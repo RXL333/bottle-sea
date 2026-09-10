@@ -28,8 +28,8 @@ export class ExploreController {
     });
     element.addEventListener('dblclick',()=>{if(this.active)this.lock();});
   }
-  enter(requestLock=true){this.active=true;this.camera.near=.025;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);this.velocityY=0;if(requestLock)this.lock();}
-  exit(){this.active=false;if(this.pointer.domElement)this.pointer.unlock();this.keys.clear();this.camera.near=.12;this.camera.fov=34;this.camera.updateProjectionMatrix();this.swimming=false;this.underwater=false;}
+  enter(requestLock=true){this.active=true;this.camera.near=.08;this.camera.far=40;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);this.velocityY=0;if(requestLock)this.lock();}
+  exit(){this.active=false;if(this.pointer.domElement)this.pointer.unlock();this.keys.clear();this.camera.near=.12;this.camera.far=200;this.camera.fov=34;this.camera.updateProjectionMatrix();this.swimming=false;this.underwater=false;}
   private lock(){
     // Some embedded browsers deny Pointer Lock. Drag-look remains fully usable.
     if(this.pointer.domElement)this.pointer.disconnect();

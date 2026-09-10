@@ -15,7 +15,7 @@ export class DayNightSystem {
   private cloudMaterial:MeshStandardMaterial;
   constructor(private scene:Scene) {
     this.sun.position.set(-4,10,6);this.sun.castShadow=true;this.sun.shadow.mapSize.set(2048,2048);
-    Object.assign(this.sun.shadow.camera,{left:-13,right:13,top:10,bottom:-10,near:.5,far:35});this.sun.shadow.normalBias=.035;
+    Object.assign(this.sun.shadow.camera,{left:-13,right:13,top:10,bottom:-10,near:.5,far:35});this.sun.shadow.bias=-.00025;this.sun.shadow.normalBias=.045;
     scene.add(this.ambient,this.sun,this.hemi,this.sky);
     const random=seededRandom(721),positions=[];
     for(let i=0;i<75;i++)positions.push(-5+random()*9.5,4.9+random()*.9,-.3-random());
