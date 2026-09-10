@@ -26,3 +26,11 @@ it('falls back to drag-look on rejection without reporting a console error',asyn
   expect(controller.pointer.isLocked).toBe(false);const before=camera.quaternion.clone();element.dispatchEvent(movement('pointerdown',0,0));element.dispatchEvent(movement('pointermove',40,20));element.dispatchEvent(new Event('pointerup'));
   expect(camera.quaternion.equals(before)).toBe(false);expect(error).not.toHaveBeenCalled();error.mockRestore();
 });
+it('caps abnormal mouse deltas in locked and drag-look modes',async()=>{
+  const locked=setup(true);locked.controller.enter();await Promise.resolve();const lockedBefore=locked.camera.quaternion.clone();
+  locked.doc.dispatchEvent(movement('mousemove',10000,0));expect(lockedBefore.angleTo(locked.camera.quaternion)).toBeLessThan(.1);
+  locked.controller.exit();
+  const drag=setup(false);drag.controller.enter();await Promise.resolve();await Promise.resolve();const dragBefore=drag.camera.quaternion.clone();
+  drag.element.dispatchEvent(movement('pointerdown',0,0));drag.element.dispatchEvent(movement('pointermove',10000,0));
+  expect(dragBefore.angleTo(drag.camera.quaternion)).toBeLessThan(.2);
+});

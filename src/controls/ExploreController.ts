@@ -5,6 +5,8 @@ import { WATER_LEVEL } from '../world/ocean/WaveMath';
 import { bottleRadiusAt } from '../world/bottle/Bounds';
 import { DOCK } from '../world/island/Dock';
 
+const MAX_LOOK_DELTA=60;
+
 export class ExploreController {
   readonly pointer:PointerLockControls;active=false;swimming=false;underwater=false;
   private keys=new Set<string>();private velocityY=0;private forward=new Vector3();private right=new Vector3();private move=new Vector3();private up=new Vector3(0,1,0);
@@ -25,8 +27,12 @@ export class ExploreController {
     element.addEventListener('pointerup',()=>this.dragging=false);
     element.addEventListener('pointermove',event=>{
       if(!this.active||this.pointer.isLocked||!this.dragging)return;
-      this.euler.setFromQuaternion(camera.quaternion);this.euler.y-=event.movementX*.003;this.euler.x=Math.max(-1.5,Math.min(1.5,this.euler.x-event.movementY*.003));camera.quaternion.setFromEuler(this.euler);
+      this.rotateView(event.movementX,event.movementY,.003);
     });
+    element.ownerDocument?.addEventListener('mousemove',event=>{
+      if(!this.active||!this.pointer.isLocked)return;
+      event.stopImmediatePropagation();this.rotateView(event.movementX,event.movementY,.002*this.pointer.pointerSpeed);
+    },true);
     element.addEventListener('dblclick',()=>{if(this.active)this.lock();});
   }
   enter(requestLock=true){this.active=true;this.camera.near=.08;this.camera.far=40;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);this.velocityY=0;if(requestLock)this.lock();}
@@ -74,6 +80,12 @@ export class ExploreController {
     const ground=groundHeight(x,z);
     // The deck is overhead when swimming underneath it, not a landing surface.
     return ground===DOCK.height&&y<DOCK.height?1.65:ground;
+  }
+  private rotateView(movementX:number,movementY:number,sensitivity:number){
+    const dx=Math.max(-MAX_LOOK_DELTA,Math.min(MAX_LOOK_DELTA,movementX));
+    const dy=Math.max(-MAX_LOOK_DELTA,Math.min(MAX_LOOK_DELTA,movementY));
+    this.euler.setFromQuaternion(this.camera.quaternion);this.euler.y-=dx*sensitivity;
+    this.euler.x=Math.max(-1.5,Math.min(1.5,this.euler.x-dy*sensitivity));this.camera.quaternion.setFromEuler(this.euler);
   }
   private blocked(x:number,z:number,y:number){
     if(x>-2.17&&x<-.83&&z>-.71&&z<.31&&y>3.75&&y<5.35)return true;
