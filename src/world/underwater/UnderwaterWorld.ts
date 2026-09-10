@@ -16,7 +16,7 @@ export class UnderwaterWorld extends Group {
       const x=-5.3+random()*9.4,z=-1.2+random()*2.5;
       if((Math.abs(x+1.8)<.5&&z>.8)||(x>2.5&&x<4&&z>0))continue;
       const h=.18+random()*.55;
-      for(let j=0;j<h/.12;j++) b.add(['#366746','#428752','#6b944f'][i%3],x+Math.sin(j*.9+i)*.04,1.79+j*.12,z,.07,.13,.07);
+      for(let j=0;j<h/.12;j++) b.add(['#366746','#428752','#6b944f'][i%3],x+Math.sin(j*.9+i)*.04,1.79+j*.12,z,.07,.118,.07);
       if(i%3===0)b.add('#4a8251',x+.1,1.87+h*.4,z,.19,.08,.08);
     }
     for(let i=0;i<19;i++) {

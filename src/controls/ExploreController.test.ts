@@ -13,6 +13,10 @@ function setup(){const camera=new PerspectiveCamera(),element=new FakeElement(),
 function key(code:string,down=true){const event=new Event(down?'keydown':'keyup');Object.defineProperties(event,{code:{value:code},repeat:{value:false}});events.dispatchEvent(event);}
 function advance(controls:ExploreController,seconds:number){for(let t=0;t<seconds;t+=1/60)controls.update(1/60);}
 describe('exploration integration',()=>{
+  it('stops before the camera enters a solid underwater landmark',()=>{
+    const {camera,controls}=setup();camera.position.set(-1.8,2.1,1.7);camera.lookAt(-1.8,2.1,1.1);key('KeyW');advance(controls,1);key('KeyW',false);
+    expect(camera.position.z).toBeGreaterThanOrEqual(1.49);expect(controls.swimming).toBe(true);
+  });
   it('swims beneath the dock without teleporting onto its deck',()=>{
     const {camera,controls}=setup();camera.position.set(1.3,2.6,1.4);camera.lookAt(0,2.6,1.4);key('KeyW');
     for(let frame=0;frame<45;frame++){

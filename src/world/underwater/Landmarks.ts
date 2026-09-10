@@ -15,7 +15,7 @@ export function treasureChest(b:VoxelBatch) {
 }
 export function anchor(b:VoxelBatch) {
   const x=-3.65,y=1.82,z=.65;
-  for(let i=0;i<8;i++) b.add(i%2?'#3e4842':'#4c5446',x-.018*i,y+.12+i*.14,z,.16,.16,.16);
+  for(let i=0;i<8;i++) b.add(i%2?'#3e4842':'#4c5446',x-.018*i,y+.12+i*.14,z,.16,.138,.16);
   b.add('#424b42',x-.1,y+.87,z,.75,.14,.16);
   for(const side of [-1,1]) {
     for(let i=0;i<4;i++) b.add('#3b4540',x+side*(.1+i*.14),y+.06+i*i*.03,z,.18,.17,.18);

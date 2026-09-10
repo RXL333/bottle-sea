@@ -4,6 +4,7 @@ import { groundHeight,islandHeight } from '../world/island/Island';
 import { WATER_LEVEL } from '../world/ocean/WaveMath';
 import { bottleRadiusAt } from '../world/bottle/Bounds';
 import { DOCK } from '../world/island/Dock';
+import { hitsWorldObstacle } from '../world/Collision';
 
 const MAX_LOOK_DELTA=60;
 
@@ -88,8 +89,7 @@ export class ExploreController {
     this.euler.x=Math.max(-1.5,Math.min(1.5,this.euler.x-dy*sensitivity));this.camera.quaternion.setFromEuler(this.euler);
   }
   private blocked(x:number,z:number,y:number){
-    if(x>-2.17&&x<-.83&&z>-.71&&z<.31&&y>3.75&&y<5.35)return true;
-    if(Math.hypot(x-.35,z+.28)<.32&&y>3.8)return true;
+    if(hitsWorldObstacle(x,z,y))return true;
     const terrain=islandHeight(x,z);
     return terrain>0&&terrain>y-this.eyeHeight+.25;
   }
