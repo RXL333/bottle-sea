@@ -3,6 +3,7 @@ import { PointerLockControls } from 'three/addons/controls/PointerLockControls.j
 import { groundHeight,islandHeight } from '../world/island/Island';
 import { WATER_LEVEL } from '../world/ocean/WaveMath';
 import { bottleRadiusAt } from '../world/bottle/Bounds';
+import { DOCK } from '../world/island/Dock';
 
 export class ExploreController {
   readonly pointer:PointerLockControls;active=false;swimming=false;underwater=false;
@@ -40,7 +41,7 @@ export class ExploreController {
   }
   update(delta:number){
     if(!this.active)return;
-    const p=this.camera.position,ground=groundHeight(p.x,p.z);
+    const p=this.camera.position,ground=this.supportHeight(p.x,p.z,p.y);
     this.swimming=ground<WATER_LEVEL-.2&&p.y<WATER_LEVEL+.42;
     this.camera.getWorldDirection(this.forward);if(!this.swimming)this.forward.y=0;this.forward.normalize();
     this.right.crossVectors(this.forward,this.up).normalize();this.move.set(0,0,0);
@@ -51,7 +52,7 @@ export class ExploreController {
     const nextX=p.x+this.move.x,nextZ=p.z+this.move.z;
     if(!this.blocked(nextX,p.z,p.y))p.x=nextX;
     if(!this.blocked(p.x,nextZ,p.y))p.z=nextZ;
-    const floor=groundHeight(p.x,p.z)+this.eyeHeight;
+    const floor=this.supportHeight(p.x,p.z,p.y)+this.eyeHeight;
     if(this.swimming){
       this.velocityY=0;p.y+=this.move.y;
       if(this.keys.has('Space'))p.y+=speed;if(this.keys.has('KeyC'))p.y-=speed;
@@ -68,6 +69,11 @@ export class ExploreController {
     const zLimit=Math.sqrt(Math.max(.12,radius*radius-(p.y-3.72)**2))-.1;
     p.z=Math.max(-zLimit,Math.min(zLimit,p.z));
     this.underwater=p.y<WATER_LEVEL-.07;
+  }
+  private supportHeight(x:number,z:number,y:number){
+    const ground=groundHeight(x,z);
+    // The deck is overhead when swimming underneath it, not a landing surface.
+    return ground===DOCK.height&&y<DOCK.height?1.65:ground;
   }
   private blocked(x:number,z:number,y:number){
     if(x>-2.17&&x<-.83&&z>-.71&&z<.31&&y>3.75&&y<5.35)return true;

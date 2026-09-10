@@ -13,6 +13,14 @@ function setup(){const camera=new PerspectiveCamera(),element=new FakeElement(),
 function key(code:string,down=true){const event=new Event(down?'keydown':'keyup');Object.defineProperties(event,{code:{value:code},repeat:{value:false}});events.dispatchEvent(event);}
 function advance(controls:ExploreController,seconds:number){for(let t=0;t<seconds;t+=1/60)controls.update(1/60);}
 describe('exploration integration',()=>{
+  it('swims beneath the dock without teleporting onto its deck',()=>{
+    const {camera,controls}=setup();camera.position.set(1.3,2.6,1.4);camera.lookAt(0,2.6,1.4);key('KeyW');
+    for(let frame=0;frame<45;frame++){
+      const previous=camera.position.clone();controls.update(1/60);
+      expect(camera.position.distanceTo(previous)).toBeLessThan(.05);
+    }
+    key('KeyW',false);expect(camera.position.x).toBeLessThan(1.1);expect(camera.position.y).toBeCloseTo(2.6);expect(controls.swimming).toBe(true);
+  });
   it('uses a stable depth range while exploring and restores the overview camera',()=>{const {camera,controls}=setup();controls.active=false;controls.enter(false);expect(camera.near).toBe(.08);expect(camera.far).toBe(40);controls.exit();expect(camera.near).toBe(.12);expect(camera.far).toBe(200);});
   it('walks along the dock, steps onto the island and discovers the lighthouse',()=>{const {camera,controls}=setup();key('KeyW');advance(controls,1.35);key('KeyW',false);expect(camera.position.z).toBeLessThan(.65);expect(camera.position.y).toBeGreaterThan(4.05);const interaction=new InteractionSystem();interaction.update(camera.position);expect(interaction.nearest?.id).toBe('lighthouse');expect(interaction.interact()).toContain('发现');});
   it('dives, swims, rises, and stays within the bottle',()=>{const {camera,controls}=setup();camera.position.set(2,3.4,1);key('KeyC');advance(controls,1);key('KeyC',false);expect(controls.underwater).toBe(true);expect(camera.position.y).toBeLessThan(2.5);key('Space');advance(controls,1.5);key('Space',false);expect(camera.position.y).toBeGreaterThan(3.3);key('KeyD');advance(controls,20);expect(insideBottle(camera.position.x,camera.position.y,camera.position.z,0)).toBe(true);});
