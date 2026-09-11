@@ -1,6 +1,6 @@
-import { Euler, PerspectiveCamera, Vector3 } from 'three';
+import { Euler, PerspectiveCamera, Quaternion, Vector3 } from 'three';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
-import { groundHeight,islandHeight } from '../world/island/Island';
+import { groundHeight,islandBottomHeight,islandHeight } from '../world/island/Island';
 import { WATER_LEVEL } from '../world/ocean/WaveMath';
 import { bottleRadiusAt } from '../world/bottle/Bounds';
 import { DOCK } from '../world/island/Dock';
@@ -11,7 +11,7 @@ const MAX_LOOK_DELTA=60;
 export class ExploreController {
   readonly pointer:PointerLockControls;active=false;swimming=false;underwater=false;
   private keys=new Set<string>();private velocityY=0;private forward=new Vector3();private right=new Vector3();private move=new Vector3();private up=new Vector3(0,1,0);
-  private dragging=false;private euler=new Euler(0,0,0,'YXZ');private eyeHeight=.44;
+  private dragging=false;private euler=new Euler(0,0,0,'YXZ');private lookRotation=new Quaternion();private lookPending=false;private eyeHeight=.44;
   onInteract=()=>{};onLockChange=(locked:boolean)=>{void locked;};
   grounded=false;
   get sprinting(){return this.keys.has('ShiftLeft')||this.keys.has('ShiftRight');}
@@ -26,7 +26,7 @@ export class ExploreController {
     });
     window.addEventListener('keyup',event=>this.keys.delete(event.code));
     window.addEventListener('blur',()=>{this.keys.clear();this.dragging=false;});
-    element.addEventListener('pointerdown',event=>{if(!this.active)return;this.dragging=true;element.setPointerCapture(event.pointerId);});
+    element.addEventListener('pointerdown',event=>{if(!this.active)return;this.syncLook();this.dragging=true;element.setPointerCapture(event.pointerId);});
     element.addEventListener('pointerup',()=>this.dragging=false);
     element.addEventListener('pointercancel',()=>this.dragging=false);
     element.addEventListener('lostpointercapture',()=>this.dragging=false);
@@ -40,7 +40,7 @@ export class ExploreController {
     },true);
     element.addEventListener('dblclick',()=>{if(this.active)this.lock();});
   }
-  enter(requestLock=true){this.active=true;this.camera.near=.08;this.camera.far=40;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);this.velocityY=0;if(requestLock)this.lock();}
+  enter(requestLock=true){this.active=true;this.camera.near=.08;this.camera.far=40;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);this.velocityY=0;this.syncLook();if(requestLock)this.lock();}
   exit(){this.active=false;if(this.pointer.domElement)this.pointer.unlock();this.keys.clear();this.camera.near=.12;this.camera.far=200;this.camera.fov=34;this.camera.updateProjectionMatrix();this.swimming=false;this.underwater=false;}
   suspend(){this.active=false;this.keys.clear();this.dragging=false;if(this.pointer.domElement)this.pointer.unlock();}
   private lock(){
@@ -48,13 +48,14 @@ export class ExploreController {
     if(this.pointer.domElement)this.pointer.disconnect();
     try {void Promise.resolve(this.element.requestPointerLock()).then(()=>{
       if(!this.active){document.exitPointerLock();return;}
-      if(document.pointerLockElement===this.element){this.pointer.connect(this.element);this.pointer.isLocked=true;this.onLockChange(true);}
+      if(document.pointerLockElement===this.element){this.syncLook();this.pointer.connect(this.element);this.pointer.isLocked=true;this.onLockChange(true);}
     }).catch(()=>this.onLockChange(false));}catch{this.onLockChange(false);}
   }
   update(delta:number){
     if(!this.active)return;
     // Bound both gravity integration and horizontal travel after a slow frame.
-    const elapsed=Math.min(.1,Math.max(0,delta)),steps=Math.max(1,Math.ceil(elapsed/(1/120)));
+    const elapsed=Math.min(.1,Math.max(0,delta));this.smoothLook(elapsed);
+    const steps=Math.max(1,Math.ceil(elapsed/(1/120)));
     for(let step=0;step<steps;step++)this.updateStep(elapsed/steps);
   }
   private updateStep(delta:number){
@@ -84,7 +85,9 @@ export class ExploreController {
       this.velocityY-=5*delta;p.y+=this.velocityY*delta;
       if(p.y<floor){p.y=floor;this.velocityY=0;}
     }
-    const resolvedY=resolveVerticalCollision(p.x,p.z,previousY,p.y);
+    let resolvedY=resolveVerticalCollision(p.x,p.z,previousY,p.y);
+    const islandBottom=islandBottomHeight(p.x,p.z)-.14;
+    if(islandBottom>0&&previousY<=islandBottom&&resolvedY>islandBottom)resolvedY=islandBottom;
     if(resolvedY!==p.y)this.velocityY=0;
     p.y=resolvedY;
     p.x=Math.max(-5.55,Math.min(5.2,p.x));
@@ -98,20 +101,30 @@ export class ExploreController {
   private supportHeight(x:number,z:number,y:number){
     const ground=groundHeight(x,z);
     // The deck is overhead when swimming underneath it, not a landing surface.
-    return ground===DOCK.height&&y<DOCK.height?1.65:ground;
+    if(ground===DOCK.height&&y<DOCK.height)return 1.65;
+    const bottom=islandBottomHeight(x,z);
+    return bottom>0&&y<=bottom-.139?1.65:ground;
   }
   private rotateView(movementX:number,movementY:number,sensitivity:number){
     // Pointer capture/lock changes can report cursor-warp deltas. Clamping those
     // still produced a visible turn; discard the anomalous event entirely.
     if(!Number.isFinite(movementX)||!Number.isFinite(movementY)||Math.abs(movementX)>MAX_LOOK_DELTA||Math.abs(movementY)>MAX_LOOK_DELTA)return;
     const dx=movementX,dy=movementY;
-    this.euler.setFromQuaternion(this.camera.quaternion);this.euler.y-=dx*sensitivity;
-    this.euler.x=Math.max(-1.5,Math.min(1.5,this.euler.x-dy*sensitivity));this.camera.quaternion.setFromEuler(this.euler);
+    if(!this.lookPending)this.euler.setFromQuaternion(this.camera.quaternion);
+    this.euler.y-=dx*sensitivity;this.euler.x=Math.max(-1.5,Math.min(1.5,this.euler.x-dy*sensitivity));
+    this.lookRotation.setFromEuler(this.euler);this.lookPending=true;
+  }
+  syncLook(){this.euler.setFromQuaternion(this.camera.quaternion);this.lookRotation.copy(this.camera.quaternion);this.lookPending=false;}
+  private smoothLook(delta:number){
+    if(!this.lookPending)return;
+    this.camera.quaternion.slerp(this.lookRotation,1-Math.exp(-delta*24));
+    if(this.camera.quaternion.angleTo(this.lookRotation)<.0001){this.camera.quaternion.copy(this.lookRotation);this.lookPending=false;}
   }
   private blocked(x:number,z:number,y:number){
     if(hitsWorldObstacle(x,z,y))return true;
     const terrain=islandHeight(x,z);
-    return terrain>0&&terrain>y-this.eyeHeight+.25;
+    if(!terrain)return false;
+    return y>islandBottomHeight(x,z)-.139&&terrain>y-this.eyeHeight+.25;
   }
 }
 

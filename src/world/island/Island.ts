@@ -12,6 +12,11 @@ export function islandHeight(x:number,z:number) {
   if(d<1.08)return 3.46;
   return 0;
 }
+export function islandBottomHeight(x:number,z:number) {
+  if(!islandHeight(x,z))return 0;
+  const d=((x+.85)/1.9)**2+((z+.12)/1.04)**2;
+  return 2.5+Math.min(1,d)*.78;
+}
 export function groundHeight(x:number,z:number) {
   if(x>=DOCK.minX&&x<=DOCK.maxX&&z>=DOCK.minZ&&z<=DOCK.maxZ)return DOCK.height;
   return islandHeight(x,z)||1.65;
@@ -23,7 +28,7 @@ export class Island extends Group {
     super();this.name='Island';const terrain=new VoxelBatch(),props=new VoxelBatch();const random=seededRandom(127);
     for(let x=-2.85;x<1.18;x+=.21)for(let z=-1.28;z<1.1;z+=.21) {
       const h=islandHeight(x,z);if(!h)continue;
-      const d=((x+.85)/1.9)**2+((z+.12)/1.04)**2; const bottom=2.5+Math.min(1,d)*.78+random()*.06;
+      const bottom=islandBottomHeight(x,z)+random()*.06;
       const sandBottom=h-.3;
       const rockColor=random()>.5?'#506f5e':'#587964';
       if(sandBottom>bottom)terrain.add(rockColor,x,(bottom+sandBottom)/2,z,.209,sandBottom-bottom,.209);

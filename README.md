@@ -63,7 +63,7 @@ docs/                      架构、计划、美术、性能与验证记录
 
 ## 验证与限制
 
-- 当前 Stage 1 工作区 TypeScript strict 检查通过；生产构建通过；52 项测试通过。完整阶段状态和验收边界见 [STAGE1_VISUAL_INTERACTION_POLISH.md](docs/STAGE1_VISUAL_INTERACTION_POLISH.md)。
+- 当前 Stage 1 工作区 TypeScript strict 检查通过；生产构建通过；55 项测试通过。完整阶段状态和验收边界见 [STAGE1_VISUAL_INTERACTION_POLISH.md](docs/STAGE1_VISUAL_INTERACTION_POLISH.md)。
 - 实际浏览器检查了默认构图、拖动、风暴、夜景、水下深度、E 发现、声音、倍速和 390×844 / 1920×1080 布局。
 - 当前内嵌浏览器中 Pointer Lock 被拒绝，拖动备用方案已验证；普通桌面 Chrome 的原生锁鼠标路径需在用户实际浏览器中确认。
 - 未提供原始参考视频。本实现依据提示词和四张概念图；是程序化体素解释，并非逐像素复刻。
@@ -79,6 +79,7 @@ docs/                      架构、计划、美术、性能与验证记录
 - `/?view=dock&hour=14` 码头第一人称
 - `/?view=underwater&hour=14` 船锚附近的水下第一人称
 - `/?view=water-entry&hour=14` 从海面上方自由落入水中，经过真实控制器和入水事件
+- `/?view=under-island&hour=14` 从岛外朝岛底通道游动，检查水下通行与岛底碰撞
 - `/?view=chest&hour=14` 宝箱观察距离，按 E 检查发现反馈
 
 这些入口设置初始状态后仍使用同一游戏循环、控制器、地图与任务系统。

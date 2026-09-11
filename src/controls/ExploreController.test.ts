@@ -5,6 +5,7 @@ import { InteractionSystem } from '../systems/InteractionSystem';
 import { LANDMARKS } from '../world/underwater/Landmarks';
 import { insideBottle } from '../world/bottle/Bounds';
 import { WaterCrossing } from '../systems/WaterEntrySystem';
+import { islandBottomHeight } from '../world/island/Island';
 class FakeButton extends EventTarget {}
 class FakeElement extends EventTarget { requestPointerLock(){return Promise.reject(new Error('embedded browser'));} }
 let events:EventTarget;
@@ -14,6 +15,14 @@ function setup(){const camera=new PerspectiveCamera(),element=new FakeElement(),
 function key(code:string,down=true){const event=new Event(down?'keydown':'keyup');Object.defineProperties(event,{code:{value:code},repeat:{value:false}});events.dispatchEvent(event);}
 function advance(controls:ExploreController,seconds:number){for(let t=0;t<seconds;t+=1/60)controls.update(1/60);}
 describe('exploration integration',()=>{
+  it('swims through the open passage beneath the island',()=>{
+    const {camera,controls}=setup();camera.position.set(-3.15,2.1,0);camera.lookAt(1.2,2.1,0);controls.syncLook();key('KeyW');advance(controls,4.5);key('KeyW',false);
+    expect(camera.position.x).toBeGreaterThan(.9);expect(camera.position.y).toBeCloseTo(2.1,1);expect(controls.swimming).toBe(true);
+  });
+  it('stops at the island underside when swimming upward',()=>{
+    const {camera,controls}=setup();camera.position.set(-.85,2.1,0);key('Space');advance(controls,1);key('Space',false);
+    expect(camera.position.y).toBeCloseTo(islandBottomHeight(-.85,0)-.14,4);expect(controls.swimming).toBe(true);
+  });
   it('cannot swim upward through the ruins lintel or dive through the chest',()=>{
     const {camera,controls}=setup();camera.position.set(3.22,2.5,.4);key('Space');advance(controls,1);key('Space',false);
     expect(camera.position.y).toBeCloseTo(2.7);
