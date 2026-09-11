@@ -24,7 +24,8 @@ export class HUD {
     root.append(this.element);
     for(const action of ['storm','sound','explore'] as const)this.element.querySelector(`[data-action="${action}"] .icon`)!.innerHTML=icons[action];
     this.updateQuests(new Set());
-    this.element.querySelector('.discovery-card button')!.addEventListener('click',()=>this.element.querySelector<HTMLElement>('.discovery-card')!.hidden=true);
+    this.element.querySelector('.discovery-card button')!.addEventListener('click',()=>this.closeDiscovery());
+    window.addEventListener('keydown',event=>{if(event.code==='Escape')this.closeDiscovery();});
   }
   setSpeed(speed:number,paused:boolean) {
     this.element.querySelectorAll<HTMLButtonElement>('[data-speed]').forEach(button=>{const selected=Number(button.dataset.speed)===speed;button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));});
@@ -39,8 +40,9 @@ export class HUD {
     this.element.querySelector<HTMLElement>('#crosshair')!.hidden=!active;
     this.element.querySelector('[data-action="explore"] span:last-child')!.textContent=active?'返回瓶外':'探索模式';
     this.setHint(active?'WASD 移动 · 拖动观察 · E 交互':'ⓘ 点击拖动 · 移动视角 · 探索细节');
+    if(!active){this.closeDiscovery();this.setInteractable(false);}
   }
-  updateDepth(underwater:boolean,y:number){const depth=this.element.querySelector<HTMLElement>('#depth')!;depth.hidden=!underwater;depth.textContent=`水下深度：${Math.max(0,(3.3-y)*5).toFixed(1)} m`;}
+  updateDepth(underwater:boolean,depthWorld:number){const depth=this.element.querySelector<HTMLElement>('#depth')!;depth.hidden=!underwater;depth.textContent=`水下深度：${Math.max(0,depthWorld*5).toFixed(1)} m`;}
   updateQuests(discovered:Set<string>){this.element.querySelector('#quests')!.innerHTML=LANDMARKS.map(target=>`<li class="${discovered.has(target.id)?'found':''}">${discovered.has(target.id)?'▣':'□'} ${target.hint}</li>`).join('');this.element.querySelector('#progress')!.textContent=`${discovered.size} / 4`;}
   notify(text:string){const notice=this.element.querySelector('#notice')!;notice.textContent=text;notice.classList.add('visible');window.clearTimeout(this.noticeTimeout);this.noticeTimeout=window.setTimeout(()=>notice.classList.remove('visible'),3500);}
   showDiscovery(id:string,count:number){
@@ -48,6 +50,7 @@ export class HUD {
     card.querySelector('h2')!.textContent=target.name;card.querySelector('.journal-text')!.textContent=JOURNAL_TEXT[id];card.querySelector('small')!.textContent=`已发现 ${count} / ${LANDMARKS.length}`;card.hidden=false;
     window.clearTimeout(this.cardTimeout);this.cardTimeout=window.setTimeout(()=>card.hidden=true,7000);
   }
+  closeDiscovery(){const card=this.element.querySelector<HTMLElement>('.discovery-card')!;card.hidden=true;window.clearTimeout(this.cardTimeout);this.cardTimeout=0;}
   setInteractable(active:boolean){this.element.querySelector('#crosshair')!.textContent=active?'◇':'+';this.element.querySelector('#crosshair')!.classList.toggle('ready',active);}
   updateClock(clock:GameClock,storm:boolean) {
     this.element.querySelector('#clock')!.textContent=clock.formatted;

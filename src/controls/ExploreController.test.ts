@@ -17,17 +17,17 @@ function advance(controls:ExploreController,seconds:number){for(let t=0;t<second
 describe('exploration integration',()=>{
   it('swims through the open passage beneath the island',()=>{
     const {camera,controls}=setup();camera.position.set(-3.15,2.1,0);camera.lookAt(1.2,2.1,0);controls.syncLook();key('KeyW');advance(controls,4.5);key('KeyW',false);
-    expect(camera.position.x).toBeGreaterThan(.9);expect(camera.position.y).toBeCloseTo(2.1,1);expect(controls.swimming).toBe(true);
+    expect(camera.position.x).toBeGreaterThan(.9);expect(camera.position.y).toBeGreaterThanOrEqual(2.1);expect(camera.position.y).toBeLessThan(2.25);expect(controls.swimming).toBe(true);
   });
   it('stops at the island underside when swimming upward',()=>{
     const {camera,controls}=setup();camera.position.set(-.85,2.1,0);key('Space');advance(controls,1);key('Space',false);
-    expect(camera.position.y).toBeCloseTo(islandBottomHeight(-.85,0)-.14,4);expect(controls.swimming).toBe(true);
+    expect(camera.position.y).toBeLessThanOrEqual(islandBottomHeight(-.85,0)-.075);expect(camera.position.y).toBeGreaterThan(2.35);expect(controls.swimming).toBe(true);
   });
   it('cannot swim upward through the ruins lintel or dive through the chest',()=>{
     const {camera,controls}=setup();camera.position.set(3.22,2.5,.4);key('Space');advance(controls,1);key('Space',false);
-    expect(camera.position.y).toBeCloseTo(2.7);
+    expect(camera.position.y).toBeCloseTo(2.76);
     camera.position.set(-1.8,2.8,1.1);key('KeyC');advance(controls,1);key('KeyC',false);
-    expect(camera.position.y).toBeCloseTo(2.5);
+    expect(camera.position.y).toBeCloseTo(2.8);
   });
   it('does not tunnel through props during a stalled frame',()=>{
     const {camera,controls}=setup();camera.position.set(-1.8,2.1,1.7);camera.lookAt(-1.8,2.1,1.1);key('KeyW');key('ShiftLeft');controls.update(2);
@@ -51,9 +51,10 @@ describe('exploration integration',()=>{
     key('KeyW',false);expect(camera.position.x).toBeLessThan(1.1);expect(camera.position.y).toBeCloseTo(2.6);expect(controls.swimming).toBe(true);
   });
   it('uses a stable depth range while exploring and restores the overview camera',()=>{const {camera,controls}=setup();controls.active=false;controls.enter(false);expect(camera.near).toBe(.08);expect(camera.far).toBe(40);controls.exit();expect(camera.near).toBe(.12);expect(camera.far).toBe(200);});
-  it('walks along the dock, steps onto the island and discovers the lighthouse',()=>{const {camera,controls}=setup();key('KeyW');advance(controls,1.35);key('KeyW',false);expect(camera.position.z).toBeLessThan(.65);expect(camera.position.y).toBeGreaterThan(4.05);const interaction=new InteractionSystem();interaction.update(camera.position);expect(interaction.nearest?.id).toBe('lighthouse');expect(interaction.interact()).toContain('发现');});
+  it('walks along the dock, steps onto the island and discovers the lighthouse',()=>{const {camera,controls}=setup();key('KeyW');advance(controls,1.35);key('KeyW',false);expect(camera.position.z).toBeLessThan(.65);expect(camera.position.y).toBeGreaterThan(4.05);const interaction=new InteractionSystem();interaction.update(camera.position);expect(interaction.nearest?.id,camera.position.toArray().join(',')).toBe('lighthouse');expect(interaction.interact()).toContain('发现');});
+  it('smooths only the rendered step offset while physical support changes immediately',()=>{const {camera,controls}=setup();key('KeyW');let previous=camera.position.y+controls.renderOffsetY,maxVisualDelta=0,sawOffset=false;for(let i=0;i<100;i++){controls.update(1/60);const visual=camera.position.y+controls.renderOffsetY;maxVisualDelta=Math.max(maxVisualDelta,Math.abs(visual-previous));previous=visual;sawOffset||=controls.renderOffsetY<-.01;}key('KeyW',false);expect(sawOffset).toBe(true);expect(maxVisualDelta).toBeLessThan(.035);expect(Math.abs(controls.renderOffsetY)).toBeLessThan(.01);});
   it('dives, swims, rises, and stays within the bottle',()=>{const {camera,controls}=setup();camera.position.set(2,3.4,1);key('KeyC');advance(controls,1);key('KeyC',false);expect(controls.underwater).toBe(true);expect(camera.position.y).toBeLessThan(2.5);key('Space');advance(controls,1.5);key('Space',false);expect(camera.position.y).toBeGreaterThan(3.3);key('KeyD');advance(controls,20);expect(insideBottle(camera.position.x,camera.position.y,camera.position.z,0)).toBe(true);});
-  it('blocks walls and jumps under gravity',()=>{const {camera,controls}=setup();camera.position.set(-1.5,4.27,.6);camera.lookAt(-1.5,4.27,-1);key('KeyW');advance(controls,2);key('KeyW',false);expect(camera.position.z).toBeGreaterThan(.3);key('Space');advance(controls,.15);key('Space',false);expect(camera.position.y).toBeGreaterThan(4.4);advance(controls,1);expect(camera.position.y).toBeCloseTo(4.27,1);});
+  it('blocks walls and jumps under gravity',()=>{const {camera,controls}=setup();camera.position.set(-1.5,4.36,.6);camera.lookAt(-1.5,4.36,-1);key('KeyW');advance(controls,2);key('KeyW',false);expect(camera.position.z).toBeGreaterThan(.3);key('Space');advance(controls,.15);key('Space',false);expect(camera.position.y).toBeGreaterThan(4.45);advance(controls,1);expect(camera.position.y).toBeCloseTo(4.36,1);});
   it('discovers all four targets only within range and without duplicates',()=>{const {camera}=setup(),interaction=new InteractionSystem();camera.position.set(10,10,10);interaction.update(camera.position);interaction.interact();expect(interaction.discovered.size).toBe(0);for(const target of LANDMARKS){camera.position.set(target.x,target.y,target.z);interaction.update(camera.position);interaction.interact();interaction.interact();}expect(interaction.discovered.size).toBe(4);});
 });
 

@@ -1,10 +1,13 @@
 import { Group } from 'three';
 import { VoxelBatch, box } from '../../utils/voxel';
 import { sampleBuoyancy } from './Buoyancy';
+import { sampleShipPath } from './ShipPath';
+import type { DynamicObstacle } from '../Collision';
 
 export class Ship extends Group {
   private floatState={height:0,pitch:0,roll:0};
   private hull=new Group();
+  readonly collisionBoxes:DynamicObstacle[]=[];
   constructor() {
     super();this.name='Ship';const b=new VoxelBatch();
     for(let row=0;row<3;row++) {
@@ -24,11 +27,12 @@ export class Ship extends Group {
     this.add(this.hull);this.update(0,0);
   }
   update(time:number,storm:number) {
-    const angle=time*.065+.3;
-    const x=.2+Math.cos(angle)*3.9,z=Math.sin(angle)*1.55;
-    const yaw=Math.atan2(-3.9*Math.sin(angle),1.55*Math.cos(angle));
+    const {x,z,yaw}=sampleShipPath(time),previousX=this.position.x,previousZ=this.position.z,previousYaw=this.rotation.y;
     sampleBuoyancy(x,z,yaw,time,storm,this.floatState);
     this.position.set(x,this.floatState.height+.015,z);this.rotation.y=yaw;
     this.hull.rotation.set(this.floatState.pitch,0,this.floatState.roll);
+    const minY=this.position.y-.08,maxY=this.position.y+.38;
+    const specs=[{x:0,halfX:.32,halfZ:.55},{x:-.27,halfX:.07,halfZ:.57},{x:.27,halfX:.07,halfZ:.57}];
+    this.collisionBoxes.length=0;for(const spec of specs){const c=Math.cos(yaw),s=Math.sin(yaw),pc=Math.cos(previousYaw),ps=Math.sin(previousYaw);this.collisionBoxes.push({x:x+c*spec.x,z:z-s*spec.x,previousX:previousX+pc*spec.x,previousZ:previousZ-ps*spec.x,halfX:spec.halfX,halfZ:spec.halfZ,minY,maxY,yaw,previousYaw});}
   }
 }

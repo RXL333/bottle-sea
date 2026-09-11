@@ -1,10 +1,11 @@
 import { Vector3 } from 'three';
 import { DOCK } from '../world/island/Dock';
 import { islandHeight } from '../world/island/Island';
+import { terrainCellAt } from '../world/island/TerrainData';
 export type GroundSurface='wood'|'sand'|'grass';
 export function groundSurface(x:number,z:number):GroundSurface{
   if(x>=DOCK.minX&&x<=DOCK.maxX&&z>=DOCK.minZ&&z<=DOCK.maxZ)return 'wood';
-  return islandHeight(x,z)>3.6?'grass':'sand';
+  return terrainCellAt(x,z)?.surface??(islandHeight(x,z)>3.6?'grass':'sand');
 }
 /** Visual offsets never feed back into terrain height or collision queries. */
 export class PlayerFeedback {

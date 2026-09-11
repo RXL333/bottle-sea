@@ -14,5 +14,6 @@ export class World extends Group {
   readonly details=new Details();
   readonly wake=new ShipWake();
   constructor(){super();this.name='World';this.add(this.island,this.ocean,this.ship,new UnderwaterWorld(),this.fish,this.bubbles,this.details,this.wake);}
-  update(time:number,storm:number,dayTime=.58,player?:Vector3){this.ocean.update(time,storm,dayTime);this.ship.update(time,storm);this.wake.update(time,storm,this.ship.position.x,this.ship.position.z,this.ship.rotation.y);this.fish.update(time,player);this.bubbles.update(time);this.details.update(time,storm);this.island.update(time,storm);}
+  prepareShip(time:number,storm:number){this.ship.update(time,storm);}
+  update(time:number,storm:number,dayTime=.58,player?:Vector3){this.ocean.update(time,storm,dayTime);this.wake.update(time,storm,this.ship.position.x,this.ship.position.z,this.ship.rotation.y);this.fish.update(time,player);this.bubbles.update(time);this.details.update(time,storm);this.island.update(time,storm);}
 }

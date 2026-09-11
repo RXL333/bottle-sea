@@ -23,6 +23,7 @@ import { PlayerFeedback } from '../systems/PlayerFeedback';
 import { WaterEntrySystem } from '../systems/WaterEntrySystem';
 import { DiscoveryPulse } from '../systems/DiscoveryPulse';
 import { MicroAnimationSystem } from '../systems/MicroAnimationSystem';
+import { waveHeight } from '../world/ocean/WaveMath';
 
 export class Game {
   readonly renderer=new Renderer();readonly scene=new Scene();
@@ -48,13 +49,13 @@ export class Game {
     this.dayNight=new DayNightSystem(this.scene);
     this.overview=new OverviewController(this.camera,this.renderer.domElement);
     this.focus=new SceneFocusSystem(this.camera,this.overview.target);
-    this.explorer=new ExploreController(this.camera,this.renderer.domElement);
+    this.explorer=new ExploreController(this.camera,this.renderer.domElement,()=>this.world.ship.collisionBoxes);
     this.hud=new HUD(root);this.bindUI();
     this.performance=new PerformanceMonitor(this.renderer,this.hud.element.querySelector<HTMLElement>('#fps')!,this.camera);
     this.world.fish.setCount(QUALITY.MEDIUM.fish);this.weather.rain.setCount(QUALITY.MEDIUM.rain);
     if(import.meta.env.DEV)configurePreview(this);
     if(this.explorer.active)this.transition.state='EXPLORE';
-    this.hud.updateClock(this.clock,this.weather.storm);this.explorer.update(0);this.hud.updateDepth(this.explorer.underwater,this.camera.position.y);
+    this.hud.updateClock(this.clock,this.weather.storm);this.explorer.update(0);this.hud.updateDepth(this.explorer.underwater,0);
     this.explorer.onInteract=()=>{
       this.interaction.update(this.camera.position);const target=this.interaction.nearest;
       const message=this.interaction.interact();this.hud.updateQuests(this.interaction.discovered);
@@ -98,6 +99,7 @@ export class Game {
     const cpuStart=performance.now();
     this.clock.update(delta);const time=this.clock.elapsed;
     this.weather.update(this.clock.paused?0:delta,time);const storm=this.weather.intensity;
+    this.world.prepareShip(time,storm);let localWater=waveHeight(this.camera.position.x,this.camera.position.z,time,storm);
     if(this.transition.active){
       if(this.transition.update(delta)){
         if(this.transition.state==='EXPLORE'){this.explorer.enter(false);this.playerFeedback.reset();}
@@ -106,12 +108,12 @@ export class Game {
         }
         this.hud.setExplore(this.explorer.active);this.hud.setTransition(false);
       }
-    }else if(this.explorer.active)this.explorer.update(delta);
+    }else if(this.explorer.active)this.explorer.update(delta,localWater);
     else if(this.focus.active){if(this.focus.update(delta)){this.overview.minDistance=this.focus.selected==='overview'?12:2;this.overview.enabled=true;this.overview.update();}}
     else this.overview.update();
-    const underwater=this.explorer.underwater&&(this.explorer.active||this.transition.active&&this.camera.position.y<3.23);
+    localWater=waveHeight(this.camera.position.x,this.camera.position.z,time,storm);const underwater=this.explorer.underwater&&this.explorer.active;
     this.scene.fog=underwater?this.underwaterFog:null;
-    this.waterEntry.update(delta,this.camera.position,this.explorer.active,this.explorer.swimming,this.explorer.sprinting);
+    this.waterEntry.update(delta,this.camera.position,this.explorer.active,this.explorer.swimming,this.explorer.sprinting,localWater);
     if(this.explorer.active){this.playerFeedback.update(delta,this.camera.position,this.explorer.grounded,this.explorer.swimming,this.explorer.sprinting);this.camera.fov=this.playerFeedback.fov;this.camera.updateProjectionMatrix();}
     document.body.classList.toggle('underwater',underwater);
     this.world.update(time,storm,this.clock.normalizedDayTime,this.explorer.active?this.camera.position:undefined);this.bottle.update(time,storm,this.weather.lightning.flash);
@@ -121,11 +123,11 @@ export class Game {
     this.dayNight.update(this.clock.normalizedDayTime,time,storm,this.weather.lightning.flash);
     this.micro.update(time,this.dayNight.night,storm);
     this.world.island.house.setNight(this.dayNight.night);this.world.island.lighthouse.update(time,this.dayNight.night,storm);
-    this.hudTimer+=delta;if(this.hudTimer>.25){this.hudTimer=0;this.hud.updateClock(this.clock,this.weather.storm);this.hud.updateDepth(underwater,this.camera.position.y);
+    this.hudTimer+=delta;if(this.hudTimer>.25){this.hudTimer=0;this.hud.updateClock(this.clock,this.weather.storm);this.hud.updateDepth(underwater,localWater-this.camera.position.y);
       if(import.meta.env.DEV){const data=this.renderer.domElement.dataset;data.cameraMode=this.transition.state;data.waterEntries=String(this.waterEntry.entries);data.waterLeaves=String(this.waterEntry.leaves);data.fov=this.camera.fov.toFixed(2);}
       if(this.explorer.active){this.hud.setInteractable(Boolean(this.interaction.nearest));this.hud.setHint(this.interaction.nearest?`[ E ] 观察：${this.interaction.nearest.name}`:'WASD 移动 · 拖动 / 鼠标观察 · Space 上升 · C 下潜 · E 交互');}
     }
-    const bob=this.explorer.active?this.playerFeedback.offsetY:0;this.camera.position.y+=bob;
+    const bob=this.explorer.active?this.playerFeedback.offsetY+this.explorer.renderOffsetY:0;this.camera.position.y+=bob;
     this.renderer.render(this.scene,this.camera);this.camera.position.y-=bob;
     this.performance.update(performance.now()-cpuStart);
   };

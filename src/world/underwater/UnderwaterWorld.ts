@@ -1,17 +1,12 @@
 import { Group } from 'three';
 import { VoxelBatch,seededRandom } from '../../utils/voxel';
 import { anchor,treasureChest,ruins } from './Landmarks';
-import { bottleRadiusAt } from '../bottle/Bounds';
+import { SEABED_CELLS } from './SeabedData';
 
 export class UnderwaterWorld extends Group {
   constructor() {
-    super();this.name='UnderwaterWorld';const b=new VoxelBatch();const random=seededRandom(601);
-    for(let x=-5.45;x<4.75;x+=.24)for(let z=-1.36;z<1.4;z+=.24) {
-      if(Math.abs(x+.2)>5.1&&Math.abs(z)>1)continue;
-      const y=Math.max(1.62,3.72-Math.sqrt((bottleRadiusAt(x)-.16)**2-z*z))+Math.floor(random()*3)*.035;
-      b.add(['#a4ac77','#bdba84','#8f9f73','#c4be8b'][Math.floor(random()*4)],x,y,z,.239,.16,.239);
-      if(random()<.05)b.add('#647b68',x,y+.12,z,.16,.14,.17);
-    }
+    super();this.name='UnderwaterWorld';const b=new VoxelBatch();const random=seededRandom(1601);
+    for(const cell of SEABED_CELLS){b.add(cell.color,cell.x,cell.centerY,cell.z,.239,.16,.239);if(random()<.05)b.add('#647b68',cell.x,cell.centerY+.12,cell.z,.16,.14,.17);}
     for(let i=0;i<90;i++) {
       const x=-5.3+random()*9.4,z=-1.2+random()*2.5;
       if((Math.abs(x+1.8)<.5&&z>.8)||(x>2.5&&x<4&&z>0))continue;
