@@ -70,7 +70,7 @@
 
 ### 最新命令
 
-2026-09-11：`npm run typecheck`通过；`npm run test`通过，24个文件67项；`npm run build`通过。生产JS656.58kB、gzip173.76kB（index-7do9Ld3g.js）。BS-01～BS-10 的最终状态见 `STAGE1_BUGFIX_REPORT.md`。
+2026-09-11：`npm run typecheck`通过；`npm run test`通过，25个文件70项；`npm run build`通过。生产JS656.75kB、gzip173.83kB（index-CROSk0nu.js）。BS-01～BS-10 的最终状态见 `STAGE1_BUGFIX_REPORT.md`。
 
 ### 最新补充验收（2026-09-11，覆盖上方早期待办记录）
 

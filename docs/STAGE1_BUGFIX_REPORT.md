@@ -77,8 +77,8 @@
 ## Verification
 
 - `npm run typecheck`: passed.
-- `npm run test`: 24 files, 67 tests passed.
-- `npm run build`: passed; production assets `index-Bhg_O-bO.css` (7.70 kB, gzip 2.37 kB) and `index-7do9Ld3g.js` (656.58 kB, gzip 173.76 kB).
+- `npm run test`: 25 files, 70 tests passed, including bounded per-frame A/D shore movement and distinct inside/outside glass passes.
+- `npm run build`: passed; production assets `index-Bhg_O-bO.css` (7.70 kB, gzip 2.37 kB) and `index-CROSk0nu.js` (656.75 kB, gzip 173.83 kB).
 - `git diff --check`: passed.
 - Browser: Playwright Chromium, hardware WebGL context available. Normal overview, explore drag, and under-island traversal sampled at about 60 FPS; around 67–96 draw calls, 83k–96k triangles, 23–30 geometries, CPU about 1.0–1.7ms in stable samples.
 - Ten Overview/Explore switches completed and returned to Overview. Forty quality switches completed with a responsive UI and expected final HIGH state.

@@ -63,7 +63,7 @@ docs/                      架构、计划、美术、性能与验证记录
 
 ## 验证与限制
 
-- 当前 Stage 1 工作区 TypeScript strict 检查通过；生产构建通过；67 项测试通过。完整缺陷修复状态和验收边界见 [STAGE1_BUGFIX_REPORT.md](docs/STAGE1_BUGFIX_REPORT.md)。
+- 当前 Stage 1 工作区 TypeScript strict 检查通过；生产构建通过；70 项测试通过。完整缺陷修复状态和验收边界见 [STAGE1_BUGFIX_REPORT.md](docs/STAGE1_BUGFIX_REPORT.md)。
 - 实际浏览器检查了默认构图、拖动、风暴、夜景、水下深度、E 发现、声音、倍速和 390×844 / 1920×1080 布局。
 - 当前内嵌浏览器中 Pointer Lock 被拒绝，拖动备用方案已验证；普通桌面 Chrome 的原生锁鼠标路径需在用户实际浏览器中确认。
 - 未提供原始参考视频。本实现依据提示词和四张概念图；是程序化体素解释，并非逐像素复刻。

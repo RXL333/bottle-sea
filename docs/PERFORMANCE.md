@@ -13,7 +13,7 @@
 
 新增树冠独立动画、云层、独立发现目标材质和固定粒子池增加绘制批次，普通场景约增加17calls、660triangles；本次采样仍接近60FPS。不能由短窗口推断所有GPU和长期GC表现。此前出现约1000ms间隔的异常窗口未纳入本表；重新在同一页面运行原版/新版取得正常窗口后才进行对比。
 
-2026-09-11完成 BS-01～BS-10 修复后：67项测试、typecheck/build通过；主JS656.58kB、gzip173.76kB。Playwright Chromium 的稳定样本约60FPS、67～96 calls、83k～96k triangles、23～30 geometries、CPU约1.0～1.7ms。截图与跨进程命令会暂停页面并制造约1秒长帧，这些工具干扰样本不计入游戏性能结论。详见STAGE1_BUGFIX_REPORT.md。下方为初版历史记录。
+2026-09-11完成 BS-01～BS-10 与内侧玻璃增强后：70项测试、typecheck/build通过；主JS656.75kB、gzip173.83kB。Playwright Chromium 的稳定样本约60FPS、67～96 calls、83k～96k triangles、23～30 geometries、CPU约1.0～1.7ms。截图与跨进程命令会暂停页面并制造约1秒长帧，这些工具干扰样本不计入游戏性能结论。详见STAGE1_BUGFIX_REPORT.md。下方为初版历史记录。
 
 ## 当前实现
 
