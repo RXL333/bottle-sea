@@ -41,21 +41,21 @@ it('preserves large locked input while drag mode uses cursor coordinates',async(
   drag.element.dispatchEvent(new Event('lostpointercapture'));const released=drag.camera.quaternion.clone();
   drag.element.dispatchEvent(movement('pointermove',20,0));expect(drag.camera.quaternion.equals(released)).toBe(true);
 });
-it.each([61,100,200])('keeps a locked horizontal delta of %i pixels',async delta=>{const {doc,camera,controller}=setup(true);controller.enter();await Promise.resolve();const before=camera.quaternion.clone();doc.dispatchEvent(movement('mousemove',delta,0));controller.update(1/60);expect(before.angleTo(camera.quaternion)).toBeCloseTo(delta*.0013,6);});
-it('preserves fast drag displacement and stops immediately without trailing motion',async()=>{
+it.each([61,100,200])('keeps a locked horizontal delta of %i pixels',async delta=>{const {doc,camera,controller}=setup(true);controller.enter();await Promise.resolve();const before=camera.quaternion.clone();doc.dispatchEvent(movement('mousemove',delta,0));for(let i=0;i<30;i++)controller.update(1/60);expect(before.angleTo(camera.quaternion)).toBeCloseTo(delta*.0013,6);});
+it('preserves fast drag displacement and settles within a short bounded interval',async()=>{
   const {element,camera,controller}=setup(false);controller.enter();await Promise.resolve();await Promise.resolve();
   element.dispatchEvent(movement('pointerdown',0,0));const before=camera.quaternion.clone();element.dispatchEvent(movement('pointermove',120,0));
   expect(camera.quaternion.equals(before)).toBe(true);controller.update(1/60);
-  expect(before.angleTo(camera.quaternion)).toBeCloseTo(120*.0013,6);
+  expect(before.angleTo(camera.quaternion)).toBeLessThanOrEqual(.100001);for(let i=0;i<20;i++)controller.update(1/60);expect(before.angleTo(camera.quaternion)).toBeCloseTo(120*.0013,6);
   const settled=camera.quaternion.clone();controller.update(1/60);expect(camera.quaternion.equals(settled)).toBe(true);
-  element.dispatchEvent(movement('pointermove',-120,0,0,0));controller.update(1/60);expect(before.angleTo(camera.quaternion)).toBeLessThan(.000001);
+  element.dispatchEvent(movement('pointermove',-120,0,0,0));for(let i=0;i<20;i++)controller.update(1/60);expect(before.angleTo(camera.quaternion)).toBeLessThan(.000001);
 });
 it('applies equal locked movement regardless of event batching or frame rate',async()=>{
   const first=setup(true);first.controller.enter();await Promise.resolve();
-  first.doc.dispatchEvent(movement('mousemove',180,0));first.controller.update(1/30);const target=first.camera.quaternion.clone();first.controller.exit();
+  first.doc.dispatchEvent(movement('mousemove',180,0));for(let i=0;i<30;i++)first.controller.update(1/30);const target=first.camera.quaternion.clone();first.controller.exit();
   const second=setup(true);second.controller.enter();await Promise.resolve();
   for(let i=0;i<18;i++){second.doc.dispatchEvent(movement('mousemove',10,0));second.controller.update(1/144);}
-  expect(target.angleTo(second.camera.quaternion)).toBeLessThan(.000001);
+  for(let i=0;i<60;i++)second.controller.update(1/144);expect(target.angleTo(second.camera.quaternion)).toBeLessThan(.000001);
 });
 it('clears queued look on blur and suspension',async()=>{
   const {doc,camera,controller}=setup(true);controller.enter();await Promise.resolve();const before=camera.quaternion.clone();
@@ -63,4 +63,17 @@ it('clears queued look on blur and suspension',async()=>{
   expect(camera.quaternion.equals(before)).toBe(true);
   doc.dispatchEvent(movement('mousemove',100,0));controller.suspend();controller.active=true;controller.update(1/60);
   expect(camera.quaternion.equals(before)).toBe(true);
+});
+
+it('bounds pointer-lock warp spikes even after a stalled frame',async()=>{
+  const {doc,camera,controller}=setup(true);controller.enter();await Promise.resolve();const start=camera.quaternion.clone();
+  doc.dispatchEvent(movement('mousemove',12000,0));
+  for(let i=0;i<30;i++){const before=camera.quaternion.clone();controller.update(i===0?.5:1/60);expect(before.angleTo(camera.quaternion)).toBeLessThanOrEqual(.100001);}
+  expect(start.angleTo(camera.quaternion)).toBeLessThanOrEqual(.350001);
+  const settled=camera.quaternion.clone();controller.update(1/60);expect(settled.angleTo(camera.quaternion)).toBeLessThan(.000001);
+});
+it('responds immediately to reversal instead of replaying a stale input queue',async()=>{
+  const {doc,camera,controller}=setup(true);controller.enter();await Promise.resolve();
+  doc.dispatchEvent(movement('mousemove',10000,0));controller.update(1/60);const before=camera.rotation.y;
+  doc.dispatchEvent(movement('mousemove',-10,0));controller.update(1/60);expect(camera.rotation.y).toBeGreaterThan(before);
 });

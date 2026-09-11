@@ -59,7 +59,7 @@ export class ExploreController {
   update(delta:number,waterSurface=WATER_LEVEL){
     if(!this.active)return;
     // Bound both gravity integration and horizontal travel after a slow frame.
-    const elapsed=Math.min(.1,Math.max(0,delta));this.applyLook();this.renderOffsetY=Math.min(0,this.renderOffsetY+elapsed*1.5);
+    const elapsed=Math.min(.1,Math.max(0,delta));this.applyLook(elapsed);this.renderOffsetY=Math.min(0,this.renderOffsetY+elapsed*1.5);
     const steps=Math.max(1,Math.ceil(elapsed/(1/120)));
     for(let step=0;step<steps;step++)this.updateStep(elapsed/steps,waterSurface);
     this.safePosition.copy(this.camera.position);resolveDynamicOverlap(this.camera.position,this.dynamicObstacles());if(hitsWorldObstacle(this.camera.position.x,this.camera.position.z,this.camera.position.y)||!insideBottle(this.camera.position.x,this.camera.position.y,this.camera.position.z,.1))this.camera.position.copy(this.safePosition);
@@ -103,15 +103,24 @@ export class ExploreController {
   }
   private rotateView(movementX:number,movementY:number,sensitivity:number){
     if(!Number.isFinite(movementX)||!Number.isFinite(movementY))return;
-    this.lookX+=movementX*sensitivity;this.lookY+=movementY*sensitivity;
+    // Bound queued rotation, including pointer-lock warp events and input batched
+    // during a stalled frame. Do not leave seconds of stale movement to replay.
+    const queue=(pending:number,input:number)=>Math.max(-.35,Math.min(.35,
+      (pending*input<0?0:pending)+input));
+    this.lookX=queue(this.lookX,movementX*sensitivity);this.lookY=queue(this.lookY,movementY*sensitivity);
   }
   syncLook(){this.lookX=0;this.lookY=0;}
   private cancelLook(){this.dragging=false;this.dragId=null;this.syncLook();}
-  private applyLook(){
+  private applyLook(delta:number){
     if(this.lookX===0&&this.lookY===0)return;
+    const dt=Math.min(delta,1/60),blend=1-Math.exp(-dt/.012),limit=6*dt;
+    const consume=(pending:number)=>Math.max(-limit,Math.min(limit,pending*blend));
+    const x=consume(this.lookX),y=consume(this.lookY);
     this.euler.setFromQuaternion(this.camera.quaternion);
-    this.euler.y-=this.lookX;this.euler.x=Math.max(-1.5,Math.min(1.5,this.euler.x-this.lookY));
-    this.camera.quaternion.setFromEuler(this.euler);this.syncLook();
+    this.euler.y-=x;this.euler.x=Math.max(-1.5,Math.min(1.5,this.euler.x-y));
+    this.camera.quaternion.setFromEuler(this.euler);
+    this.lookX-=x;this.lookY-=y;
+    if(Math.abs(this.lookX)<1e-7)this.lookX=0;if(Math.abs(this.lookY)<1e-7)this.lookY=0;
   }
   private tryMove(x:number,z:number){
     const p=this.camera.position,currentFeet=p.y-this.eyeHeight,targetFloor=supportHeightAt(x,z,currentFeet);
