@@ -6,6 +6,8 @@ main.ts 仅加载样式并创建 Game。Game 构建 Renderer、Scene、World、B
 
 顺序：时钟 → 天气强度 → 当前控制器 → 水下雾 → 波浪/船/鱼/气泡/浮标/海鸟 → 声音/交互 → 昼夜和灯塔 → 低频 HUD → render → 性能采样。暂停冻结模拟，玩家仍能观察和移动。
 
+Stage 1 增量：CameraTransitionSystem以OVERVIEW/ENTERING/EXPLORE/EXITING独占模式切换期间的镜头，SceneFocusSystem在浏览模式插值position/target。Orbit交接先清空阻尼；Explore暂停输入并释放锁鼠标。PlayerFeedback使用真实移动距离计算脚步、bob和冲刺FOV，bob仅在render前叠加、render后移除，绝不反馈到碰撞。WaterEntrySystem在实际控制器位置上做带迟滞的入水边缘检测，粒子使用固定实例池。调试模式低频DOM属性记录camera mode和water entries/leaves，生产构建移除。
+
 ## 坐标与世界
 
 瓶轴为 X，中心高度 3.72；默认相机朝 -Z。静态水位 3.3。岛屿中心略偏左。瓶体用 LatheGeometry，瓶口在 +X，木架留在桌面上。Bottle.shell 与 World 是独立对象，风暴只轻摇外壳，内部海平面不旋转。
@@ -18,6 +20,8 @@ main.ts 仅加载样式并创建 Game。Game 构建 Renderer、Scene、World、B
 
 水面由薄 BoxGeometry 网格组成。波高由三个连续 sin 波叠加，天气增加幅度与速度。帆船四点采样调用同一波函数，求平均高度和两个方向坡度，不生成独立随机摇摆。
 
+海色由OceanAppearance按岸距/深度/波高/浪峰/时段/天气输出复用Color，约15Hz刷新实例颜色。浪峰使用四邻域局部曲率，泡沫分浪峰、岸浪和码头扰动；ShipWake复用固定环形缓冲生成短暂船首浪和尾迹。天气通过波能和额外高频波混合，避免累计时间乘动态天气值造成相位突变。
+
 玻璃使用轻量 Fresnel ShaderMaterial，高亮边缘、低透明度，不使用昂贵的物理透射。水体、水面、玻璃依次 renderOrder=2/3/5；透明对象 depthWrite=false，保留 depthTest。没有后处理链。
 
 ## 交互与 UI
@@ -25,6 +29,8 @@ main.ts 仅加载样式并创建 Game。Game 构建 Renderer、Scene、World、B
 HUD 是 DOM/CSS，控制按钮有 aria-pressed、键盘焦点和可读标签，发现通知使用 aria-live。交互距离阈值 0.85，Set 保证发现幂等。时间/UI 每 250 ms 刷新，性能每约 1 s 刷新。
 
 PointerLockControls 只在 requestPointerLock 成功后连接，避免嵌入浏览器拒绝时产生 Three.js 控制器错误；备用拖动使用 Euler YXZ。键盘在失焦/解锁时清除，防止卡键。
+
+DiscoveryPulse为四目标隔离材质，350ms内轻亮后精确恢复；HUD显示可关闭7秒卡片，Set继续保证发现幂等。SoundSystem保留用户点击解锁AudioContext；AudioAssets只加载真实存在的可选文件，缺失/解码失败使用合成fallback。AudioMixer以浏览、岛屿、水下状态控制五层音量和全局低通，雷声由闪电边缘触发。
 
 ## 测试
 

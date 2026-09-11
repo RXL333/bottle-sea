@@ -4,6 +4,7 @@ import { ExploreController } from './ExploreController';
 import { InteractionSystem } from '../systems/InteractionSystem';
 import { LANDMARKS } from '../world/underwater/Landmarks';
 import { insideBottle } from '../world/bottle/Bounds';
+import { WaterCrossing } from '../systems/WaterEntrySystem';
 class FakeButton extends EventTarget {}
 class FakeElement extends EventTarget { requestPointerLock(){return Promise.reject(new Error('embedded browser'));} }
 let events:EventTarget;
@@ -13,6 +14,21 @@ function setup(){const camera=new PerspectiveCamera(),element=new FakeElement(),
 function key(code:string,down=true){const event=new Event(down?'keydown':'keyup');Object.defineProperties(event,{code:{value:code},repeat:{value:false}});events.dispatchEvent(event);}
 function advance(controls:ExploreController,seconds:number){for(let t=0;t<seconds;t+=1/60)controls.update(1/60);}
 describe('exploration integration',()=>{
+  it('cannot swim upward through the ruins lintel or dive through the chest',()=>{
+    const {camera,controls}=setup();camera.position.set(3.22,2.5,.4);key('Space');advance(controls,1);key('Space',false);
+    expect(camera.position.y).toBeCloseTo(2.7);
+    camera.position.set(-1.8,2.8,1.1);key('KeyC');advance(controls,1);key('KeyC',false);
+    expect(camera.position.y).toBeCloseTo(2.5);
+  });
+  it('does not tunnel through props during a stalled frame',()=>{
+    const {camera,controls}=setup();camera.position.set(-1.8,2.1,1.7);camera.lookAt(-1.8,2.1,1.1);key('KeyW');key('ShiftLeft');controls.update(2);
+    expect(camera.position.z).toBeGreaterThanOrEqual(1.5);
+  });
+  it('carries a jump through the water surface and triggers entry once',()=>{
+    const {camera,controls}=setup();camera.position.set(2,4.5,1);const crossing=new WaterCrossing();crossing.update(camera.position.y);let entries=0;
+    for(let i=0;i<180;i++){const before=camera.position.y;controls.update(1/60);expect(Math.abs(camera.position.y-before)).toBeLessThan(.08);if(crossing.update(camera.position.y)==='enter')entries++;}
+    expect(entries).toBe(1);expect(controls.underwater).toBe(true);expect(camera.position.y).toBeGreaterThan(1.88);
+  });
   it('stops before the camera enters a solid underwater landmark',()=>{
     const {camera,controls}=setup();camera.position.set(-1.8,2.1,1.7);camera.lookAt(-1.8,2.1,1.1);key('KeyW');advance(controls,1);key('KeyW',false);
     expect(camera.position.z).toBeGreaterThanOrEqual(1.49);expect(controls.swimming).toBe(true);

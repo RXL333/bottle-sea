@@ -2,6 +2,8 @@ type BoxObstacle={minX:number;maxX:number;minY:number;maxY:number;minZ:number;ma
 type RoundObstacle={x:number;z:number;radius:number;minY:number;maxY:number};
 
 const boxes:BoxObstacle[]=[
+  // The deck is solid from below as well as a walking surface from above.
+  {minX:.19,maxX:1.11,minY:3.54,maxY:3.68,minZ:.5785,maxZ:1.9165},
   {minX:-2.17,maxX:-.83,minY:3.75,maxY:5.35,minZ:-.71,maxZ:.31},
   ...([.24,1.06].flatMap(x=>[.77,1.8].map(z=>({minX:x-.07,maxX:x+.07,minY:2.48,maxY:3.98,minZ:z-.07,maxZ:z+.07})))),
   {minX:-2.15,maxX:-1.45,minY:1.68,maxY:2.36,minZ:.85,maxZ:1.36},
@@ -22,4 +24,16 @@ export function hitsWorldObstacle(x:number,z:number,y:number,radius=.14){
   for(const b of boxes)if(x>b.minX-radius&&x<b.maxX+radius&&z>b.minZ-radius&&z<b.maxZ+radius&&y>b.minY-radius&&y<b.maxY+radius)return true;
   for(const obstacle of rounds)if(y>obstacle.minY-radius&&y<obstacle.maxY+radius&&Math.hypot(x-obstacle.x,z-obstacle.z)<obstacle.radius+radius)return true;
   return false;
+}
+
+/** Sweep the camera volume vertically; a thin slab cannot be skipped between frames. */
+export function resolveVerticalCollision(x:number,z:number,from:number,to:number,radius=.14){
+  let result=to;
+  const clip=(min:number,max:number)=>{
+    if(to>from&&from<=min-radius&&result>min-radius)result=min-radius;
+    if(to<from&&from>=max+radius&&result<max+radius)result=max+radius;
+  };
+  for(const b of boxes)if(x>b.minX-radius&&x<b.maxX+radius&&z>b.minZ-radius&&z<b.maxZ+radius)clip(b.minY,b.maxY);
+  for(const b of rounds)if(Math.hypot(x-b.x,z-b.z)<b.radius+radius)clip(b.minY,b.maxY);
+  return result;
 }

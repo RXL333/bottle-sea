@@ -6,6 +6,12 @@ export const LANDMARKS=[
   {id:'ruins',name:'失落的海底遗迹',hint:'发现沉船与遗迹',x:3.1,y:2,z:.45},
   {id:'lighthouse',name:'守望者的灯塔',hint:'拜访岛上灯塔',x:.35,y:4.05,z:-.28},
 ] as const;
+export const JOURNAL_TEXT:Record<string,string>={
+  chest:'木箱上的铜锁早已被海水侵蚀，里面却仍有一点金色的微光。也许有人一直在等它归航。',
+  anchor:'船锚沉入细沙，海草缠绕着锈迹。曾经牵住一艘船的重量，如今安静地牵住一段往事。',
+  ruins:'断桅旁的石柱依然站立。鱼群从门洞穿过，像一封始终没有寄出的回信。',
+  lighthouse:'灯光缓缓掠过海面。这座小小的灯塔，仍认真守望着每一艘晚归的船。',
+};
 export function treasureChest(b:VoxelBatch) {
   const x=-1.8,y=1.77,z=1.1;
   b.add('#513723',x,y+.2,z,.68,.4,.46);

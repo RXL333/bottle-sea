@@ -27,7 +27,8 @@ export class UnderwaterWorld extends Group {
         if(arm%2===0)b.add(color,x+(arm-1.5)*.095+.045,1.84+h*.45,z,.18,.08,.08);
       }
     }
-    anchor(b);treasureChest(b);ruins(b);b.build(this);
+    b.build(this);
+    for(const [name,build] of [['anchor',anchor],['chest',treasureChest],['ruins',ruins]] as const){const group=new Group(),batch=new VoxelBatch();group.name=name;build(batch);batch.build(group);this.add(group);}
   }
 }
 

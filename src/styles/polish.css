@@ -1,0 +1,24 @@
+.hud .bottom,.hud .identity,.hud .explore-panel,.hud .weather,.hud .edition,.hud .focus-menu{transition:opacity .2s ease}
+.hud.transitioning .bottom,.hud.transitioning .identity,.hud.transitioning .explore-panel,.hud.transitioning .weather,.hud.transitioning .focus-menu,.hud.transitioning #crosshair{opacity:0;pointer-events:none}
+.hud.transitioning button{pointer-events:none}
+button{transition:transform .1s,background .18s,color .18s,filter .18s}
+button:active{transform:scale(.97)}
+button:hover{filter:brightness(1.12)}
+.exploring .identity,.exploring .edition,.exploring .weather{opacity:0;pointer-events:none}
+.exploring .toolbar>[data-speed],.exploring .toolbar>[data-action=pause],.exploring .toolbar>[data-action=storm],.exploring .toolbar>i{display:none}
+.exploring .explore-panel{top:30px;opacity:.8}
+.exploring .key-help{display:none}
+@media(prefers-reduced-motion:reduce){button,.hud .bottom,.hud .identity,.hud .explore-panel{transition:none}}
+.focus-menu{position:absolute;right:40px;top:180px;pointer-events:auto;font-size:12px;background:#14282bd9;border:1px solid #91b7a533;padding:10px}
+.focus-menu summary{cursor:pointer;list-style:none;letter-spacing:2px;padding:5px}
+.focus-menu nav{display:grid;gap:5px;margin-top:10px}
+.focus-menu button{background:transparent;padding:9px 18px;text-align:left;font-size:12px}
+.focus-menu button[aria-pressed=true]{background:#cbdcaf;color:#20332f}
+.exploring .focus-menu{display:none}
+.discovery-card{position:absolute;left:50%;top:18%;transform:translateX(-50%);width:min(360px,calc(100vw - 36px));padding:25px;background:#102b2df2;border:1px solid #cbdcaf66;box-shadow:5px 5px 0 #071b1d88;pointer-events:auto}
+.discovery-card button{position:absolute;top:8px;right:10px;background:transparent;font-size:21px;padding:4px 8px}
+.discovery-card h2{font-size:19px;font-weight:normal;margin:12px 0;letter-spacing:2px}
+.journal-text{font-size:13px;line-height:1.9;color:#c0d2c3;margin-bottom:20px}
+.discovery-card small{color:#dae4b4;font-size:11px}
+#crosshair.ready{color:#f5eac0;opacity:1;font-size:22px}
+@media(max-width:800px){.focus-menu{right:22px;top:155px;padding:6px}.focus-menu button{padding:8px 12px}}

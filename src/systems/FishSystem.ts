@@ -1,4 +1,4 @@
-import { Color, DynamicDrawUsage, Group, InstancedMesh, Object3D } from 'three';
+import { Color, DynamicDrawUsage, Group, InstancedMesh, Object3D, Vector3 } from 'three';
 import { cubeGeometry,voxelMaterial,seededRandom } from '../utils/voxel';
 
 export class FishSystem extends Group {
@@ -13,10 +13,13 @@ export class FishSystem extends Group {
     }
     this.add(this.mesh);this.update(0);
   }
-  update(time:number) {
+  update(time:number,player?:Vector3) {
     for(let i=0;i<this.fishCount;i++) {
       const phase=this.randoms[i*3],angle=time*.18+phase;
-      const x=Math.sin(angle)*(3.1+this.randoms[i*3+1]*1.5),z=.25+Math.cos(angle)*(.5+this.randoms[i*3+2]*.65),y=2.15+this.randoms[i*3+1]*.72+Math.sin(time*.6+phase)*.05;
+      const scatter=Math.max(0,Math.sin(time*.16))**8;
+      let x=Math.sin(angle)*(3.1+this.randoms[i*3+1]*1.5),z=.25+Math.cos(angle)*(.5+this.randoms[i*3+2]*.65)+Math.sin(phase*3)*scatter*.22;
+      const y=2.15+this.randoms[i*3+1]*.72+Math.sin(time*.6+phase)*.05;
+      if(player){const dx=x-player.x,dz=z-player.z,d=Math.hypot(dx,dz,y-player.y);if(d<.8&&d>.001){const push=(.8-d)*.45;x+=dx/d*push;z+=dz/d*push;}}
       const yaw=Math.cos(angle)>0?0:Math.PI;
       for(let p=0;p<4;p++) {
         const part=this.parts[p];this.dummy.position.set(x+part[0]*Math.cos(yaw),y+part[1],z+part[2]);this.dummy.scale.set(part[3],part[4],part[5]);this.dummy.rotation.set(0,yaw+(p===1?Math.sin(time*7+phase)*.28:0),0);this.dummy.updateMatrix();this.mesh.setMatrixAt(i*4+p,this.dummy.matrix);

@@ -6,7 +6,7 @@ export class Lighthouse extends Group {
   readonly beam=new Group();
   private beamMaterial=new MeshBasicMaterial({color:'#ffcc70',transparent:true,opacity:.05,depthWrite:false});
   constructor() {
-    super();this.position.set(.35,3.83,-.28);
+    super();this.name='lighthouse';this.position.set(.35,3.83,-.28);
     for(let i=0;i<7;i++) {
       const tower=new Mesh(new CylinderGeometry(.21-i*.009,.22-i*.009,.235,8),material(i%3===1?'#d85849':'#e7e1cf'));
       tower.position.y=.1175+i*.235;tower.castShadow=true;this.add(tower);
