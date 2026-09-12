@@ -11,3 +11,5 @@ describe('daylight',()=>{
   it('is light at noon and dark at midnight',()=>{expect(daylightAt(.5)).toBe(1);expect(daylightAt(0)).toBe(0);expect(daylightAt(1)).toBe(0);});
   it('is smooth at dawn and dusk',()=>{for(const t of [.24,.25,.26,.74,.75,.76])expect(Math.abs(daylightAt(t+.0001)-daylightAt(t))).toBeLessThan(.01);});
 });
+
+it('advances twenty calendar minutes without changing animation time, speed or pause',()=>{const c=new GameClock();c.timeScale=12;c.paused=true;const before=c.snapshot();c.advanceGameMinutes(20);expect(c.simulationTime-before.simulationTime).toBeCloseTo(DAY_DURATION*20/1440);expect(c.elapsed).toBe(before.elapsed);expect(c.paused).toBe(true);expect(c.timeScale).toBe(12);const restored=new GameClock();restored.restore(c.snapshot());expect(restored.snapshot()).toEqual(c.snapshot());expect(()=>c.advanceGameMinutes(NaN)).toThrow();expect(()=>c.advanceGameMinutes(-20)).toThrow();});
