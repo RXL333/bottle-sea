@@ -1,8 +1,10 @@
 import { Euler, PerspectiveCamera, Vector3 } from 'three';
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 import { WATER_LEVEL } from '../world/ocean/WaveMath';
-import { bottleRadiusAt,insideBottle } from '../world/bottle/Bounds';
-import { hitsDynamicObstacle, hitsWorldObstacle, PLAYER_FOOT_OFFSET, resolveDynamicOverlap, resolveVerticalCollision, STEP_HEIGHT, supportHeightAt } from '../world/Collision';
+import { homeNavigation } from '../worlds/home/HomeNavigation';
+import type { NavigationSurface } from '../worlds/NavigationSurface';
+import type { SpawnPoint } from '../worlds/types';
+import { hitsDynamicObstacle, PLAYER_FOOT_OFFSET, resolveDynamicOverlap, STEP_HEIGHT } from '../world/Collision';
 import type { DynamicObstacle } from '../world/Collision';
 
 export class ExploreController {
@@ -13,7 +15,7 @@ export class ExploreController {
   onInteract=()=>{};onLockChange=(locked:boolean)=>{void locked;};
   grounded=false;
   get sprinting(){return this.keys.has('ShiftLeft')||this.keys.has('ShiftRight');}
-  constructor(private camera:PerspectiveCamera,private element:HTMLElement,private dynamicObstacles:()=>readonly DynamicObstacle[]=()=>[]) {
+  constructor(private camera:PerspectiveCamera,private element:HTMLElement,dynamicObstacles:()=>readonly DynamicObstacle[]=()=>[], private navigation:NavigationSurface=homeNavigation(dynamicObstacles)) {
     this.pointer=new PointerLockControls(camera);this.pointer.domElement=element;this.pointer.pointerSpeed=.65;
     element.ownerDocument?.addEventListener('pointerlockchange',()=>{
       const locked=element.ownerDocument.pointerLockElement===element;this.pointer.isLocked=locked;
@@ -45,7 +47,8 @@ export class ExploreController {
     });
     element.addEventListener('dblclick',()=>{if(this.active)this.lock();});
   }
-  enter(requestLock=true){this.active=true;this.camera.near=.08;this.camera.far=40;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);this.velocityY=0;this.renderOffsetY=0;this.headInitialized=false;this.syncLook();if(requestLock)this.lock();}
+  setNavigation(navigation:NavigationSurface){this.navigation=navigation;this.keys.clear();this.cancelLook();}
+  enter(requestLock=true,spawn?:SpawnPoint){this.active=true;this.camera.near=.08;this.camera.far=40;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);if(spawn){this.camera.position.fromArray(spawn.position);this.camera.lookAt(...spawn.lookAt);}this.velocityY=0;this.renderOffsetY=0;this.headInitialized=false;this.syncLook();if(requestLock)this.lock();}
   exit(){this.active=false;this.releaseLock();this.keys.clear();this.camera.near=.12;this.camera.far=200;this.camera.fov=34;this.camera.updateProjectionMatrix();this.swimming=false;this.underwater=false;this.renderOffsetY=0;this.headInitialized=false;}
   suspend(){this.active=false;this.keys.clear();this.cancelLook();this.releaseLock();}
   private releaseLock(){const doc=this.element.ownerDocument;if(doc?.pointerLockElement===this.element)doc.exitPointerLock();else this.pointer.isLocked=false;}
@@ -62,13 +65,13 @@ export class ExploreController {
     const elapsed=Math.min(.1,Math.max(0,delta));this.applyLook(elapsed);this.renderOffsetY=Math.min(0,this.renderOffsetY+elapsed*1.5);
     const steps=Math.max(1,Math.ceil(elapsed/(1/120)));
     for(let step=0;step<steps;step++)this.updateStep(elapsed/steps,waterSurface);
-    this.safePosition.copy(this.camera.position);resolveDynamicOverlap(this.camera.position,this.dynamicObstacles());if(hitsWorldObstacle(this.camera.position.x,this.camera.position.z,this.camera.position.y)||!insideBottle(this.camera.position.x,this.camera.position.y,this.camera.position.z,.1))this.camera.position.copy(this.safePosition);
+    this.safePosition.copy(this.camera.position);resolveDynamicOverlap(this.camera.position,this.navigation.dynamicObstacles());if(this.navigation.hitsObstacle(this.camera.position.x,this.camera.position.z,this.camera.position.y)||!this.navigation.isInside(this.camera.position.x,this.camera.position.y,this.camera.position.z))this.camera.position.copy(this.safePosition);
     if(!this.headInitialized){this.underwater=this.camera.position.y<waterSurface;this.headInitialized=true;}
     else if(!this.underwater&&this.camera.position.y<waterSurface-.025)this.underwater=true;
     else if(this.underwater&&this.camera.position.y>waterSurface+.025)this.underwater=false;
   }
   private updateStep(delta:number,waterSurface:number){
-    const p=this.camera.position,feet=p.y-this.eyeHeight,ground=supportHeightAt(p.x,p.z,feet);
+    const p=this.camera.position,feet=p.y-this.eyeHeight,ground=this.navigation.groundHeight(p.x,p.z,feet);
     this.swimming=ground<waterSurface-.2&&p.y<waterSurface+.42;
     this.camera.getWorldDirection(this.forward);if(!this.swimming)this.forward.y=0;this.forward.normalize();
     this.right.crossVectors(this.forward,this.up).normalize();this.move.set(0,0,0);
@@ -77,7 +80,7 @@ export class ExploreController {
     const speed=(this.keys.has('ShiftLeft')||this.keys.has('ShiftRight')?1.9:1.05)*delta;
     if(this.move.lengthSq()>0)this.move.normalize().multiplyScalar(speed);
     this.tryMove(p.x+this.move.x,p.z);this.tryMove(p.x,p.z+this.move.z);
-    const floor=supportHeightAt(p.x,p.z,p.y-this.eyeHeight)+this.eyeHeight,previousY=p.y;
+    const floor=this.navigation.groundHeight(p.x,p.z,p.y-this.eyeHeight)+this.eyeHeight,previousY=p.y;
     if(this.swimming){
       // Carry a falling player's momentum through the surface, then damp it in water.
       // Clearing velocity here used to stop jumps above the underwater threshold.
@@ -91,14 +94,10 @@ export class ExploreController {
       this.velocityY-=5*delta;p.y+=this.velocityY*delta;
       if(p.y<floor){p.y=floor;this.velocityY=0;}
     }
-    let resolvedY=resolveVerticalCollision(p.x,p.z,previousY,p.y);
+    let resolvedY=this.navigation.resolveVertical(p.x,p.z,previousY,p.y);
     if(resolvedY!==p.y)this.velocityY=0;
     p.y=resolvedY;
-    p.x=Math.max(-5.55,Math.min(5.2,p.x));
-    const radius=bottleRadiusAt(p.x)-.18;
-    p.y=Math.max(3.72-radius+.1,Math.min(3.72+radius-.1,p.y));
-    const zLimit=Math.sqrt(Math.max(.12,radius*radius-(p.y-3.72)**2))-.1;
-    p.z=Math.max(-zLimit,Math.min(zLimit,p.z));
+    this.navigation.constrain(p);
     this.grounded=!this.swimming&&Math.abs(p.y-floor)<.035&&this.velocityY===0;
   }
   private rotateView(movementX:number,movementY:number,sensitivity:number){
@@ -123,9 +122,9 @@ export class ExploreController {
     if(Math.abs(this.lookX)<1e-7)this.lookX=0;if(Math.abs(this.lookY)<1e-7)this.lookY=0;
   }
   private tryMove(x:number,z:number){
-    const p=this.camera.position,currentFeet=p.y-this.eyeHeight,targetFloor=supportHeightAt(x,z,currentFeet);
+    const p=this.camera.position,currentFeet=p.y-this.eyeHeight,targetFloor=this.navigation.groundHeight(x,z,currentFeet);
     const rise=targetFloor-currentFeet,candidateY=rise>0&&rise<=STEP_HEIGHT+.001?p.y+rise:p.y;
-    if(hitsWorldObstacle(x,z,candidateY)||hitsDynamicObstacle(x,z,candidateY,this.dynamicObstacles()))return false;
+    if(this.navigation.hitsObstacle(x,z,candidateY)||hitsDynamicObstacle(x,z,candidateY,this.navigation.dynamicObstacles()))return false;
     if(rise>STEP_HEIGHT+.001)return false;
     p.x=x;p.z=z;if(candidateY>p.y){p.y=candidateY;this.renderOffsetY-=rise;this.velocityY=0;}return true;
   }

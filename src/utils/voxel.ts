@@ -2,11 +2,13 @@ import { BoxGeometry, Color, Group, InstancedMesh, Mesh, MeshStandardMaterial, O
 
 export const cubeGeometry = new BoxGeometry(1, 1, 1);
 export const voxelMaterial = new MeshStandardMaterial({ roughness: 0.91, flatShading: true });
+const sharedResources=new WeakSet<object>([cubeGeometry,voxelMaterial]);
+export const isSharedVoxelResource=(resource:object)=>sharedResources.has(resource);
 const materials = new Map<string, MeshStandardMaterial>();
 export function material(color: string, glow = 0) {
   const key = color + glow;
   if (!materials.has(key)) materials.set(key, new MeshStandardMaterial({ color, roughness: 0.85, flatShading: true, emissive: color, emissiveIntensity: glow }));
-  return materials.get(key)!;
+  const result=materials.get(key)!;sharedResources.add(result);return result;
 }
 export function box(parent: Group, color: string, x: number, y: number, z: number, sx: number, sy: number, sz: number, glow = 0) {
   const mesh = new Mesh(cubeGeometry, material(color, glow));

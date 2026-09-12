@@ -59,3 +59,8 @@ describe('exploration integration',()=>{
   it('discovers all four targets only within range and without duplicates',()=>{const {camera}=setup(),interaction=new InteractionSystem();camera.position.set(10,10,10);interaction.update(camera.position);interaction.interact();expect(interaction.discovered.size).toBe(0);for(const target of LANDMARKS){camera.position.set(target.x,target.y,target.z);interaction.update(camera.position);interaction.interact();interaction.interact();}expect(interaction.discovered.size).toBe(4);});
 });
 
+
+it('uses supplied navigation beyond Home bottle bounds and supplied arrival pose',()=>{
+  const {camera,controls}=setup();controls.setNavigation({groundHeight:()=>0,hitsObstacle:()=>false,resolveVertical:(_x,_z,_from,to)=>to,isInside:()=>true,constrain:()=>{},waterLevel:()=>-100,dynamicObstacles:()=>[]});
+  controls.enter(false,{id:'test',position:[50,.44,50],lookAt:[50,.44,49]});key('KeyW');for(let i=0;i<60;i++)controls.update(1/60,-100);key('KeyW',false);expect(camera.position.x).toBe(50);expect(camera.position.z).toBeCloseTo(48.95);expect(camera.position.y).toBeCloseTo(.44);expect(controls.swimming).toBe(false);
+});
