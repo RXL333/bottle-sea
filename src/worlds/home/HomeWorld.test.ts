@@ -1,3 +1,4 @@
+import { hitsDynamicObstacle } from '../../world/Collision';
 import { expect,it,vi } from 'vitest';
 import { HomeWorld } from './HomeWorld';
 import { cubeGeometry,material,voxelMaterial } from '../../utils/voxel';
@@ -15,3 +16,5 @@ it('deduplicates owned geometry, materials and textures and permits idempotent d
   const root=new Group(),geo=new BufferGeometry(),texture=new Texture(),mat=new MeshBasicMaterial({map:texture});root.add(new Mesh(geo,mat),new Mesh(geo,mat));
   const g=vi.spyOn(geo,'dispose'),m=vi.spyOn(mat,'dispose'),t=vi.spyOn(texture,'dispose');disposeWorld(root);disposeWorld(root);expect(g).toHaveBeenCalledOnce();expect(m).toHaveBeenCalledOnce();expect(t).toHaveBeenCalledOnce();
 });
+
+it('keeps the original dock spawn clear of the new transport boat',()=>{const world=new HomeWorld(),spawn=world.getSpawnPoint();for(let time=0;time<30;time+=.5){world.prepare({delta:1/60,time,gameTime:0,storm:1,dayTime:.5,night:0,flash:0});expect(hitsDynamicObstacle(spawn.position[0],spawn.position[2],spawn.position[1],world.boat.collisionBoxes)).toBe(false);}world.dispose();});

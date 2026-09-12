@@ -16,6 +16,7 @@ export class GameClock implements Updatable {
     // Calendar advance does not jump wave/ship animation phases.
     this.simulationTime+=minutes*DAY_DURATION/1440;
   }
+  updateAnimation(deltaTime:number){if(!this.paused)this.elapsed+=Math.max(0,deltaTime)*this.timeScale;}
   update(deltaTime:number) {
     if(this.paused)return;
     const delta=Math.max(0,deltaTime)*this.timeScale;

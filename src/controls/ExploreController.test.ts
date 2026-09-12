@@ -1,3 +1,4 @@
+import { FarmWorld } from '../worlds/farm/FarmWorld';
 import { beforeEach,afterEach,describe,it,expect,vi } from 'vitest';
 import { PerspectiveCamera } from 'three';
 import { ExploreController } from './ExploreController';
@@ -64,3 +65,5 @@ it('uses supplied navigation beyond Home bottle bounds and supplied arrival pose
   const {camera,controls}=setup();controls.setNavigation({groundHeight:()=>0,hitsObstacle:()=>false,resolveVertical:(_x,_z,_from,to)=>to,isInside:()=>true,constrain:()=>{},waterLevel:()=>-100,dynamicObstacles:()=>[]});
   controls.enter(false,{id:'test',position:[50,.44,50],lookAt:[50,.44,49]});key('KeyW');for(let i=0;i<60;i++)controls.update(1/60,-100);key('KeyW',false);expect(camera.position.x).toBe(50);expect(camera.position.z).toBeCloseTo(48.95);expect(camera.position.y).toBeCloseTo(.44);expect(controls.swimming).toBe(false);
 });
+
+it('walks the farm dock and wide road, and stops at the closed barn',()=>{const farm=new FarmWorld(),{camera,controls}=setup();controls.setNavigation(farm.navigation);controls.enter(false,farm.getSpawnPoint());key('KeyW');advance(controls,16);key('KeyW',false);expect(camera.position.x).toBeCloseTo(-4);expect(camera.position.z).toBeLessThan(-2);expect(camera.position.y).toBeCloseTo(4.44);camera.position.set(7,4.44,-4);camera.lookAt(7,4.44,-6);controls.syncLook();key('KeyW');advance(controls,3);key('KeyW',false);expect(camera.position.z).toBeGreaterThan(-4.87);expect(camera.position.z).toBeLessThan(-4.7);farm.dispose();});

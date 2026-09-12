@@ -11,6 +11,7 @@ export class PerformanceMonitor {
     const info=this.renderer.info,details=`${Math.round(this.frames*1000/this.total)} FPS · ${info.render.calls} calls · ${info.render.triangles.toLocaleString()} triangles · ${info.memory.geometries} geometries · CPU ${cpuMs.toFixed(1)} ms · max frame ${this.worst.toFixed(1)} ms · ${document.visibilityState}${memory?` · heap ${(memory.usedJSHeapSize/1048576).toFixed(1)} MB`:''}`;
     this.output.textContent=`· ${Math.round(this.frames*1000/this.total)} FPS`;this.output.title=details;
     this.renderer.domElement.dataset.performance=details;
+    this.renderer.domElement.dataset.renderStats=JSON.stringify({fps:Math.round(this.frames*1000/this.total),calls:info.render.calls,triangles:info.render.triangles,geometries:info.memory.geometries,textures:info.memory.textures,dom:document.getElementsByTagName('*').length});
     this.renderer.domElement.dataset.position=this.camera.position.toArray().map(n=>n.toFixed(3)).join(',');
     this.frames=0;this.total=0;this.worst=0;
   }

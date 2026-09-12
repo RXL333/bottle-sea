@@ -1,3 +1,6 @@
+import type { NavigationSurface } from './NavigationSurface';
+import type { InteractionSystem } from '../systems/InteractionSystem';
+import type { PlayerTravelBoat } from './travel/PlayerTravelBoat';
 import type { Group, Vector3 } from 'three';
 import type { Quality } from '../core/Renderer';
 import type { WorldState } from '../state/WorldStateRegistry';
@@ -10,6 +13,13 @@ export interface WorldUpdateContext { delta: number; time: number; gameTime: num
 export interface GameWorld {
   readonly id: WorldId;
   readonly root: Group;
+  readonly navigation?: NavigationSurface;
+  readonly interaction?: InteractionSystem;
+  readonly boat?: PlayerTravelBoat;
+  prepare?(context: WorldUpdateContext):void;
+  triggerDiscovery?(id:string):void;
+  getFocusPosition?():Vector3;
+  setTravelPresentation?(active:boolean):void;
   load(context: WorldLoadContext): void | Promise<void>;
   enter(context: WorldEnterContext): void;
   update(context: WorldUpdateContext): void;

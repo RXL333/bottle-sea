@@ -11,7 +11,7 @@ export class WorldManager {
   private pending=false;
   constructor(private scene: Scene, private registry: WorldRegistry, readonly states: WorldStateRegistry, private placePlayer: (spawn: SpawnPoint)=>void) {}
   get currentWorldId(){return this.currentWorld?.id??null;}
-  async switchTo(id: WorldId, gameTime: number, spawnId?: string): Promise<GameWorld> {
+  async switchTo(id: WorldId, gameTime: number, spawnId?: string, prepared?:GameWorld): Promise<GameWorld> {
     if(this.pending)throw new Error('World switch already in progress');
     if(this.currentWorldId===id&&this.state==='READY')return this.currentWorld!;
     this.pending=true;
@@ -20,7 +20,7 @@ export class WorldManager {
     try {
       this.state=old?'SWITCHING':'LOADING';
       if(old){const snapshot=old.leave({gameTime});if(old.id!=='TRAVEL')this.states.set(old.id,snapshot);this.scene.remove(old.root);}
-      this.state='LOADING';target=await this.registry.create(id);await target.load({gameTime});
+      this.state='LOADING';target=prepared??await this.registry.create(id);if(target.id!==id)throw new Error('Prepared world mismatch');if(!prepared)await target.load({gameTime});
       const spawn=target.getSpawnPoint(spawnId),state=id==='TRAVEL'?defaultWorldState():this.states.get(id);
       this.scene.add(target.root);target.enter({gameTime,state,spawn});target.applyQuality(this.quality);this.placePlayer(spawn);
       this.currentWorld=target;this.state='READY';old?.dispose();return target;
@@ -32,6 +32,7 @@ export class WorldManager {
       throw error;
     } finally {this.pending=false;}
   }
+  async prepare(id:WorldId,gameTime:number):Promise<GameWorld>{const world=await this.registry.create(id);try{await world.load({gameTime});return world;}catch(error){world.dispose();throw error;}}
   applyQuality(quality: Quality){this.quality=quality;this.currentWorld?.applyQuality(quality);}
   update(context: WorldUpdateContext){if(this.state==='READY')this.currentWorld?.update(context);}
 }

@@ -6,6 +6,8 @@ import type { GroundSurface } from './PlayerFeedback';
 
 type Layer={source:AudioBufferSourceNode;filter:BiquadFilterNode;gain:GainNode};
 export class SoundSystem {
+  private transientNodes=0;
+  get diagnostics(){return {enabled:this.enabled,state:this.context?.state??'uninitialized',layers:this.layers.length,nodes:this.layers.length*3+(this.master?1:0)+(this.lowpass?1:0)+this.transientNodes};}
   enabled=false;private context:AudioContext|undefined;private master:GainNode|undefined;private lowpass:BiquadFilterNode|undefined;
   private assets=new AudioAssets();private noise:AudioBuffer|undefined;private layers:Layer[]=[];
   private mix:AudioMix={ocean:0,wind:0,stormWind:0,rain:0,underwater:0,cutoff:6500};
@@ -47,7 +49,7 @@ export class SoundSystem {
     filter.type='lowpass';filter.frequency.value=id==='wood-step'?420:id==='sand-step'?1700:id==='grass-step'?2800:id==='thunder'?220:1800;
     gain.gain.setValueAtTime(0,now);gain.gain.linearRampToValueAtTime(volume,now+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
     source.connect(filter);filter.connect(gain);gain.connect(this.lowpass);source.start();source.stop(now+duration+.02);
-    source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();};
+    this.transientNodes+=3;source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();this.transientNodes-=3;};
   }
   dispose(){for(const layer of this.layers){layer.source.stop();layer.source.disconnect();layer.filter.disconnect();layer.gain.disconnect();}void this.context?.close();}
 }

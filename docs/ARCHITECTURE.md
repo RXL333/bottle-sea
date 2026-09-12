@@ -2,6 +2,18 @@
 
 ## 生命周期
 
+### World Expansion Foundation 分支
+
+Game 保留唯一的 Scene、Renderer、Camera、GameLoop、GameClock、天气、声音、HUD 和玩家控制器。WorldRegistry 用动态 import 延迟创建 HOME / TRAVEL / FARM；WorldManager 负责 load → enter → update → leave → dispose，地图根节点整体装卸。HomeWorld 包装原 World、Bottle、Room、发现交互和主岛细节，原主岛系统继续使用原有算法。
+
+NavigationSurface 将地面高度、静态障碍、水位和动态碰撞交给当前世界。HomeNavigation 保存瓶体约束；FarmWorld 使用独立地形、建筑障碍和地图边界。ExploreController 切换适配器时清空输入，不重建控制器。
+
+TravelSystem 控制登船、离港、旅行海面、接近目的地、靠岸和下船；TravelCamera 在这段时间独占相机。目标世界先脱离场景预加载，再在遮挡下激活。单程动画时长约 6.85 秒加实际加载时间，成功到达一次性推进 20 游戏分钟；途中只更新动画时钟，避免重复计算日历时间。
+
+PlayerState 和 WorldStateRegistry 存放纯 JSON 数据。SaveSystem 管理 v1 本地存档，默认合并、格式错误回退和节流写入；lastSuccessfulWorld 确保中途刷新不会恢复到 TRAVEL。世界切换与发现后保存，页面隐藏和关闭时同步 flush。资源释放跳过共享体素几何和缓存材质，只销毁地图拥有的资源。
+
+以下保留主岛内部系统说明；其中旧版直接由 Game 创建 World 的组织方式已由上述世界生命周期替代。
+
 main.ts 仅加载样式并创建 Game。Game 构建 Renderer、Scene、World、Bottle、Room、两类控制器、系统及 HUD。GameLoop 是唯一 requestAnimationFrame 所有者，使用 RAF 时间戳并将 delta 限制到 50 ms，避免切换标签后大幅跳变。所有动画时间来自 GameClock.elapsed；玩家控制使用真实 delta，不受时间倍速影响。
 
 顺序：时钟 → 天气强度 → 当前控制器 → 水下雾 → 波浪/船/鱼/气泡/浮标/海鸟 → 声音/交互 → 昼夜和灯塔 → 低频 HUD → render → 性能采样。暂停冻结模拟，玩家仍能观察和移动。
