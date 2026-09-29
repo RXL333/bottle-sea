@@ -1,0 +1,57 @@
+{
+  "number": 18,
+  "id": "chicken",
+  "label": "鸡与小鸡",
+  "file": "chicken.glb",
+  "blend": "chicken.blend",
+  "dimensions": {
+    "width": 1.045,
+    "height": 1.3545,
+    "depth": 1.17831
+  },
+  "boundsBlender": {
+    "min": [
+      -0.3400000035762787,
+      -0.5899999737739563,
+      0.0
+    ],
+    "max": [
+      0.7049999833106995,
+      0.58830726146698,
+      1.3545000553131104
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "chick": "chicken__chick",
+    "head": "chicken__head",
+    "leg_left": "chicken__leg_left",
+    "leg_right": "chicken__leg_right",
+    "wing_left": "chicken__wing_left",
+    "wing_right": "chicken__wing_right"
+  },
+  "triangles": 540,
+  "meshCount": 19,
+  "bytes": 41696,
+  "notes": [
+    "Includes separate chick component. Adult body and head/wing/leg pivots retained."
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/chicken.png",
+  "modules": [
+    {
+      "id": "chick",
+      "file": "modules/chicken__chick.glb",
+      "dimensions": [
+        0.28999999165534973,
+        0.36500000953674316,
+        0.4245000183582306
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "number": 7,
+  "id": "barn",
+  "label": "农场谷仓与筒仓",
+  "file": "barn.glb",
+  "blend": "barn.blend",
+  "dimensions": {
+    "width": 6.69805,
+    "height": 4.79,
+    "depth": 5.886
+  },
+  "boundsBlender": {
+    "min": [
+      -2.83804988861084,
+      -3.2160000801086426,
+      0.0
+    ],
+    "max": [
+      3.859999895095825,
+      2.669999837875366,
+      4.789999961853027
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "door_left": "barn__door_left",
+    "door_right": "barn__door_right"
+  },
+  "triangles": 8230,
+  "meshCount": 24,
+  "bytes": 448192,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/barn.png",
+  "modules": []
+}

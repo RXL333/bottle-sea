@@ -1,0 +1,61 @@
+{
+  "number": 15,
+  "id": "bed",
+  "label": "床与床头柜",
+  "file": "bed.glb",
+  "blend": "bed.blend",
+  "dimensions": {
+    "width": 2.29,
+    "height": 1.38,
+    "depth": 2.19
+  },
+  "boundsBlender": {
+    "min": [
+      -0.7649999856948853,
+      -1.0950000286102295,
+      0.0
+    ],
+    "max": [
+      1.5250000953674316,
+      1.0950000286102295,
+      1.3799999952316284
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "bed_frame": "bed__bed_frame",
+    "bedside_table": "bed__bedside_table"
+  },
+  "triangles": 1660,
+  "meshCount": 12,
+  "bytes": 98760,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/bed.png",
+  "modules": [
+    {
+      "id": "bed_frame",
+      "file": "modules/bed__bed_frame.glb",
+      "dimensions": [
+        1.5299999713897705,
+        2.190000057220459,
+        1.25
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "bedside_table",
+      "file": "modules/bed__bedside_table.glb",
+      "dimensions": [
+        0.6100000739097595,
+        0.5950000286102295,
+        1.3799999952316284
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    }
+  ]
+}

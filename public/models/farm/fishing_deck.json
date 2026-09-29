@@ -1,0 +1,149 @@
+{
+  "number": 14,
+  "id": "fishing_deck",
+  "label": "钓鱼台",
+  "file": "fishing_deck.glb",
+  "blend": "fishing_deck.blend",
+  "dimensions": {
+    "width": 2.106,
+    "height": 3.3,
+    "depth": 2.2525
+  },
+  "boundsBlender": {
+    "min": [
+      -1.0529999732971191,
+      -1.2074999809265137,
+      -1.2000000476837158
+    ],
+    "max": [
+      1.0529999732971191,
+      1.0449999570846558,
+      2.0999999046325684
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "deck",
+  "parts": {
+    "fishing_bucket": "fishing_deck__fishing_bucket",
+    "fishing_chair": "fishing_deck__fishing_chair",
+    "fishing_ladder": "fishing_deck__fishing_ladder",
+    "fishing_lamp": "fishing_deck__fishing_lamp",
+    "fishing_pile_0": "fishing_deck__fishing_pile_0",
+    "fishing_pile_1": "fishing_deck__fishing_pile_1",
+    "fishing_pile_2": "fishing_deck__fishing_pile_2",
+    "fishing_pile_3": "fishing_deck__fishing_pile_3",
+    "fishing_platform": "fishing_deck__fishing_platform",
+    "fishing_rod": "fishing_deck__fishing_rod"
+  },
+  "triangles": 2066,
+  "meshCount": 33,
+  "bytes": 120148,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/fishing_deck.png",
+  "modules": [
+    {
+      "id": "fishing_bucket",
+      "file": "modules/fishing_deck__fishing_bucket.glb",
+      "dimensions": [
+        0.4400000274181366,
+        0.4399999976158142,
+        0.5349999666213989
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fishing_chair",
+      "file": "modules/fishing_deck__fishing_chair.glb",
+      "dimensions": [
+        0.6299999952316284,
+        0.5799999237060547,
+        1.1800000667572021
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fishing_ladder",
+      "file": "modules/fishing_deck__fishing_ladder.glb",
+      "dimensions": [
+        0.4249999523162842,
+        0.04500007629394531,
+        1.1399999856948853
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fishing_lamp",
+      "file": "modules/fishing_deck__fishing_lamp.glb",
+      "dimensions": [
+        0.468999981880188,
+        0.2380000352859497,
+        2.0999999046325684
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fishing_pile_0",
+      "file": "modules/fishing_deck__fishing_pile_0.glb",
+      "dimensions": [
+        0.3259999752044678,
+        0.3259999752044678,
+        1.7200000286102295
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fishing_pile_1",
+      "file": "modules/fishing_deck__fishing_pile_1.glb",
+      "dimensions": [
+        0.3259999752044678,
+        0.3259999752044678,
+        1.7200000286102295
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fishing_pile_2",
+      "file": "modules/fishing_deck__fishing_pile_2.glb",
+      "dimensions": [
+        0.3259999752044678,
+        0.3259999752044678,
+        1.7200000286102295
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fishing_pile_3",
+      "file": "modules/fishing_deck__fishing_pile_3.glb",
+      "dimensions": [
+        0.3259999752044678,
+        0.3259999752044678,
+        1.7200000286102295
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fishing_platform",
+      "file": "modules/fishing_deck__fishing_platform.glb",
+      "dimensions": [
+        2.0,
+        2.0899999141693115,
+        0.34299999475479126
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fishing_rod",
+      "file": "modules/fishing_deck__fishing_rod.glb",
+      "dimensions": [
+        0.22681647539138794,
+        1.1674998998641968,
+        2.3469676971435547
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    }
+  ]
+}

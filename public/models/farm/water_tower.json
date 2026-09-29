@@ -1,0 +1,37 @@
+{
+  "number": 11,
+  "id": "water_tower",
+  "label": "水塔",
+  "file": "water_tower.glb",
+  "blend": "water_tower.blend",
+  "dimensions": {
+    "width": 2.16,
+    "height": 4.99,
+    "depth": 2.183
+  },
+  "boundsBlender": {
+    "min": [
+      -1.0800000429153442,
+      -1.1030000448226929,
+      0.0
+    ],
+    "max": [
+      1.0800000429153442,
+      1.0800000429153442,
+      4.989999771118164
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {},
+  "triangles": 1560,
+  "meshCount": 7,
+  "bytes": 81636,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/water_tower.png",
+  "modules": []
+}

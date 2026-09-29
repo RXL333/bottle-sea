@@ -1,0 +1,43 @@
+{
+  "number": 20,
+  "id": "sheep",
+  "label": "羊",
+  "file": "sheep.glb",
+  "blend": "sheep.blend",
+  "dimensions": {
+    "width": 0.89638,
+    "height": 1.10974,
+    "depth": 1.785
+  },
+  "boundsBlender": {
+    "min": [
+      -0.44647783041000366,
+      -0.8949999809265137,
+      0.0
+    ],
+    "max": [
+      0.4499000608921051,
+      0.8899999856948853,
+      1.1097350120544434
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "head": "sheep__head",
+    "leg_front_-1": "sheep__leg_front_-1",
+    "leg_front_1": "sheep__leg_front_1",
+    "leg_rear_-1": "sheep__leg_rear_-1",
+    "leg_rear_1": "sheep__leg_rear_1"
+  },
+  "triangles": 1092,
+  "meshCount": 14,
+  "bytes": 68640,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/sheep.png",
+  "modules": []
+}

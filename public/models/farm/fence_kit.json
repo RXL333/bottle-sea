@@ -1,0 +1,85 @@
+{
+  "number": 12,
+  "id": "fence_kit",
+  "label": "木围栏套件",
+  "file": "fence_kit.glb",
+  "blend": "fence_kit.blend",
+  "dimensions": {
+    "width": 5.0,
+    "height": 1.14,
+    "depth": 3.735
+  },
+  "boundsBlender": {
+    "min": [
+      -2.549999952316284,
+      -0.10499999672174454,
+      0.0
+    ],
+    "max": [
+      2.4499998092651367,
+      3.629999876022339,
+      1.1399999856948853
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "fence_corner": "fence_kit__fence_corner",
+    "fence_gate": "fence_kit__fence_gate",
+    "fence_post": "fence_kit__fence_post",
+    "fence_straight": "fence_kit__fence_straight"
+  },
+  "triangles": 628,
+  "meshCount": 12,
+  "bytes": 41296,
+  "notes": [
+    "Exploded kit layout. Named components also exported individually under modules/."
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/fence_kit.png",
+  "modules": [
+    {
+      "id": "fence_corner",
+      "file": "modules/fence_kit__fence_corner.glb",
+      "dimensions": [
+        1.850000023841858,
+        1.8549998998641968,
+        1.1399999856948853
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fence_gate",
+      "file": "modules/fence_kit__fence_gate.glb",
+      "dimensions": [
+        2.1999998092651367,
+        0.20499999821186066,
+        1.1399999856948853
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fence_post",
+      "file": "modules/fence_kit__fence_post.glb",
+      "dimensions": [
+        0.23000001907348633,
+        0.23000001907348633,
+        1.1399999856948853
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "fence_straight",
+      "file": "modules/fence_kit__fence_straight.glb",
+      "dimensions": [
+        2.1999998092651367,
+        0.20499999821186066,
+        1.1399999856948853
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "number": 13,
+  "id": "dock_kit",
+  "label": "农场码头套件",
+  "file": "dock_kit.glb",
+  "blend": "dock_kit.blend",
+  "dimensions": {
+    "width": 2.806,
+    "height": 3.18,
+    "depth": 2.965
+  },
+  "boundsBlender": {
+    "min": [
+      -1.402999997138977,
+      -1.5199999809265137,
+      -1.2000000476837158
+    ],
+    "max": [
+      1.402999997138977,
+      1.4450000524520874,
+      1.9800000190734863
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "deck",
+  "parts": {
+    "dock_barrel": "dock_kit__dock_barrel",
+    "dock_ladder": "dock_kit__dock_ladder",
+    "dock_lamp": "dock_kit__dock_lamp",
+    "dock_pile_1": "dock_kit__dock_pile_1",
+    "dock_pile_2": "dock_kit__dock_pile_2",
+    "dock_pile_3": "dock_kit__dock_pile_3",
+    "dock_pile_4": "dock_kit__dock_pile_4",
+    "dock_platform": "dock_kit__dock_platform",
+    "life_ring": "dock_kit__life_ring"
+  },
+  "triangles": 2298,
+  "meshCount": 28,
+  "bytes": 126884,
+  "notes": [
+    "Deck elevation is Y=0 after export; piles extend below deck. Includes reusable modules."
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/dock_kit.png",
+  "modules": [
+    {
+      "id": "dock_barrel",
+      "file": "modules/dock_kit__dock_barrel.glb",
+      "dimensions": [
+        0.5475150346755981,
+        0.5475149154663086,
+        0.6554999947547913
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "dock_ladder",
+      "file": "modules/dock_kit__dock_ladder.glb",
+      "dimensions": [
+        0.42500001192092896,
+        0.04500007629394531,
+        1.1399999856948853
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "dock_lamp",
+      "file": "modules/dock_kit__dock_lamp.glb",
+      "dimensions": [
+        0.5039999485015869,
+        0.23799991607666016,
+        1.9800000190734863
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "dock_pile_1",
+      "file": "modules/dock_kit__dock_pile_1.glb",
+      "dimensions": [
+        0.3259999752044678,
+        0.3259999752044678,
+        1.8000000715255737
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "dock_pile_2",
+      "file": "modules/dock_kit__dock_pile_2.glb",
+      "dimensions": [
+        0.3259999752044678,
+        0.3259999752044678,
+        1.8000000715255737
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "dock_pile_3",
+      "file": "modules/dock_kit__dock_pile_3.glb",
+      "dimensions": [
+        0.3259999752044678,
+        0.3259999752044678,
+        1.8000000715255737
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "dock_pile_4",
+      "file": "modules/dock_kit__dock_pile_4.glb",
+      "dimensions": [
+        0.3259999752044678,
+        0.3259999752044678,
+        1.8000000715255737
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "dock_platform",
+      "file": "modules/dock_kit__dock_platform.glb",
+      "dimensions": [
+        2.6500000953674316,
+        2.890000104904175,
+        0.34299999475479126
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    },
+    {
+      "id": "life_ring",
+      "file": "modules/dock_kit__life_ring.glb",
+      "dimensions": [
+        0.6100000143051147,
+        0.12999987602233887,
+        0.6200000047683716
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    }
+  ]
+}

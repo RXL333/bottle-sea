@@ -1,0 +1,50 @@
+{
+  "number": 16,
+  "id": "kitchen_stove",
+  "label": "厨房炉灶与锅",
+  "file": "kitchen_stove.glb",
+  "blend": "kitchen_stove.blend",
+  "dimensions": {
+    "width": 2.51,
+    "height": 2.49,
+    "depth": 1.02
+  },
+  "boundsBlender": {
+    "min": [
+      -0.7200000286102295,
+      -0.5149999856948853,
+      0.0
+    ],
+    "max": [
+      1.790000081062317,
+      0.5049999952316284,
+      2.490000009536743
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "cooking_pot": "kitchen_stove__cooking_pot"
+  },
+  "triangles": 1972,
+  "meshCount": 13,
+  "bytes": 105984,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/kitchen_stove.png",
+  "modules": [
+    {
+      "id": "cooking_pot",
+      "file": "modules/kitchen_stove__cooking_pot.glb",
+      "dimensions": [
+        0.9099999666213989,
+        0.6800000071525574,
+        0.559999942779541
+      ],
+      "origin": "component local origin; orientation matches parent asset"
+    }
+  ]
+}

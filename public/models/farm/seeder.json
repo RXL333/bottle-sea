@@ -1,0 +1,46 @@
+{
+  "number": 3,
+  "id": "seeder",
+  "label": "播种机",
+  "file": "seeder.glb",
+  "blend": "seeder.blend",
+  "dimensions": {
+    "width": 3.215,
+    "height": 1.8344,
+    "depth": 3.00413
+  },
+  "boundsBlender": {
+    "min": [
+      -1.6074999570846558,
+      -1.6741267442703247,
+      0.0
+    ],
+    "max": [
+      1.6074999570846558,
+      1.3299999237060547,
+      1.834399938583374
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "row_unit_1": "seeder__row_unit_1",
+    "row_unit_2": "seeder__row_unit_2",
+    "row_unit_3": "seeder__row_unit_3",
+    "row_unit_4": "seeder__row_unit_4",
+    "row_unit_5": "seeder__row_unit_5",
+    "row_unit_6": "seeder__row_unit_6",
+    "transport_wheel_-1": "seeder__transport_wheel_-1",
+    "transport_wheel_1": "seeder__transport_wheel_1"
+  },
+  "triangles": 2568,
+  "meshCount": 41,
+  "bytes": 146100,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/seeder.png",
+  "modules": []
+}

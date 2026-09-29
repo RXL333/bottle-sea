@@ -1,0 +1,37 @@
+{
+  "number": 23,
+  "id": "hay_bale",
+  "label": "捆扎草垛",
+  "file": "hay_bale.glb",
+  "blend": "hay_bale.blend",
+  "dimensions": {
+    "width": 0.9,
+    "height": 0.6655,
+    "depth": 0.641
+  },
+  "boundsBlender": {
+    "min": [
+      -0.44999998807907104,
+      -0.320499986410141,
+      -0.004999995231628418
+    ],
+    "max": [
+      0.44999998807907104,
+      0.320499986410141,
+      0.6604999899864197
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 180,
+  "meshCount": 3,
+  "bytes": 12716,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies"
+}

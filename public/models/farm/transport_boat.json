@@ -1,0 +1,45 @@
+{
+  "number": 1,
+  "id": "transport_boat",
+  "label": "交通小船",
+  "file": "transport_boat.glb",
+  "blend": "transport_boat.blend",
+  "dimensions": {
+    "width": 1.865,
+    "height": 2.6075,
+    "depth": 3.867
+  },
+  "boundsBlender": {
+    "min": [
+      -0.9325000047683716,
+      -2.0350000858306885,
+      -0.41999998688697815
+    ],
+    "max": [
+      0.9325000047683716,
+      1.8320000171661377,
+      2.1875
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "waterline",
+  "parts": {
+    "cabin": "transport_boat__cabin",
+    "deck_fittings": "transport_boat__deck_fittings",
+    "hull": "transport_boat__hull",
+    "mast": "transport_boat__mast"
+  },
+  "triangles": 2188,
+  "meshCount": 23,
+  "bytes": 124872,
+  "notes": [
+    "Optimized from the first Blender boat; semantic parts retained, static geometry batched by material.",
+    "Website original boat scale differs; start near 0.27 uniform scale and verify dock clearance."
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/transport_boat.png",
+  "modules": []
+}

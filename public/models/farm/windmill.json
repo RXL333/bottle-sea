@@ -1,0 +1,39 @@
+{
+  "number": 10,
+  "id": "windmill",
+  "label": "风车",
+  "file": "windmill.glb",
+  "blend": "windmill.blend",
+  "dimensions": {
+    "width": 3.72292,
+    "height": 5.14146,
+    "depth": 2.91
+  },
+  "boundsBlender": {
+    "min": [
+      -1.8614585399627686,
+      -1.4600000381469727,
+      0.0
+    ],
+    "max": [
+      1.8614585399627686,
+      1.4500000476837158,
+      5.141458511352539
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "windmill_rotor": "windmill__windmill_rotor"
+  },
+  "triangles": 2868,
+  "meshCount": 14,
+  "bytes": 156372,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/windmill.png",
+  "modules": []
+}

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>农场岛 · 模型查看器</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#c4d3d7;color:#173541;font:15px system-ui,"Microsoft YaHei",sans-serif}canvas{display:block;width:100%;height:100vh}header{position:absolute;left:26px;top:22px;max-width:calc(100vw - 52px)}h1{margin:0 0 8px;font-size:26px}p{margin:5px 0;color:#41616a}aside{position:absolute;bottom:24px;left:26px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:15px 18px;background:#fff9edee;border:1px solid #fff;border-radius:12px;max-width:calc(100vw - 52px);box-shadow:0 5px 22px #234b4d14}select,button{font:inherit;border:1px solid #9bb0b4;border-radius:6px;background:white;color:#173541;padding:9px 12px}button{cursor:pointer}#detail{font-size:13px;line-height:1.7}#status{font-size:13px}#error{color:#a22b21}a{color:inherit}
+  </style>
+</head>
+<body>
+  <header><h1>农场岛 · 20 类模型</h1><p>拖动旋转 · 滚轮缩放 · 右键平移</p><p id="status" role="status">正在载入资产清单…</p><p id="error" role="alert"></p></header>
+  <canvas aria-label="农场模型三维预览"></canvas>
+  <aside><select id="asset" aria-label="选择模型"></select><button id="front">正面</button><button id="rear">背面</button><button id="spin" aria-pressed="false">自动旋转</button><div id="detail"></div></aside>
+  <script type="module">
+    import * as THREE from 'three';
+    import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+    import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+    const canvas=document.querySelector('canvas');
+    const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+    renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;
+    renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;
+    const scene=new THREE.Scene();scene.background=new THREE.Color('#c4d3d7');
+    const camera=new THREE.PerspectiveCamera(36,1,.01,1000);
+    const controls=new OrbitControls(camera,canvas);controls.enableDamping=true;controls.maxPolarAngle=Math.PI*.48;controls.autoRotateSpeed=1;
+    scene.add(new THREE.HemisphereLight('#fff5dc','#8da1a7',2.5));
+    const key=new THREE.DirectionalLight('#fff1d3',3.2);key.position.set(-4,8,5);key.castShadow=true;key.shadow.mapSize.set(2048,2048);key.shadow.camera.left=-7;key.shadow.camera.right=7;key.shadow.camera.top=7;key.shadow.camera.bottom=-7;key.shadow.normalBias=.02;scene.add(key);
+    const fill=new THREE.DirectionalLight('#c5e5ff',1.2);fill.position.set(4,3,-4);scene.add(fill);
+    const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:'#b4c8c9',roughness:1}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+    let active=null,span=4,center=new THREE.Vector3();const cached=new Map();
+    const select=document.querySelector('#asset'),status=document.querySelector('#status');
+    function view(rear=false){camera.position.copy(center).add(new THREE.Vector3(rear?-1.15:1.15,.85,rear?-1.6:1.6).multiplyScalar(span*1.1/Math.min(1,camera.aspect)));controls.target.copy(center);controls.update();}
+    function show(id){if(active)scene.remove(active);active=cached.get(id).scene;scene.add(active);active.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(active),size=box.getSize(new THREE.Vector3());center=box.getCenter(new THREE.Vector3());span=Math.max(size.x,size.y,size.z);ground.position.y=box.min.y-.025;view();const a=cached.get(id).info;document.querySelector('#detail').textContent=`${a.label} · ${a.triangles.toLocaleString()} 三角面 · ${(a.bytes/1024).toFixed(0)} KB ｜ ${a.dimensions.width.toFixed(2)} × ${a.dimensions.depth.toFixed(2)} × ${a.dimensions.height.toFixed(2)} m`;document.body.dataset.currentAsset=id;}
+    select.addEventListener('change',()=>show(select.value));document.querySelector('#front').onclick=()=>view();document.querySelector('#rear').onclick=()=>view(true);document.querySelector('#spin').onclick=e=>{controls.autoRotate=!controls.autoRotate;e.target.setAttribute('aria-pressed',String(controls.autoRotate));e.target.textContent=controls.autoRotate?'停止旋转':'自动旋转';};
+    function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();if(active)view();}addEventListener('resize',resize);resize();renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});
+    try{
+      const base=import.meta.env.BASE_URL+'models/farm/';
+      const manifest=await(await fetch(base+'manifest.json')).json();
+      for(const a of manifest.assets){
+        const gltf=await new GLTFLoader().loadAsync(base+a.file);
+        gltf.scene.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+        cached.set(a.id,{scene:gltf.scene,info:a});
+        select.add(new Option(String(a.number).padStart(2,'0')+'  '+a.label,a.id));status.textContent=`${cached.size} / 20 已载入`;
+        if(cached.size===1)show(a.id);
+      }
+      status.textContent='20 / 20 已载入 · 可切换查看所有模型';document.body.dataset.loadedAssets='20';
+    }catch(error){document.querySelector('#error').textContent='载入失败：'+error.message;console.error(error);}
+  </script>
+</body>
+</html>

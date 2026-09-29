@@ -1,0 +1,37 @@
+{
+  "number": 22,
+  "id": "wheat_cluster",
+  "label": "麦穗簇",
+  "file": "wheat_cluster.glb",
+  "blend": "wheat_cluster.blend",
+  "dimensions": {
+    "width": 0.5575,
+    "height": 0.8968,
+    "depth": 0.37
+  },
+  "boundsBlender": {
+    "min": [
+      -0.2184048444032669,
+      -0.21000000834465027,
+      0.0
+    ],
+    "max": [
+      0.33907994627952576,
+      0.1599999964237213,
+      0.8967981338500977
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 240,
+  "meshCount": 3,
+  "bytes": 16004,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies"
+}

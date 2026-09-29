@@ -1,0 +1,45 @@
+{
+  "number": 4,
+  "id": "combine_harvester",
+  "label": "联合收割机",
+  "file": "combine_harvester.glb",
+  "blend": "combine_harvester.blend",
+  "dimensions": {
+    "width": 4.52049,
+    "height": 2.9315,
+    "depth": 4.485
+  },
+  "boundsBlender": {
+    "min": [
+      -1.7599999904632568,
+      -2.674999952316284,
+      0.0
+    ],
+    "max": [
+      2.7604854106903076,
+      1.809999942779541,
+      2.931500196456909
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "drive_wheel_-1": "combine_harvester__drive_wheel_-1",
+    "drive_wheel_1": "combine_harvester__drive_wheel_1",
+    "header": "combine_harvester__header",
+    "header_reel": "combine_harvester__header_reel",
+    "steer_wheel_-1": "combine_harvester__steer_wheel_-1",
+    "steer_wheel_1": "combine_harvester__steer_wheel_1",
+    "unloading_auger": "combine_harvester__unloading_auger"
+  },
+  "triangles": 4108,
+  "meshCount": 36,
+  "bytes": 225556,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/combine_harvester.png",
+  "modules": []
+}

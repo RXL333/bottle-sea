@@ -1,0 +1,162 @@
+[
+  {
+    "id": "transport_boat",
+    "scene": "Farm_01_transport_boat",
+    "meshes": 23,
+    "triangles": 2188,
+    "camera": "ReviewCamera.019",
+    "status": "opened and saved"
+  },
+  {
+    "id": "tractor",
+    "scene": "Farm_02_tractor",
+    "meshes": 29,
+    "triangles": 3308,
+    "camera": "ReviewCamera",
+    "status": "opened and saved"
+  },
+  {
+    "id": "seeder",
+    "scene": "Farm_03_seeder",
+    "meshes": 41,
+    "triangles": 2568,
+    "camera": "ReviewCamera.001",
+    "status": "opened and saved"
+  },
+  {
+    "id": "combine_harvester",
+    "scene": "Farm_04_combine_harvester",
+    "meshes": 36,
+    "triangles": 4108,
+    "camera": "ReviewCamera.002",
+    "status": "opened and saved"
+  },
+  {
+    "id": "farm_trailer",
+    "scene": "Farm_05_farm_trailer",
+    "meshes": 28,
+    "triangles": 3356,
+    "camera": "ReviewCamera.003",
+    "status": "opened and saved"
+  },
+  {
+    "id": "plow",
+    "scene": "Farm_06_plow",
+    "meshes": 11,
+    "triangles": 1072,
+    "camera": "ReviewCamera.004",
+    "status": "opened and saved"
+  },
+  {
+    "id": "barn",
+    "scene": "Farm_07_barn",
+    "meshes": 24,
+    "triangles": 8230,
+    "camera": "ReviewCamera.005",
+    "status": "opened and saved"
+  },
+  {
+    "id": "tool_shed",
+    "scene": "Farm_08_tool_shed",
+    "meshes": 13,
+    "triangles": 3304,
+    "camera": "ReviewCamera.006",
+    "status": "opened and saved"
+  },
+  {
+    "id": "farmhouse",
+    "scene": "Farm_09_farmhouse",
+    "meshes": 21,
+    "triangles": 4892,
+    "camera": "ReviewCamera.007",
+    "status": "opened and saved"
+  },
+  {
+    "id": "windmill",
+    "scene": "Farm_10_windmill",
+    "meshes": 14,
+    "triangles": 2868,
+    "camera": "ReviewCamera.008",
+    "status": "opened and saved"
+  },
+  {
+    "id": "water_tower",
+    "scene": "Farm_11_water_tower",
+    "meshes": 7,
+    "triangles": 1560,
+    "camera": "ReviewCamera.009",
+    "status": "opened and saved"
+  },
+  {
+    "id": "fence_kit",
+    "scene": "Farm_12_fence_kit",
+    "meshes": 12,
+    "triangles": 628,
+    "camera": "ReviewCamera.010",
+    "status": "opened and saved"
+  },
+  {
+    "id": "dock_kit",
+    "scene": "Farm_13_dock_kit",
+    "meshes": 28,
+    "triangles": 2298,
+    "camera": "ReviewCamera.011",
+    "status": "opened and saved"
+  },
+  {
+    "id": "fishing_deck",
+    "scene": "Farm_14_fishing_deck",
+    "meshes": 33,
+    "triangles": 2066,
+    "camera": "ReviewCamera.012",
+    "status": "opened and saved"
+  },
+  {
+    "id": "bed",
+    "scene": "Farm_15_bed",
+    "meshes": 12,
+    "triangles": 1660,
+    "camera": "ReviewCamera.013",
+    "status": "opened and saved"
+  },
+  {
+    "id": "kitchen_stove",
+    "scene": "Farm_16_kitchen_stove",
+    "meshes": 13,
+    "triangles": 1972,
+    "camera": "ReviewCamera.014",
+    "status": "opened and saved"
+  },
+  {
+    "id": "storage_set",
+    "scene": "Farm_17_storage_set",
+    "meshes": 22,
+    "triangles": 1392,
+    "camera": "ReviewCamera.015",
+    "status": "opened and saved"
+  },
+  {
+    "id": "chicken",
+    "scene": "Farm_18_chicken",
+    "meshes": 19,
+    "triangles": 540,
+    "camera": "ReviewCamera.016",
+    "status": "opened and saved"
+  },
+  {
+    "id": "cow",
+    "scene": "Farm_19_cow",
+    "meshes": 26,
+    "triangles": 944,
+    "camera": "ReviewCamera.017",
+    "status": "opened and saved"
+  },
+  {
+    "id": "sheep",
+    "scene": "Farm_20_sheep",
+    "meshes": 14,
+    "triangles": 1092,
+    "camera": "ReviewCamera.018",
+    "status": "opened and saved"
+  }
+]

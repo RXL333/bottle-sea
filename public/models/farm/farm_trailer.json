@@ -1,0 +1,42 @@
+{
+  "number": 5,
+  "id": "farm_trailer",
+  "label": "农用拖车",
+  "file": "farm_trailer.glb",
+  "blend": "farm_trailer.blend",
+  "dimensions": {
+    "width": 2.0624,
+    "height": 1.6587,
+    "depth": 3.86913
+  },
+  "boundsBlender": {
+    "min": [
+      -1.0312000513076782,
+      -2.494126796722412,
+      0.0
+    ],
+    "max": [
+      1.0312000513076782,
+      1.375,
+      1.6586999893188477
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "wheel_-1_-0": "farm_trailer__wheel_-1_-0",
+    "wheel_-1_0": "farm_trailer__wheel_-1_0",
+    "wheel_1_-0": "farm_trailer__wheel_1_-0",
+    "wheel_1_0": "farm_trailer__wheel_1_0"
+  },
+  "triangles": 3356,
+  "meshCount": 28,
+  "bytes": 180340,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/farm_trailer.png",
+  "modules": []
+}

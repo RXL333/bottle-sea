@@ -1,0 +1,1278 @@
+{
+  "title": "农场岛 · 20 类低多边形模型",
+  "version": 1,
+  "style": "reference-inspired low-poly / block forms",
+  "assetCount": 20,
+  "units": "meters",
+  "glTFUp": "+Y",
+  "glTFForward": "+Z",
+  "assets": [
+    {
+      "number": 1,
+      "id": "transport_boat",
+      "label": "交通小船",
+      "file": "transport_boat.glb",
+      "blend": "transport_boat.blend",
+      "dimensions": {
+        "width": 1.865,
+        "height": 2.6075,
+        "depth": 3.867
+      },
+      "boundsBlender": {
+        "min": [
+          -0.9325000047683716,
+          -2.0350000858306885,
+          -0.41999998688697815
+        ],
+        "max": [
+          0.9325000047683716,
+          1.8320000171661377,
+          2.1875
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "waterline",
+      "parts": {
+        "cabin": "transport_boat__cabin",
+        "deck_fittings": "transport_boat__deck_fittings",
+        "hull": "transport_boat__hull",
+        "mast": "transport_boat__mast"
+      },
+      "triangles": 2188,
+      "meshCount": 23,
+      "bytes": 124872,
+      "notes": [
+        "Optimized from the first Blender boat; semantic parts retained, static geometry batched by material.",
+        "Website original boat scale differs; start near 0.27 uniform scale and verify dock clearance."
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/transport_boat.png",
+      "modules": []
+    },
+    {
+      "number": 2,
+      "id": "tractor",
+      "label": "拖拉机",
+      "file": "tractor.glb",
+      "blend": "tractor.blend",
+      "dimensions": {
+        "width": 2.224,
+        "height": 2.747,
+        "depth": 3.295
+      },
+      "boundsBlender": {
+        "min": [
+          -1.1119999885559082,
+          -1.5750000476837158,
+          0.0
+        ],
+        "max": [
+          1.1119999885559082,
+          1.71999990940094,
+          2.746999979019165
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "wheel_front_-1": "tractor__wheel_front_-1",
+        "wheel_front_1": "tractor__wheel_front_1",
+        "wheel_rear_-1": "tractor__wheel_rear_-1",
+        "wheel_rear_1": "tractor__wheel_rear_1"
+      },
+      "triangles": 3308,
+      "meshCount": 29,
+      "bytes": 179848,
+      "notes": [
+        "Four wheel pivots retained for future driving animation."
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/tractor.png",
+      "modules": []
+    },
+    {
+      "number": 3,
+      "id": "seeder",
+      "label": "播种机",
+      "file": "seeder.glb",
+      "blend": "seeder.blend",
+      "dimensions": {
+        "width": 3.215,
+        "height": 1.8344,
+        "depth": 3.00413
+      },
+      "boundsBlender": {
+        "min": [
+          -1.6074999570846558,
+          -1.6741267442703247,
+          0.0
+        ],
+        "max": [
+          1.6074999570846558,
+          1.3299999237060547,
+          1.834399938583374
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "row_unit_1": "seeder__row_unit_1",
+        "row_unit_2": "seeder__row_unit_2",
+        "row_unit_3": "seeder__row_unit_3",
+        "row_unit_4": "seeder__row_unit_4",
+        "row_unit_5": "seeder__row_unit_5",
+        "row_unit_6": "seeder__row_unit_6",
+        "transport_wheel_-1": "seeder__transport_wheel_-1",
+        "transport_wheel_1": "seeder__transport_wheel_1"
+      },
+      "triangles": 2568,
+      "meshCount": 41,
+      "bytes": 146100,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/seeder.png",
+      "modules": []
+    },
+    {
+      "number": 4,
+      "id": "combine_harvester",
+      "label": "联合收割机",
+      "file": "combine_harvester.glb",
+      "blend": "combine_harvester.blend",
+      "dimensions": {
+        "width": 4.52049,
+        "height": 2.9315,
+        "depth": 4.485
+      },
+      "boundsBlender": {
+        "min": [
+          -1.7599999904632568,
+          -2.674999952316284,
+          0.0
+        ],
+        "max": [
+          2.7604854106903076,
+          1.809999942779541,
+          2.931500196456909
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "drive_wheel_-1": "combine_harvester__drive_wheel_-1",
+        "drive_wheel_1": "combine_harvester__drive_wheel_1",
+        "header": "combine_harvester__header",
+        "header_reel": "combine_harvester__header_reel",
+        "steer_wheel_-1": "combine_harvester__steer_wheel_-1",
+        "steer_wheel_1": "combine_harvester__steer_wheel_1",
+        "unloading_auger": "combine_harvester__unloading_auger"
+      },
+      "triangles": 4108,
+      "meshCount": 36,
+      "bytes": 225556,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/combine_harvester.png",
+      "modules": []
+    },
+    {
+      "number": 5,
+      "id": "farm_trailer",
+      "label": "农用拖车",
+      "file": "farm_trailer.glb",
+      "blend": "farm_trailer.blend",
+      "dimensions": {
+        "width": 2.0624,
+        "height": 1.6587,
+        "depth": 3.86913
+      },
+      "boundsBlender": {
+        "min": [
+          -1.0312000513076782,
+          -2.494126796722412,
+          0.0
+        ],
+        "max": [
+          1.0312000513076782,
+          1.375,
+          1.6586999893188477
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "wheel_-1_-0": "farm_trailer__wheel_-1_-0",
+        "wheel_-1_0": "farm_trailer__wheel_-1_0",
+        "wheel_1_-0": "farm_trailer__wheel_1_-0",
+        "wheel_1_0": "farm_trailer__wheel_1_0"
+      },
+      "triangles": 3356,
+      "meshCount": 28,
+      "bytes": 180340,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/farm_trailer.png",
+      "modules": []
+    },
+    {
+      "number": 6,
+      "id": "plow",
+      "label": "犁 / 耕地机",
+      "file": "plow.glb",
+      "blend": "plow.blend",
+      "dimensions": {
+        "width": 3.0286,
+        "height": 1.5632,
+        "depth": 1.31985
+      },
+      "boundsBlender": {
+        "min": [
+          -1.6385999917984009,
+          -0.6848453283309937,
+          0.0
+        ],
+        "max": [
+          1.3899999856948853,
+          0.6349999904632568,
+          1.5631999969482422
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "depth_wheel": "plow__depth_wheel"
+      },
+      "triangles": 1072,
+      "meshCount": 11,
+      "bytes": 65408,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/plow.png",
+      "modules": []
+    },
+    {
+      "number": 7,
+      "id": "barn",
+      "label": "农场谷仓与筒仓",
+      "file": "barn.glb",
+      "blend": "barn.blend",
+      "dimensions": {
+        "width": 6.69805,
+        "height": 4.79,
+        "depth": 5.886
+      },
+      "boundsBlender": {
+        "min": [
+          -2.83804988861084,
+          -3.2160000801086426,
+          0.0
+        ],
+        "max": [
+          3.859999895095825,
+          2.669999837875366,
+          4.789999961853027
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "door_left": "barn__door_left",
+        "door_right": "barn__door_right"
+      },
+      "triangles": 8230,
+      "meshCount": 24,
+      "bytes": 448192,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/barn.png",
+      "modules": []
+    },
+    {
+      "number": 8,
+      "id": "tool_shed",
+      "label": "农机棚 / 工具棚",
+      "file": "tool_shed.glb",
+      "blend": "tool_shed.blend",
+      "dimensions": {
+        "width": 5.66805,
+        "height": 4.39,
+        "depth": 4.61
+      },
+      "boundsBlender": {
+        "min": [
+          -2.83804988861084,
+          -2.305000066757202,
+          0.0
+        ],
+        "max": [
+          2.8299999237060547,
+          2.305000066757202,
+          4.390000343322754
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {},
+      "triangles": 3304,
+      "meshCount": 13,
+      "bytes": 182200,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/tool_shed.png",
+      "modules": []
+    },
+    {
+      "number": 9,
+      "id": "farmhouse",
+      "label": "农场小屋",
+      "file": "farmhouse.glb",
+      "blend": "farmhouse.blend",
+      "dimensions": {
+        "width": 4.998,
+        "height": 4.5775,
+        "depth": 5.445
+      },
+      "boundsBlender": {
+        "min": [
+          -2.2480499744415283,
+          -3.3450000286102295,
+          0.0
+        ],
+        "max": [
+          2.75,
+          2.0999999046325684,
+          4.577500343322754
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body",
+        "front_door"
+      ],
+      "triangles": 4954,
+      "meshCount": 21,
+      "bytes": 278992,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies"
+    },
+    {
+      "number": 10,
+      "id": "windmill",
+      "label": "风车",
+      "file": "windmill.glb",
+      "blend": "windmill.blend",
+      "dimensions": {
+        "width": 3.72292,
+        "height": 5.14146,
+        "depth": 2.91
+      },
+      "boundsBlender": {
+        "min": [
+          -1.8614585399627686,
+          -1.4600000381469727,
+          0.0
+        ],
+        "max": [
+          1.8614585399627686,
+          1.4500000476837158,
+          5.141458511352539
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "windmill_rotor": "windmill__windmill_rotor"
+      },
+      "triangles": 2868,
+      "meshCount": 14,
+      "bytes": 156372,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/windmill.png",
+      "modules": []
+    },
+    {
+      "number": 11,
+      "id": "water_tower",
+      "label": "水塔",
+      "file": "water_tower.glb",
+      "blend": "water_tower.blend",
+      "dimensions": {
+        "width": 2.16,
+        "height": 4.99,
+        "depth": 2.183
+      },
+      "boundsBlender": {
+        "min": [
+          -1.0800000429153442,
+          -1.1030000448226929,
+          0.0
+        ],
+        "max": [
+          1.0800000429153442,
+          1.0800000429153442,
+          4.989999771118164
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {},
+      "triangles": 1560,
+      "meshCount": 7,
+      "bytes": 81636,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/water_tower.png",
+      "modules": []
+    },
+    {
+      "number": 12,
+      "id": "fence_kit",
+      "label": "木围栏套件",
+      "file": "fence_kit.glb",
+      "blend": "fence_kit.blend",
+      "dimensions": {
+        "width": 5.0,
+        "height": 1.14,
+        "depth": 3.735
+      },
+      "boundsBlender": {
+        "min": [
+          -2.549999952316284,
+          -0.10499999672174454,
+          0.0
+        ],
+        "max": [
+          2.4499998092651367,
+          3.629999876022339,
+          1.1399999856948853
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "fence_corner": "fence_kit__fence_corner",
+        "fence_gate": "fence_kit__fence_gate",
+        "fence_post": "fence_kit__fence_post",
+        "fence_straight": "fence_kit__fence_straight"
+      },
+      "triangles": 628,
+      "meshCount": 12,
+      "bytes": 41296,
+      "notes": [
+        "Exploded kit layout. Named components also exported individually under modules/."
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/fence_kit.png",
+      "modules": [
+        {
+          "id": "fence_corner",
+          "file": "modules/fence_kit__fence_corner.glb",
+          "dimensions": [
+            1.850000023841858,
+            1.8549998998641968,
+            1.1399999856948853
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fence_gate",
+          "file": "modules/fence_kit__fence_gate.glb",
+          "dimensions": [
+            2.1999998092651367,
+            0.20499999821186066,
+            1.1399999856948853
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fence_post",
+          "file": "modules/fence_kit__fence_post.glb",
+          "dimensions": [
+            0.23000001907348633,
+            0.23000001907348633,
+            1.1399999856948853
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fence_straight",
+          "file": "modules/fence_kit__fence_straight.glb",
+          "dimensions": [
+            2.1999998092651367,
+            0.20499999821186066,
+            1.1399999856948853
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "id": "dock_kit",
+      "label": "农场码头套件",
+      "file": "dock_kit.glb",
+      "blend": "dock_kit.blend",
+      "dimensions": {
+        "width": 2.806,
+        "height": 3.18,
+        "depth": 2.965
+      },
+      "boundsBlender": {
+        "min": [
+          -1.402999997138977,
+          -1.5199999809265137,
+          -1.2000000476837158
+        ],
+        "max": [
+          1.402999997138977,
+          1.4450000524520874,
+          1.9800000190734863
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "deck",
+      "parts": {
+        "dock_barrel": "dock_kit__dock_barrel",
+        "dock_ladder": "dock_kit__dock_ladder",
+        "dock_lamp": "dock_kit__dock_lamp",
+        "dock_pile_1": "dock_kit__dock_pile_1",
+        "dock_pile_2": "dock_kit__dock_pile_2",
+        "dock_pile_3": "dock_kit__dock_pile_3",
+        "dock_pile_4": "dock_kit__dock_pile_4",
+        "dock_platform": "dock_kit__dock_platform",
+        "life_ring": "dock_kit__life_ring"
+      },
+      "triangles": 2298,
+      "meshCount": 28,
+      "bytes": 126884,
+      "notes": [
+        "Deck elevation is Y=0 after export; piles extend below deck. Includes reusable modules."
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/dock_kit.png",
+      "modules": [
+        {
+          "id": "dock_barrel",
+          "file": "modules/dock_kit__dock_barrel.glb",
+          "dimensions": [
+            0.5475150346755981,
+            0.5475149154663086,
+            0.6554999947547913
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "dock_ladder",
+          "file": "modules/dock_kit__dock_ladder.glb",
+          "dimensions": [
+            0.42500001192092896,
+            0.04500007629394531,
+            1.1399999856948853
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "dock_lamp",
+          "file": "modules/dock_kit__dock_lamp.glb",
+          "dimensions": [
+            0.5039999485015869,
+            0.23799991607666016,
+            1.9800000190734863
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "dock_pile_1",
+          "file": "modules/dock_kit__dock_pile_1.glb",
+          "dimensions": [
+            0.3259999752044678,
+            0.3259999752044678,
+            1.8000000715255737
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "dock_pile_2",
+          "file": "modules/dock_kit__dock_pile_2.glb",
+          "dimensions": [
+            0.3259999752044678,
+            0.3259999752044678,
+            1.8000000715255737
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "dock_pile_3",
+          "file": "modules/dock_kit__dock_pile_3.glb",
+          "dimensions": [
+            0.3259999752044678,
+            0.3259999752044678,
+            1.8000000715255737
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "dock_pile_4",
+          "file": "modules/dock_kit__dock_pile_4.glb",
+          "dimensions": [
+            0.3259999752044678,
+            0.3259999752044678,
+            1.8000000715255737
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "dock_platform",
+          "file": "modules/dock_kit__dock_platform.glb",
+          "dimensions": [
+            2.6500000953674316,
+            2.890000104904175,
+            0.34299999475479126
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "life_ring",
+          "file": "modules/dock_kit__life_ring.glb",
+          "dimensions": [
+            0.6100000143051147,
+            0.12999987602233887,
+            0.6200000047683716
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "id": "fishing_deck",
+      "label": "钓鱼台",
+      "file": "fishing_deck.glb",
+      "blend": "fishing_deck.blend",
+      "dimensions": {
+        "width": 2.106,
+        "height": 3.3,
+        "depth": 2.2525
+      },
+      "boundsBlender": {
+        "min": [
+          -1.0529999732971191,
+          -1.2074999809265137,
+          -1.2000000476837158
+        ],
+        "max": [
+          1.0529999732971191,
+          1.0449999570846558,
+          2.0999999046325684
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "deck",
+      "parts": {
+        "fishing_bucket": "fishing_deck__fishing_bucket",
+        "fishing_chair": "fishing_deck__fishing_chair",
+        "fishing_ladder": "fishing_deck__fishing_ladder",
+        "fishing_lamp": "fishing_deck__fishing_lamp",
+        "fishing_pile_0": "fishing_deck__fishing_pile_0",
+        "fishing_pile_1": "fishing_deck__fishing_pile_1",
+        "fishing_pile_2": "fishing_deck__fishing_pile_2",
+        "fishing_pile_3": "fishing_deck__fishing_pile_3",
+        "fishing_platform": "fishing_deck__fishing_platform",
+        "fishing_rod": "fishing_deck__fishing_rod"
+      },
+      "triangles": 2066,
+      "meshCount": 33,
+      "bytes": 120148,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/fishing_deck.png",
+      "modules": [
+        {
+          "id": "fishing_bucket",
+          "file": "modules/fishing_deck__fishing_bucket.glb",
+          "dimensions": [
+            0.4400000274181366,
+            0.4399999976158142,
+            0.5349999666213989
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fishing_chair",
+          "file": "modules/fishing_deck__fishing_chair.glb",
+          "dimensions": [
+            0.6299999952316284,
+            0.5799999237060547,
+            1.1800000667572021
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fishing_ladder",
+          "file": "modules/fishing_deck__fishing_ladder.glb",
+          "dimensions": [
+            0.4249999523162842,
+            0.04500007629394531,
+            1.1399999856948853
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fishing_lamp",
+          "file": "modules/fishing_deck__fishing_lamp.glb",
+          "dimensions": [
+            0.468999981880188,
+            0.2380000352859497,
+            2.0999999046325684
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fishing_pile_0",
+          "file": "modules/fishing_deck__fishing_pile_0.glb",
+          "dimensions": [
+            0.3259999752044678,
+            0.3259999752044678,
+            1.7200000286102295
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fishing_pile_1",
+          "file": "modules/fishing_deck__fishing_pile_1.glb",
+          "dimensions": [
+            0.3259999752044678,
+            0.3259999752044678,
+            1.7200000286102295
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fishing_pile_2",
+          "file": "modules/fishing_deck__fishing_pile_2.glb",
+          "dimensions": [
+            0.3259999752044678,
+            0.3259999752044678,
+            1.7200000286102295
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fishing_pile_3",
+          "file": "modules/fishing_deck__fishing_pile_3.glb",
+          "dimensions": [
+            0.3259999752044678,
+            0.3259999752044678,
+            1.7200000286102295
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fishing_platform",
+          "file": "modules/fishing_deck__fishing_platform.glb",
+          "dimensions": [
+            2.0,
+            2.0899999141693115,
+            0.34299999475479126
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "fishing_rod",
+          "file": "modules/fishing_deck__fishing_rod.glb",
+          "dimensions": [
+            0.22681647539138794,
+            1.1674998998641968,
+            2.3469676971435547
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "id": "bed",
+      "label": "床与床头柜",
+      "file": "bed.glb",
+      "blend": "bed.blend",
+      "dimensions": {
+        "width": 2.29,
+        "height": 1.38,
+        "depth": 2.19
+      },
+      "boundsBlender": {
+        "min": [
+          -0.7649999856948853,
+          -1.0950000286102295,
+          0.0
+        ],
+        "max": [
+          1.5250000953674316,
+          1.0950000286102295,
+          1.3799999952316284
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "bed_frame": "bed__bed_frame",
+        "bedside_table": "bed__bedside_table"
+      },
+      "triangles": 1660,
+      "meshCount": 12,
+      "bytes": 98760,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/bed.png",
+      "modules": [
+        {
+          "id": "bed_frame",
+          "file": "modules/bed__bed_frame.glb",
+          "dimensions": [
+            1.5299999713897705,
+            2.190000057220459,
+            1.25
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "bedside_table",
+          "file": "modules/bed__bedside_table.glb",
+          "dimensions": [
+            0.6100000739097595,
+            0.5950000286102295,
+            1.3799999952316284
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "id": "kitchen_stove",
+      "label": "厨房炉灶与锅",
+      "file": "kitchen_stove.glb",
+      "blend": "kitchen_stove.blend",
+      "dimensions": {
+        "width": 2.51,
+        "height": 2.49,
+        "depth": 1.02
+      },
+      "boundsBlender": {
+        "min": [
+          -0.7200000286102295,
+          -0.5149999856948853,
+          0.0
+        ],
+        "max": [
+          1.790000081062317,
+          0.5049999952316284,
+          2.490000009536743
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "cooking_pot": "kitchen_stove__cooking_pot"
+      },
+      "triangles": 1972,
+      "meshCount": 13,
+      "bytes": 105984,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/kitchen_stove.png",
+      "modules": [
+        {
+          "id": "cooking_pot",
+          "file": "modules/kitchen_stove__cooking_pot.glb",
+          "dimensions": [
+            0.9099999666213989,
+            0.6800000071525574,
+            0.559999942779541
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        }
+      ]
+    },
+    {
+      "number": 17,
+      "id": "storage_set",
+      "label": "储物箱与食材柜",
+      "file": "storage_set.glb",
+      "blend": "storage_set.blend",
+      "dimensions": {
+        "width": 2.825,
+        "height": 2.13,
+        "depth": 1.585
+      },
+      "boundsBlender": {
+        "min": [
+          -1.3049999475479126,
+          -1.0199999809265137,
+          0.0
+        ],
+        "max": [
+          1.5199999809265137,
+          0.5649999976158142,
+          2.129999876022339
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "food_cupboard": "storage_set__food_cupboard",
+        "grain_sack": "storage_set__grain_sack",
+        "storage_chest": "storage_set__storage_chest",
+        "chest_lid": "storage_set__chest_lid"
+      },
+      "triangles": 1392,
+      "meshCount": 22,
+      "bytes": 82964,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/storage_set.png",
+      "modules": [
+        {
+          "id": "food_cupboard",
+          "file": "modules/storage_set__food_cupboard.glb",
+          "dimensions": [
+            1.3399999141693115,
+            0.7924999594688416,
+            2.129999876022339
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "grain_sack",
+          "file": "modules/storage_set__grain_sack.glb",
+          "dimensions": [
+            0.47999998927116394,
+            0.48000001907348633,
+            0.5099999904632568
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        },
+        {
+          "id": "storage_chest",
+          "file": "modules/storage_set__storage_chest.glb",
+          "dimensions": [
+            1.0499999523162842,
+            0.9700000286102295,
+            0.8834999799728394
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "id": "chicken",
+      "label": "鸡与小鸡",
+      "file": "chicken.glb",
+      "blend": "chicken.blend",
+      "dimensions": {
+        "width": 1.045,
+        "height": 1.3545,
+        "depth": 1.17831
+      },
+      "boundsBlender": {
+        "min": [
+          -0.3400000035762787,
+          -0.5899999737739563,
+          0.0
+        ],
+        "max": [
+          0.7049999833106995,
+          0.58830726146698,
+          1.3545000553131104
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "chick": "chicken__chick",
+        "head": "chicken__head",
+        "leg_left": "chicken__leg_left",
+        "leg_right": "chicken__leg_right",
+        "wing_left": "chicken__wing_left",
+        "wing_right": "chicken__wing_right"
+      },
+      "triangles": 540,
+      "meshCount": 19,
+      "bytes": 41696,
+      "notes": [
+        "Includes separate chick component. Adult body and head/wing/leg pivots retained."
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/chicken.png",
+      "modules": [
+        {
+          "id": "chick",
+          "file": "modules/chicken__chick.glb",
+          "dimensions": [
+            0.28999999165534973,
+            0.36500000953674316,
+            0.4245000183582306
+          ],
+          "origin": "component local origin; orientation matches parent asset"
+        }
+      ]
+    },
+    {
+      "number": 19,
+      "id": "cow",
+      "label": "奶牛",
+      "file": "cow.glb",
+      "blend": "cow.blend",
+      "dimensions": {
+        "width": 1.09587,
+        "height": 1.82326,
+        "depth": 2.1975
+      },
+      "boundsBlender": {
+        "min": [
+          -0.5479367971420288,
+          -1.1449999809265137,
+          0.0
+        ],
+        "max": [
+          0.5479367971420288,
+          1.0525000095367432,
+          1.8232616186141968
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "head": "cow__head",
+        "leg_front_left": "cow__leg_front_left",
+        "leg_front_right": "cow__leg_front_right",
+        "leg_rear_left": "cow__leg_rear_left",
+        "leg_rear_right": "cow__leg_rear_right",
+        "tail": "cow__tail"
+      },
+      "triangles": 944,
+      "meshCount": 26,
+      "bytes": 67052,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/cow.png",
+      "modules": []
+    },
+    {
+      "number": 20,
+      "id": "sheep",
+      "label": "羊",
+      "file": "sheep.glb",
+      "blend": "sheep.blend",
+      "dimensions": {
+        "width": 0.89638,
+        "height": 1.10974,
+        "depth": 1.785
+      },
+      "boundsBlender": {
+        "min": [
+          -0.44647783041000366,
+          -0.8949999809265137,
+          0.0
+        ],
+        "max": [
+          0.4499000608921051,
+          0.8899999856948853,
+          1.1097350120544434
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": {
+        "head": "sheep__head",
+        "leg_front_-1": "sheep__leg_front_-1",
+        "leg_front_1": "sheep__leg_front_1",
+        "leg_rear_-1": "sheep__leg_rear_-1",
+        "leg_rear_1": "sheep__leg_rear_1"
+      },
+      "triangles": 1092,
+      "meshCount": 14,
+      "bytes": 68640,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "preview": "previews/sheep.png",
+      "modules": []
+    }
+  ],
+  "additionalAssets": [
+    {
+      "number": 21,
+      "id": "orchard_tree",
+      "label": "果园树",
+      "file": "orchard_tree.glb",
+      "blend": "orchard_tree.blend",
+      "dimensions": {
+        "width": 2.575,
+        "height": 3.69,
+        "depth": 1.973
+      },
+      "boundsBlender": {
+        "min": [
+          -1.274999976158142,
+          -0.9980000257492065,
+          0.0
+        ],
+        "max": [
+          1.2999999523162842,
+          0.9750000238418579,
+          3.68999981880188
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 168,
+      "meshCount": 5,
+      "bytes": 13716,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies"
+    },
+    {
+      "number": 22,
+      "id": "wheat_cluster",
+      "label": "麦穗簇",
+      "file": "wheat_cluster.glb",
+      "blend": "wheat_cluster.blend",
+      "dimensions": {
+        "width": 0.5575,
+        "height": 0.8968,
+        "depth": 0.37
+      },
+      "boundsBlender": {
+        "min": [
+          -0.2184048444032669,
+          -0.21000000834465027,
+          0.0
+        ],
+        "max": [
+          0.33907994627952576,
+          0.1599999964237213,
+          0.8967981338500977
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 240,
+      "meshCount": 3,
+      "bytes": 16004,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies"
+    },
+    {
+      "number": 23,
+      "id": "hay_bale",
+      "label": "捆扎草垛",
+      "file": "hay_bale.glb",
+      "blend": "hay_bale.blend",
+      "dimensions": {
+        "width": 0.9,
+        "height": 0.6655,
+        "depth": 0.641
+      },
+      "boundsBlender": {
+        "min": [
+          -0.44999998807907104,
+          -0.320499986410141,
+          -0.004999995231628418
+        ],
+        "max": [
+          0.44999998807907104,
+          0.320499986410141,
+          0.6604999899864197
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 180,
+      "meshCount": 3,
+      "bytes": 12716,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies"
+    }
+  ]
+}

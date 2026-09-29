@@ -1,0 +1,37 @@
+{
+  "number": 8,
+  "id": "tool_shed",
+  "label": "农机棚 / 工具棚",
+  "file": "tool_shed.glb",
+  "blend": "tool_shed.blend",
+  "dimensions": {
+    "width": 5.66805,
+    "height": 4.39,
+    "depth": 4.61
+  },
+  "boundsBlender": {
+    "min": [
+      -2.83804988861084,
+      -2.305000066757202,
+      0.0
+    ],
+    "max": [
+      2.8299999237060547,
+      2.305000066757202,
+      4.390000343322754
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {},
+  "triangles": 3304,
+  "meshCount": 13,
+  "bytes": 182200,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/tool_shed.png",
+  "modules": []
+}

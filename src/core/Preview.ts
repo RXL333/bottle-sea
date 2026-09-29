@@ -5,6 +5,17 @@ export function configurePreview(game:Game){
   const params=new URLSearchParams(location.search),hour=Number(params.get('hour'));
   if(params.has('hour')&&Number.isFinite(hour)&&hour>=0&&hour<24)game.clock.simulationTime=DAY_DURATION*(7+hour/24);
   if(params.get('weather')==='storm'){game.weather.storm=true;game.weather.intensity=1;game.hud.setActive('storm',true);}
+  if(game.worldManager.currentWorldId==='FARM'){
+    const views:Record<string,{position:[number,number,number];target:[number,number,number]}>={
+      'farm-overview':{position:[21,24,30],target:[0,4.1,0]},
+      'farm-yard':{position:[-3,4.44,-3.8],target:[2,5,-6.6]},
+      'farm-cottage':{position:[-8.0825,4.642,-5.13],target:[-7.85,4.65,-6.9]},
+      'farm-pasture':{position:[4.5,4.44,1.0],target:[8,4.5,1.8]},
+      'farm-fishing':{position:[-8,4.44,9.2],target:[-8,4.5,10.5]},
+    };
+    const view=params.get('view')??'',checkpoint=views[view];
+    if(checkpoint){game.camera.position.fromArray(checkpoint.position);game.camera.lookAt(...checkpoint.target);game.explorer.syncLook();if(view==='farm-overview'){game.explorer.suspend();game.camera.fov=43;game.camera.updateProjectionMatrix();}}
+  }
   if(['underwater','under-island','dock','water-entry','chest','lighthouse','ruins'].includes(params.get('view')??'')){
     game.overview.enabled=false;game.explorer.enter(false);game.hud.setExplore(true);
     if(params.get('view')==='lighthouse'){game.camera.position.set(.35,4.49,.35);game.camera.lookAt(.35,5.1,-.28);}

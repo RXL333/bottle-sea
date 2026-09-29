@@ -1,0 +1,44 @@
+{
+  "number": 19,
+  "id": "cow",
+  "label": "奶牛",
+  "file": "cow.glb",
+  "blend": "cow.blend",
+  "dimensions": {
+    "width": 1.09587,
+    "height": 1.82326,
+    "depth": 2.1975
+  },
+  "boundsBlender": {
+    "min": [
+      -0.5479367971420288,
+      -1.1449999809265137,
+      0.0
+    ],
+    "max": [
+      0.5479367971420288,
+      1.0525000095367432,
+      1.8232616186141968
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "head": "cow__head",
+    "leg_front_left": "cow__leg_front_left",
+    "leg_front_right": "cow__leg_front_right",
+    "leg_rear_left": "cow__leg_rear_left",
+    "leg_rear_right": "cow__leg_rear_right",
+    "tail": "cow__tail"
+  },
+  "triangles": 944,
+  "meshCount": 26,
+  "bytes": 67052,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/cow.png",
+  "modules": []
+}

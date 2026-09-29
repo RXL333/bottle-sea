@@ -1,0 +1,38 @@
+{
+  "number": 9,
+  "id": "farmhouse",
+  "label": "农场小屋",
+  "file": "farmhouse.glb",
+  "blend": "farmhouse.blend",
+  "dimensions": {
+    "width": 4.998,
+    "height": 4.5775,
+    "depth": 5.445
+  },
+  "boundsBlender": {
+    "min": [
+      -2.2480499744415283,
+      -3.3450000286102295,
+      0.0
+    ],
+    "max": [
+      2.75,
+      2.0999999046325684,
+      4.577500343322754
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "front_door"
+  ],
+  "triangles": 4954,
+  "meshCount": 21,
+  "bytes": 278992,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies"
+}

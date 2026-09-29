@@ -1,0 +1,44 @@
+{
+  "number": 2,
+  "id": "tractor",
+  "label": "拖拉机",
+  "file": "tractor.glb",
+  "blend": "tractor.blend",
+  "dimensions": {
+    "width": 2.224,
+    "height": 2.747,
+    "depth": 3.295
+  },
+  "boundsBlender": {
+    "min": [
+      -1.1119999885559082,
+      -1.5750000476837158,
+      0.0
+    ],
+    "max": [
+      1.1119999885559082,
+      1.71999990940094,
+      2.746999979019165
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": {
+    "wheel_front_-1": "tractor__wheel_front_-1",
+    "wheel_front_1": "tractor__wheel_front_1",
+    "wheel_rear_-1": "tractor__wheel_rear_-1",
+    "wheel_rear_1": "tractor__wheel_rear_1"
+  },
+  "triangles": 3308,
+  "meshCount": 29,
+  "bytes": 179848,
+  "notes": [
+    "Four wheel pivots retained for future driving animation."
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "preview": "previews/tractor.png",
+  "modules": []
+}
