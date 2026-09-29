@@ -1,0 +1,40 @@
+{
+  "number": 8,
+  "id": "ancient_anchor",
+  "label": "船锚",
+  "file": "ancient_anchor.glb",
+  "blend": "ancient_anchor.blend",
+  "dimensions": {
+    "width": 2.494999885559082,
+    "height": 2.9800000190734863,
+    "depth": 0.4674233943223953
+  },
+  "boundsBlender": {
+    "min": [
+      -1.059999942779541,
+      -0.2337295413017273,
+      0.0
+    ],
+    "max": [
+      1.434999942779541,
+      0.23369385302066803,
+      2.9800000190734863
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 2888,
+  "meshCount": 4,
+  "bytes": 140144,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [],
+  "degenerateTriangles": 0,
+  "preview": "previews/ancient_anchor.png"
+}

@@ -1,0 +1,61 @@
+{
+  "number": 11,
+  "id": "seagrass_kit",
+  "label": "海草套件",
+  "file": "seagrass_kit.glb",
+  "blend": "seagrass_kit.blend",
+  "dimensions": {
+    "width": 2.4125789999961853,
+    "height": 1.3924999237060547,
+    "depth": 2.325135350227356
+  },
+  "boundsBlender": {
+    "min": [
+      -0.42757898569107056,
+      -0.41390955448150635,
+      0.0
+    ],
+    "max": [
+      1.9850000143051147,
+      1.9112257957458496,
+      1.3924999237060547
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "seagrass_0",
+    "seagrass_1",
+    "seagrass_2",
+    "seagrass_3"
+  ],
+  "triangles": 1440,
+  "meshCount": 12,
+  "bytes": 80448,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [
+    {
+      "id": "seagrass_0",
+      "file": "modules/seagrass_kit__seagrass_0.glb"
+    },
+    {
+      "id": "seagrass_1",
+      "file": "modules/seagrass_kit__seagrass_1.glb"
+    },
+    {
+      "id": "seagrass_2",
+      "file": "modules/seagrass_kit__seagrass_2.glb"
+    },
+    {
+      "id": "seagrass_3",
+      "file": "modules/seagrass_kit__seagrass_3.glb"
+    }
+  ],
+  "degenerateTriangles": 0,
+  "preview": "previews/seagrass_kit.png"
+}

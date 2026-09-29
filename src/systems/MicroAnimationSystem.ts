@@ -13,7 +13,7 @@ export class MicroAnimationSystem extends Group {
     if(night>.2&&storm<.45){for(let i=0;i<this.density;i++){
       const age=(time*.24+i/this.density*2.5)%2.5;
       const size=.06*Math.sin(age/2.5*Math.PI)*Math.min(1,night*2)*(1-storm/.45);
-      this.dummy.position.set(-1.14+age*.065,5.53+age*.14,-.45);this.dummy.scale.setScalar(size);this.dummy.updateMatrix();this.mesh.setMatrixAt(count++,this.dummy.matrix);
+      this.dummy.position.set(-1.04+age*.065,5.71+age*.14,-.50);this.dummy.scale.setScalar(size);this.dummy.updateMatrix();this.mesh.setMatrixAt(count++,this.dummy.matrix);
     }}
     if(time>=this.nextMeteor){this.nextMeteor=time+75+this.random()*90;if(night>.7&&storm<.25)this.meteorStart=time;}
     const age=time-this.meteorStart;

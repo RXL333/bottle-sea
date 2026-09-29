@@ -6,7 +6,7 @@ import { BufferGeometry, Group, Mesh, MeshBasicMaterial, Texture } from 'three';
 import { disposeWorld } from '../disposeWorld';
 it('retains landmarks, restores discovery and releases only owned resources',()=>{
   const cube=vi.spyOn(cubeGeometry,'dispose'),voxel=vi.spyOn(voxelMaterial,'dispose'),cached=vi.spyOn(material('#513723'),'dispose');
-  const world=new HomeWorld();world.load();world.enter({gameTime:100,state:{lastSimulatedGameTime:1,discoveries:['anchor','lighthouse']},spawn:world.getSpawnPoint()});
+  const world=new HomeWorld();world.enter({gameTime:100,state:{lastSimulatedGameTime:1,discoveries:['anchor','lighthouse']},spawn:world.getSpawnPoint()});
   for(const id of ['chest','anchor','ruins','lighthouse'])expect(world.root.getObjectByName(id)).toBeDefined();
   expect(world.leave({gameTime:200})).toEqual({lastSimulatedGameTime:200,discoveries:['anchor','lighthouse']});world.applyQuality('LOW');world.dispose();
   expect(world.root.children).toHaveLength(0);expect(cube).not.toHaveBeenCalled();expect(voxel).not.toHaveBeenCalled();expect(cached).not.toHaveBeenCalled();

@@ -1,0 +1,61 @@
+{
+  "number": 10,
+  "id": "coral_kit",
+  "label": "珊瑚套件",
+  "file": "coral_kit.glb",
+  "blend": "coral_kit.blend",
+  "dimensions": {
+    "width": 2.4739444255828857,
+    "height": 1.3924999237060547,
+    "depth": 2.325135350227356
+  },
+  "boundsBlender": {
+    "min": [
+      -0.488944411277771,
+      -0.41390955448150635,
+      0.0
+    ],
+    "max": [
+      1.9850000143051147,
+      1.9112257957458496,
+      1.3924999237060547
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "coral_0",
+    "coral_1",
+    "coral_2",
+    "coral_3"
+  ],
+  "triangles": 2400,
+  "meshCount": 12,
+  "bytes": 127844,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [
+    {
+      "id": "coral_0",
+      "file": "modules/coral_kit__coral_0.glb"
+    },
+    {
+      "id": "coral_1",
+      "file": "modules/coral_kit__coral_1.glb"
+    },
+    {
+      "id": "coral_2",
+      "file": "modules/coral_kit__coral_2.glb"
+    },
+    {
+      "id": "coral_3",
+      "file": "modules/coral_kit__coral_3.glb"
+    }
+  ],
+  "degenerateTriangles": 0,
+  "preview": "previews/coral_kit.png"
+}

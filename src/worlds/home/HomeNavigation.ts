@@ -1,12 +1,14 @@
 import { bottleRadiusAt,insideBottle } from '../../world/bottle/Bounds';
 import { hitsWorldObstacle, resolveVerticalCollision, supportHeightAt } from '../../world/Collision';
-import type { DynamicObstacle } from '../../world/Collision';
+import type { BoxObstacle,DynamicObstacle } from '../../world/Collision';
 import { waveHeight } from '../../world/ocean/WaveMath';
 import type { NavigationSurface } from '../NavigationSurface';
 /** The stable Home collision rules, moved without changing thresholds or order. */
-export function homeNavigation(dynamicObstacles:()=>readonly DynamicObstacle[]=()=>[]):NavigationSurface {
+export function homeNavigation(dynamicObstacles:()=>readonly DynamicObstacle[]=()=>[],models?:()=>BoxObstacle[]):NavigationSurface {
   return {
-    groundHeight:supportHeightAt,hitsObstacle:hitsWorldObstacle,resolveVertical:resolveVerticalCollision,
+    groundHeight:(x,z,feet)=>supportHeightAt(x,z,feet,models?.()),
+    hitsObstacle:(x,z,y)=>hitsWorldObstacle(x,z,y,undefined,models?.(),models?[]:undefined),
+    resolveVertical:(x,z,from,to)=>resolveVerticalCollision(x,z,from,to,undefined,models?.(),models?[]:undefined),
     isInside:(x,y,z)=>insideBottle(x,y,z,.1),waterLevel:waveHeight,dynamicObstacles,
     constrain(p){
       p.x=Math.max(-5.55,Math.min(5.2,p.x));

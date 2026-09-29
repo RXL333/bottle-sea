@@ -1,0 +1,96 @@
+{
+  "number": 6,
+  "id": "main_fishing_deck",
+  "label": "钓鱼台",
+  "file": "main_fishing_deck.glb",
+  "blend": "main_fishing_deck.blend",
+  "dimensions": {
+    "width": 3.1599998474121094,
+    "height": 3.7425284385681152,
+    "depth": 2.8400001525878906
+  },
+  "boundsBlender": {
+    "min": [
+      -1.5799999237060547,
+      -1.4600000381469727,
+      -1.0299999713897705
+    ],
+    "max": [
+      1.5799999237060547,
+      1.380000114440918,
+      2.7125284671783447
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "deck",
+  "parts": [
+    "body",
+    "platform",
+    "pile_0",
+    "pile_1",
+    "pile_2",
+    "pile_3",
+    "pile_4",
+    "pile_5",
+    "rope_rails",
+    "lamp",
+    "life_ring",
+    "fishing_rod"
+  ],
+  "triangles": 2258,
+  "meshCount": 42,
+  "bytes": 129052,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [
+    {
+      "id": "fishing_rod",
+      "file": "modules/main_fishing_deck__fishing_rod.glb"
+    },
+    {
+      "id": "lamp",
+      "file": "modules/main_fishing_deck__lamp.glb"
+    },
+    {
+      "id": "life_ring",
+      "file": "modules/main_fishing_deck__life_ring.glb"
+    },
+    {
+      "id": "pile_0",
+      "file": "modules/main_fishing_deck__pile_0.glb"
+    },
+    {
+      "id": "pile_1",
+      "file": "modules/main_fishing_deck__pile_1.glb"
+    },
+    {
+      "id": "pile_2",
+      "file": "modules/main_fishing_deck__pile_2.glb"
+    },
+    {
+      "id": "pile_3",
+      "file": "modules/main_fishing_deck__pile_3.glb"
+    },
+    {
+      "id": "pile_4",
+      "file": "modules/main_fishing_deck__pile_4.glb"
+    },
+    {
+      "id": "pile_5",
+      "file": "modules/main_fishing_deck__pile_5.glb"
+    },
+    {
+      "id": "platform",
+      "file": "modules/main_fishing_deck__platform.glb"
+    },
+    {
+      "id": "rope_rails",
+      "file": "modules/main_fishing_deck__rope_rails.glb"
+    }
+  ],
+  "degenerateTriangles": 0,
+  "preview": "previews/main_fishing_deck.png"
+}

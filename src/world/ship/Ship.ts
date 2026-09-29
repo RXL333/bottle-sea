@@ -5,6 +5,7 @@ import { sampleShipPath } from './ShipPath';
 import type { DynamicObstacle } from '../Collision';
 
 export class Ship extends Group {
+  private modelLoaded=false;
   private floatState={height:0,pitch:0,roll:0};
   private hull=new Group();
   readonly collisionBoxes:DynamicObstacle[]=[];
@@ -26,13 +27,14 @@ export class Ship extends Group {
     b.build(this.hull);box(this.hull,'#ffca67',.12,.4,-.37,.08,.12,.08,1.6);
     this.add(this.hull);this.update(0,0);
   }
+  setModel(model:Group){for(const child of this.hull.children)child.visible=false;model.scale.setScalar(.23);this.hull.add(model);this.modelLoaded=true;}
   update(time:number,storm:number) {
     const {x,z,yaw}=sampleShipPath(time),previousX=this.position.x,previousZ=this.position.z,previousYaw=this.rotation.y;
     sampleBuoyancy(x,z,yaw,time,storm,this.floatState);
     this.position.set(x,this.floatState.height+.015,z);this.rotation.y=yaw;
     this.hull.rotation.set(this.floatState.pitch,0,this.floatState.roll);
-    const minY=this.position.y-.08,maxY=this.position.y+.38;
-    const specs=[{x:0,halfX:.32,halfZ:.55},{x:-.27,halfX:.07,halfZ:.57},{x:.27,halfX:.07,halfZ:.57}];
+    const minY=this.position.y-(this.modelLoaded?.15:.08),maxY=this.position.y+(this.modelLoaded?1.15:.38);
+    const specs=this.modelLoaded?[{x:0,halfX:.27,halfZ:.75}]:[{x:0,halfX:.32,halfZ:.55},{x:-.27,halfX:.07,halfZ:.57},{x:.27,halfX:.07,halfZ:.57}];
     this.collisionBoxes.length=0;for(const spec of specs){const c=Math.cos(yaw),s=Math.sin(yaw),pc=Math.cos(previousYaw),ps=Math.sin(previousYaw);this.collisionBoxes.push({x:x+c*spec.x,z:z-s*spec.x,previousX:previousX+pc*spec.x,previousZ:previousZ-ps*spec.x,halfX:spec.halfX,halfZ:spec.halfZ,minY,maxY,yaw,previousYaw});}
   }
 }

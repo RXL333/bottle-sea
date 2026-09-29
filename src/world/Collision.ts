@@ -1,5 +1,5 @@
-type BoxObstacle={minX:number;maxX:number;minY:number;maxY:number;minZ:number;maxZ:number};
-type RoundObstacle={x:number;z:number;radius:number;minY:number;maxY:number};
+export type BoxObstacle={minX:number;maxX:number;minY:number;maxY:number;minZ:number;maxZ:number};
+export type RoundObstacle={x:number;z:number;radius:number;minY:number;maxY:number};
 import { terrainCellsNear } from './island/TerrainData';
 import { seabedCellsNear,seabedCellAt } from './underwater/SeabedData';
 
@@ -25,10 +25,10 @@ const rounds:RoundObstacle[]=[
   {x:-.37,z:-.78,radius:.18,minY:3.75,maxY:5.45},
 ];
 
-export function hitsWorldObstacle(x:number,z:number,y:number,radius=.14){
+export function hitsWorldObstacle(x:number,z:number,y:number,radius=.14,staticBoxes=boxes,staticRounds=rounds){
   const feet=y-PLAYER_FOOT_OFFSET,head=y+PLAYER_HEAD_OFFSET;
-  for(const b of boxes)if(x>b.minX-radius&&x<b.maxX+radius&&z>b.minZ-radius&&z<b.maxZ+radius&&head>b.minY+.001&&feet<b.maxY-.001)return true;
-  for(const obstacle of rounds)if(head>obstacle.minY+.001&&feet<obstacle.maxY-.001&&Math.hypot(x-obstacle.x,z-obstacle.z)<obstacle.radius+radius)return true;
+  for(const b of staticBoxes)if(x>b.minX-radius&&x<b.maxX+radius&&z>b.minZ-radius&&z<b.maxZ+radius&&head>b.minY+.001&&feet<b.maxY-.001)return true;
+  for(const obstacle of staticRounds)if(head>obstacle.minY+.001&&feet<obstacle.maxY-.001&&Math.hypot(x-obstacle.x,z-obstacle.z)<obstacle.radius+radius)return true;
   for(const cell of terrainCellsNear(x,z,radius))if(circleHitsBox(x,z,radius,cell)&&head>cell.solidMinY+.001&&feet<cell.solidMaxY-.001)return true;
   for(const cell of seabedCellsNear(x,z,radius))if(circleHitsBox(x,z,radius,cell)&&head>cell.minY+.001&&feet<cell.top-.001)return true;
   return false;
@@ -53,23 +53,23 @@ export function resolveDynamicOverlap(position:{x:number;y:number;z:number},obst
 }
 
 /** Highest real walkable surface under the player. */
-export function supportHeightAt(x:number,z:number,currentFeet=Infinity){
+export function supportHeightAt(x:number,z:number,currentFeet=Infinity,staticBoxes=boxes){
   let top=seabedCellAt(x,z)?.top??1.65;
   for(const cell of seabedCellsNear(x,z,PLAYER_RADIUS))if(circleHitsBox(x,z,PLAYER_RADIUS,cell))top=Math.max(top,cell.top);
   for(const terrain of terrainCellsNear(x,z,PLAYER_RADIUS))if(circleHitsBox(x,z,PLAYER_RADIUS,terrain)&&terrain.top<=currentFeet+STEP_HEIGHT+.001)top=Math.max(top,terrain.top);
-  for(const b of boxes)if(x>b.minX-PLAYER_RADIUS&&x<b.maxX+PLAYER_RADIUS&&z>b.minZ-PLAYER_RADIUS&&z<b.maxZ+PLAYER_RADIUS&&b.maxY<=currentFeet+STEP_HEIGHT+.001)top=Math.max(top,b.maxY);
+  for(const b of staticBoxes)if(x>b.minX-PLAYER_RADIUS&&x<b.maxX+PLAYER_RADIUS&&z>b.minZ-PLAYER_RADIUS&&z<b.maxZ+PLAYER_RADIUS&&b.maxY<=currentFeet+STEP_HEIGHT+.001)top=Math.max(top,b.maxY);
   return top;
 }
 
 /** Sweep the camera volume vertically; a thin slab cannot be skipped between frames. */
-export function resolveVerticalCollision(x:number,z:number,from:number,to:number,radius=.14){
+export function resolveVerticalCollision(x:number,z:number,from:number,to:number,radius=.14,staticBoxes=boxes,staticRounds=rounds){
   let result=to;
   const clip=(min:number,max:number)=>{
     if(to>from&&from<=min-PLAYER_HEAD_OFFSET&&to>min-PLAYER_HEAD_OFFSET)result=Math.min(result,min-PLAYER_HEAD_OFFSET);
     if(to<from&&from>=max+PLAYER_FOOT_OFFSET&&to<max+PLAYER_FOOT_OFFSET)result=Math.max(result,max+PLAYER_FOOT_OFFSET);
   };
-  for(const b of boxes)if(x>b.minX-radius&&x<b.maxX+radius&&z>b.minZ-radius&&z<b.maxZ+radius)clip(b.minY,b.maxY);
-  for(const b of rounds)if(Math.hypot(x-b.x,z-b.z)<b.radius+radius)clip(b.minY,b.maxY);
+  for(const b of staticBoxes)if(x>b.minX-radius&&x<b.maxX+radius&&z>b.minZ-radius&&z<b.maxZ+radius)clip(b.minY,b.maxY);
+  for(const b of staticRounds)if(Math.hypot(x-b.x,z-b.z)<b.radius+radius)clip(b.minY,b.maxY);
   for(const cell of terrainCellsNear(x,z,radius))if(circleHitsBox(x,z,radius,cell))clip(cell.solidMinY,cell.solidMaxY);
   for(const cell of seabedCellsNear(x,z,radius))if(circleHitsBox(x,z,radius,cell))clip(cell.minY,cell.top);
   return result;

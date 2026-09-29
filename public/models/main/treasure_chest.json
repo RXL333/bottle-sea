@@ -1,0 +1,41 @@
+{
+  "number": 7,
+  "id": "treasure_chest",
+  "label": "宝箱",
+  "file": "treasure_chest.glb",
+  "blend": "treasure_chest.blend",
+  "dimensions": {
+    "width": 1.5700000524520874,
+    "height": 1.3744490146636963,
+    "depth": 1.2551090717315674
+  },
+  "boundsBlender": {
+    "min": [
+      -0.7850000262260437,
+      -0.6624999642372131,
+      0.0
+    ],
+    "max": [
+      0.7850000262260437,
+      0.5926091074943542,
+      1.3744490146636963
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "lid"
+  ],
+  "triangles": 1452,
+  "meshCount": 11,
+  "bytes": 83088,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [],
+  "degenerateTriangles": 0,
+  "preview": "previews/treasure_chest.png"
+}

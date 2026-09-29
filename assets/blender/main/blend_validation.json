@@ -1,0 +1,98 @@
+[
+  {
+    "id": "main_sailboat",
+    "scene": "Main_02_main_sailboat",
+    "meshes": 14,
+    "triangles": 3184,
+    "camera": "ReviewCamera.026",
+    "status": "opened and saved"
+  },
+  {
+    "id": "main_cottage",
+    "scene": "Main_03_main_cottage",
+    "meshes": 31,
+    "triangles": 5306,
+    "camera": "ReviewCamera",
+    "status": "opened and saved"
+  },
+  {
+    "id": "main_lighthouse",
+    "scene": "Main_04_main_lighthouse",
+    "meshes": 13,
+    "triangles": 1502,
+    "camera": "ReviewCamera.014",
+    "status": "opened and saved"
+  },
+  {
+    "id": "main_dock_kit",
+    "scene": "Main_05_main_dock_kit",
+    "meshes": 40,
+    "triangles": 2334,
+    "camera": "ReviewCamera.015",
+    "status": "opened and saved"
+  },
+  {
+    "id": "main_fishing_deck",
+    "scene": "Main_06_main_fishing_deck",
+    "meshes": 42,
+    "triangles": 2258,
+    "camera": "ReviewCamera.016",
+    "status": "opened and saved"
+  },
+  {
+    "id": "treasure_chest",
+    "scene": "Main_07_treasure_chest",
+    "meshes": 11,
+    "triangles": 1452,
+    "camera": "ReviewCamera.027",
+    "status": "opened and saved"
+  },
+  {
+    "id": "ancient_anchor",
+    "scene": "Main_08_ancient_anchor",
+    "meshes": 4,
+    "triangles": 2888,
+    "camera": "ReviewCamera.018",
+    "status": "opened and saved"
+  },
+  {
+    "id": "underwater_ruins",
+    "scene": "Main_09_underwater_ruins",
+    "meshes": 13,
+    "triangles": 600,
+    "camera": "ReviewCamera.019",
+    "status": "opened and saved"
+  },
+  {
+    "id": "coral_kit",
+    "scene": "Main_10_coral_kit",
+    "meshes": 12,
+    "triangles": 2400,
+    "camera": "ReviewCamera.020",
+    "status": "opened and saved"
+  },
+  {
+    "id": "seagrass_kit",
+    "scene": "Main_11_seagrass_kit",
+    "meshes": 12,
+    "triangles": 1440,
+    "camera": "ReviewCamera.021",
+    "status": "opened and saved"
+  },
+  {
+    "id": "tropical_fish",
+    "scene": "Main_12_tropical_fish",
+    "meshes": 28,
+    "triangles": 1080,
+    "camera": "ReviewCamera.025",
+    "status": "opened and saved"
+  },
+  {
+    "id": "island_palm",
+    "scene": "Main_13_island_palm",
+    "meshes": 5,
+    "triangles": 672,
+    "camera": "ReviewCamera.023",
+    "status": "opened and saved"
+  }
+]

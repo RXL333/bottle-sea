@@ -1,0 +1,690 @@
+{
+  "reference": "主岛 建模参考 2–12",
+  "assets": [
+    {
+      "number": 2,
+      "id": "main_sailboat",
+      "label": "主岛帆船",
+      "file": "main_sailboat.glb",
+      "blend": "main_sailboat.blend",
+      "dimensions": {
+        "width": 2.384999990463257,
+        "height": 5.5000001192092896,
+        "depth": 5.709339141845703
+      },
+      "boundsBlender": {
+        "min": [
+          -1.1924999952316284,
+          -3.209339141845703,
+          -0.6000000238418579
+        ],
+        "max": [
+          1.1924999952316284,
+          2.5,
+          4.900000095367432
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "waterline",
+      "parts": [
+        "body",
+        "mainsail",
+        "jib",
+        "rudder"
+      ],
+      "triangles": 3184,
+      "meshCount": 14,
+      "bytes": 163984,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [],
+      "degenerateTriangles": 0,
+      "preview": "previews/main_sailboat.png"
+    },
+    {
+      "number": 3,
+      "id": "main_cottage",
+      "label": "主岛小屋",
+      "file": "main_cottage.glb",
+      "blend": "main_cottage.blend",
+      "dimensions": {
+        "width": 7.233001947402954,
+        "height": 4.695229530334473,
+        "depth": 5.496112823486328
+      },
+      "boundsBlender": {
+        "min": [
+          -3.4857120513916016,
+          -3.0999999046325684,
+          0.0
+        ],
+        "max": [
+          3.7472898960113525,
+          2.3961129188537598,
+          4.695229530334473
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body",
+        "front_door",
+        "palm_left",
+        "palm_right"
+      ],
+      "triangles": 5306,
+      "meshCount": 31,
+      "bytes": 297732,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [],
+      "degenerateTriangles": 0,
+      "preview": "previews/main_cottage.png"
+    },
+    {
+      "number": 4,
+      "id": "main_lighthouse",
+      "label": "灯塔",
+      "file": "main_lighthouse.glb",
+      "blend": "main_lighthouse.blend",
+      "dimensions": {
+        "width": 3.924294352531433,
+        "height": 7.032747745513916,
+        "depth": 4.054985523223877
+      },
+      "boundsBlender": {
+        "min": [
+          -1.9733290672302246,
+          -2.0027995109558105,
+          0.0
+        ],
+        "max": [
+          1.9509652853012085,
+          2.0521860122680664,
+          7.032747745513916
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body",
+        "light_rotor"
+      ],
+      "triangles": 1502,
+      "meshCount": 13,
+      "bytes": 87716,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [],
+      "degenerateTriangles": 0,
+      "preview": "previews/main_lighthouse.png"
+    },
+    {
+      "number": 5,
+      "id": "main_dock_kit",
+      "label": "主码头套件",
+      "file": "main_dock_kit.glb",
+      "blend": "main_dock_kit.blend",
+      "dimensions": {
+        "width": 3.1599998474121094,
+        "height": 3.2300000190734863,
+        "depth": 3.661844253540039
+      },
+      "boundsBlender": {
+        "min": [
+          -1.5799999237060547,
+          -2.281844139099121,
+          -1.0299999713897705
+        ],
+        "max": [
+          1.5799999237060547,
+          1.380000114440918,
+          2.200000047683716
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "deck",
+      "parts": [
+        "body",
+        "platform",
+        "pile_0",
+        "pile_1",
+        "pile_2",
+        "pile_3",
+        "pile_4",
+        "pile_5",
+        "rope_rails",
+        "lamp",
+        "life_ring",
+        "stairs"
+      ],
+      "triangles": 2334,
+      "meshCount": 40,
+      "bytes": 131220,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [
+        {
+          "id": "lamp",
+          "file": "modules/main_dock_kit__lamp.glb"
+        },
+        {
+          "id": "life_ring",
+          "file": "modules/main_dock_kit__life_ring.glb"
+        },
+        {
+          "id": "pile_0",
+          "file": "modules/main_dock_kit__pile_0.glb"
+        },
+        {
+          "id": "pile_1",
+          "file": "modules/main_dock_kit__pile_1.glb"
+        },
+        {
+          "id": "pile_2",
+          "file": "modules/main_dock_kit__pile_2.glb"
+        },
+        {
+          "id": "pile_3",
+          "file": "modules/main_dock_kit__pile_3.glb"
+        },
+        {
+          "id": "pile_4",
+          "file": "modules/main_dock_kit__pile_4.glb"
+        },
+        {
+          "id": "pile_5",
+          "file": "modules/main_dock_kit__pile_5.glb"
+        },
+        {
+          "id": "platform",
+          "file": "modules/main_dock_kit__platform.glb"
+        },
+        {
+          "id": "rope_rails",
+          "file": "modules/main_dock_kit__rope_rails.glb"
+        },
+        {
+          "id": "stairs",
+          "file": "modules/main_dock_kit__stairs.glb"
+        }
+      ],
+      "degenerateTriangles": 0,
+      "preview": "previews/main_dock_kit.png"
+    },
+    {
+      "number": 6,
+      "id": "main_fishing_deck",
+      "label": "钓鱼台",
+      "file": "main_fishing_deck.glb",
+      "blend": "main_fishing_deck.blend",
+      "dimensions": {
+        "width": 3.1599998474121094,
+        "height": 3.7425284385681152,
+        "depth": 2.8400001525878906
+      },
+      "boundsBlender": {
+        "min": [
+          -1.5799999237060547,
+          -1.4600000381469727,
+          -1.0299999713897705
+        ],
+        "max": [
+          1.5799999237060547,
+          1.380000114440918,
+          2.7125284671783447
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "deck",
+      "parts": [
+        "body",
+        "platform",
+        "pile_0",
+        "pile_1",
+        "pile_2",
+        "pile_3",
+        "pile_4",
+        "pile_5",
+        "rope_rails",
+        "lamp",
+        "life_ring",
+        "fishing_rod"
+      ],
+      "triangles": 2258,
+      "meshCount": 42,
+      "bytes": 129052,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [
+        {
+          "id": "fishing_rod",
+          "file": "modules/main_fishing_deck__fishing_rod.glb"
+        },
+        {
+          "id": "lamp",
+          "file": "modules/main_fishing_deck__lamp.glb"
+        },
+        {
+          "id": "life_ring",
+          "file": "modules/main_fishing_deck__life_ring.glb"
+        },
+        {
+          "id": "pile_0",
+          "file": "modules/main_fishing_deck__pile_0.glb"
+        },
+        {
+          "id": "pile_1",
+          "file": "modules/main_fishing_deck__pile_1.glb"
+        },
+        {
+          "id": "pile_2",
+          "file": "modules/main_fishing_deck__pile_2.glb"
+        },
+        {
+          "id": "pile_3",
+          "file": "modules/main_fishing_deck__pile_3.glb"
+        },
+        {
+          "id": "pile_4",
+          "file": "modules/main_fishing_deck__pile_4.glb"
+        },
+        {
+          "id": "pile_5",
+          "file": "modules/main_fishing_deck__pile_5.glb"
+        },
+        {
+          "id": "platform",
+          "file": "modules/main_fishing_deck__platform.glb"
+        },
+        {
+          "id": "rope_rails",
+          "file": "modules/main_fishing_deck__rope_rails.glb"
+        }
+      ],
+      "degenerateTriangles": 0,
+      "preview": "previews/main_fishing_deck.png"
+    },
+    {
+      "number": 7,
+      "id": "treasure_chest",
+      "label": "宝箱",
+      "file": "treasure_chest.glb",
+      "blend": "treasure_chest.blend",
+      "dimensions": {
+        "width": 1.5700000524520874,
+        "height": 1.3744490146636963,
+        "depth": 1.2551090717315674
+      },
+      "boundsBlender": {
+        "min": [
+          -0.7850000262260437,
+          -0.6624999642372131,
+          0.0
+        ],
+        "max": [
+          0.7850000262260437,
+          0.5926091074943542,
+          1.3744490146636963
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body",
+        "lid"
+      ],
+      "triangles": 1452,
+      "meshCount": 11,
+      "bytes": 83088,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [],
+      "degenerateTriangles": 0,
+      "preview": "previews/treasure_chest.png"
+    },
+    {
+      "number": 8,
+      "id": "ancient_anchor",
+      "label": "船锚",
+      "file": "ancient_anchor.glb",
+      "blend": "ancient_anchor.blend",
+      "dimensions": {
+        "width": 2.494999885559082,
+        "height": 2.9800000190734863,
+        "depth": 0.4674233943223953
+      },
+      "boundsBlender": {
+        "min": [
+          -1.059999942779541,
+          -0.2337295413017273,
+          0.0
+        ],
+        "max": [
+          1.434999942779541,
+          0.23369385302066803,
+          2.9800000190734863
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 2888,
+      "meshCount": 4,
+      "bytes": 140144,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [],
+      "degenerateTriangles": 0,
+      "preview": "previews/ancient_anchor.png"
+    },
+    {
+      "number": 9,
+      "id": "underwater_ruins",
+      "label": "水下遗迹套件",
+      "file": "underwater_ruins.glb",
+      "blend": "underwater_ruins.blend",
+      "dimensions": {
+        "width": 4.6650002002716064,
+        "height": 2.93999981880188,
+        "depth": 1.3499999642372131
+      },
+      "boundsBlender": {
+        "min": [
+          -1.2850000858306885,
+          -0.6499999761581421,
+          0.0
+        ],
+        "max": [
+          3.380000114440918,
+          0.699999988079071,
+          2.93999981880188
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body",
+        "arch",
+        "short_column",
+        "tall_column"
+      ],
+      "triangles": 600,
+      "meshCount": 13,
+      "bytes": 40608,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [
+        {
+          "id": "arch",
+          "file": "modules/underwater_ruins__arch.glb"
+        },
+        {
+          "id": "short_column",
+          "file": "modules/underwater_ruins__short_column.glb"
+        },
+        {
+          "id": "tall_column",
+          "file": "modules/underwater_ruins__tall_column.glb"
+        }
+      ],
+      "degenerateTriangles": 0,
+      "preview": "previews/underwater_ruins.png"
+    },
+    {
+      "number": 10,
+      "id": "coral_kit",
+      "label": "珊瑚套件",
+      "file": "coral_kit.glb",
+      "blend": "coral_kit.blend",
+      "dimensions": {
+        "width": 2.4739444255828857,
+        "height": 1.3924999237060547,
+        "depth": 2.325135350227356
+      },
+      "boundsBlender": {
+        "min": [
+          -0.488944411277771,
+          -0.41390955448150635,
+          0.0
+        ],
+        "max": [
+          1.9850000143051147,
+          1.9112257957458496,
+          1.3924999237060547
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body",
+        "coral_0",
+        "coral_1",
+        "coral_2",
+        "coral_3"
+      ],
+      "triangles": 2400,
+      "meshCount": 12,
+      "bytes": 127844,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [
+        {
+          "id": "coral_0",
+          "file": "modules/coral_kit__coral_0.glb"
+        },
+        {
+          "id": "coral_1",
+          "file": "modules/coral_kit__coral_1.glb"
+        },
+        {
+          "id": "coral_2",
+          "file": "modules/coral_kit__coral_2.glb"
+        },
+        {
+          "id": "coral_3",
+          "file": "modules/coral_kit__coral_3.glb"
+        }
+      ],
+      "degenerateTriangles": 0,
+      "preview": "previews/coral_kit.png"
+    },
+    {
+      "number": 11,
+      "id": "seagrass_kit",
+      "label": "海草套件",
+      "file": "seagrass_kit.glb",
+      "blend": "seagrass_kit.blend",
+      "dimensions": {
+        "width": 2.4125789999961853,
+        "height": 1.3924999237060547,
+        "depth": 2.325135350227356
+      },
+      "boundsBlender": {
+        "min": [
+          -0.42757898569107056,
+          -0.41390955448150635,
+          0.0
+        ],
+        "max": [
+          1.9850000143051147,
+          1.9112257957458496,
+          1.3924999237060547
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body",
+        "seagrass_0",
+        "seagrass_1",
+        "seagrass_2",
+        "seagrass_3"
+      ],
+      "triangles": 1440,
+      "meshCount": 12,
+      "bytes": 80448,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [
+        {
+          "id": "seagrass_0",
+          "file": "modules/seagrass_kit__seagrass_0.glb"
+        },
+        {
+          "id": "seagrass_1",
+          "file": "modules/seagrass_kit__seagrass_1.glb"
+        },
+        {
+          "id": "seagrass_2",
+          "file": "modules/seagrass_kit__seagrass_2.glb"
+        },
+        {
+          "id": "seagrass_3",
+          "file": "modules/seagrass_kit__seagrass_3.glb"
+        }
+      ],
+      "degenerateTriangles": 0,
+      "preview": "previews/seagrass_kit.png"
+    },
+    {
+      "number": 12,
+      "id": "tropical_fish",
+      "label": "热带鱼群",
+      "file": "tropical_fish.glb",
+      "blend": "tropical_fish.blend",
+      "dimensions": {
+        "width": 3.165630280971527,
+        "height": 0.7199999690055847,
+        "depth": 2.215000092983246
+      },
+      "boundsBlender": {
+        "min": [
+          -0.33281511068344116,
+          -0.5350000262260437,
+          0.12000000476837158
+        ],
+        "max": [
+          2.832815170288086,
+          1.6800000667572021,
+          0.8399999737739563
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "center",
+      "parts": [
+        "body",
+        "fish_0",
+        "fish_1",
+        "fish_2",
+        "fish_3",
+        "fish_4"
+      ],
+      "triangles": 1080,
+      "meshCount": 28,
+      "bytes": 73908,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [
+        {
+          "id": "fish_0",
+          "file": "modules/tropical_fish__fish_0.glb"
+        },
+        {
+          "id": "fish_1",
+          "file": "modules/tropical_fish__fish_1.glb"
+        },
+        {
+          "id": "fish_2",
+          "file": "modules/tropical_fish__fish_2.glb"
+        },
+        {
+          "id": "fish_3",
+          "file": "modules/tropical_fish__fish_3.glb"
+        },
+        {
+          "id": "fish_4",
+          "file": "modules/tropical_fish__fish_4.glb"
+        }
+      ],
+      "degenerateTriangles": 0,
+      "preview": "previews/tropical_fish.png"
+    },
+    {
+      "number": 13,
+      "id": "island_palm",
+      "label": "额外：椰树",
+      "file": "island_palm.glb",
+      "blend": "island_palm.blend",
+      "dimensions": {
+        "width": 3.119646906852722,
+        "height": 3.4882757663726807,
+        "depth": 3.1998744010925293
+      },
+      "boundsBlender": {
+        "min": [
+          -1.2120269536972046,
+          -1.5999372005462646,
+          0.0
+        ],
+        "max": [
+          1.9076199531555176,
+          1.5999372005462646,
+          3.4882757663726807
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 672,
+      "meshCount": 5,
+      "bytes": 39080,
+      "notes": [],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "modules": [],
+      "degenerateTriangles": 0,
+      "preview": "previews/island_palm.png"
+    }
+  ],
+  "notes": "11 reference categories + one additional palm; original geometry; no external textures"
+}

@@ -5,6 +5,13 @@ export function configurePreview(game:Game){
   const params=new URLSearchParams(location.search),hour=Number(params.get('hour'));
   if(params.has('hour')&&Number.isFinite(hour)&&hour>=0&&hour<24)game.clock.simulationTime=DAY_DURATION*(7+hour/24);
   if(params.get('weather')==='storm'){game.weather.storm=true;game.weather.intensity=1;game.hud.setActive('storm',true);}
+  if(game.worldManager.currentWorldId==='HOME'&&params.get('view')==='home-cottage'){
+    game.overview.enabled=false;game.explorer.enter(false);game.hud.setExplore(true);
+    game.camera.position.set(-1.564,4.446,.72);game.camera.lookAt(-1.6,4.30,-.4);game.explorer.syncLook();
+  }
+  if(game.worldManager.currentWorldId==='HOME'&&params.get('view')==='home-island'){
+    game.overview.suspend();game.explorer.suspend();game.overview.target.set(-.7,4.25,0);game.overview.minDistance=2;game.camera.position.set(4,7.2,8);game.camera.lookAt(-.7,4.25,0);game.camera.fov=35;game.camera.updateProjectionMatrix();
+  }
   if(game.worldManager.currentWorldId==='FARM'){
     const views:Record<string,{position:[number,number,number];target:[number,number,number]}>={
       'farm-overview':{position:[21,24,30],target:[0,4.1,0]},

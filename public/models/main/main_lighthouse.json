@@ -1,0 +1,41 @@
+{
+  "number": 4,
+  "id": "main_lighthouse",
+  "label": "灯塔",
+  "file": "main_lighthouse.glb",
+  "blend": "main_lighthouse.blend",
+  "dimensions": {
+    "width": 3.924294352531433,
+    "height": 7.032747745513916,
+    "depth": 4.054985523223877
+  },
+  "boundsBlender": {
+    "min": [
+      -1.9733290672302246,
+      -2.0027995109558105,
+      0.0
+    ],
+    "max": [
+      1.9509652853012085,
+      2.0521860122680664,
+      7.032747745513916
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "light_rotor"
+  ],
+  "triangles": 1502,
+  "meshCount": 13,
+  "bytes": 87716,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [],
+  "degenerateTriangles": 0,
+  "preview": "previews/main_lighthouse.png"
+}

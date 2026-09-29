@@ -5,6 +5,8 @@ import { seabedCellAt } from '../world/underwater/SeabedData';
 import { bottleRadiusAt } from '../world/bottle/Bounds';
 
 export class FishSystem extends Group {
+  private models:Group[]=[];
+  setModels(templates:Group[]){this.mesh.visible=false;for(let i=0;i<this.randoms.length/3;i++){const model=templates[i%templates.length].clone(true);model.scale.setScalar(.24);model.visible=i<this.fishCount;this.models.push(model);this.add(model);}}
   private mesh:InstancedMesh;private dummy=new Object3D();private randoms:number[]=[];
   private previous:Vector3[]=[];private yaws:number[]=[];private previousTime=0;
   private parts=[[0,0,0,.19,.095,.065],[-.125,0,0,.08,.13,.027],[.08,.025,.037,.022,.022,.01],[0,0,0,.035,.1,.07]];
@@ -26,6 +28,7 @@ export class FishSystem extends Group {
       if(player){const dx=x-player.x,dz=z-player.z,d=Math.hypot(dx,dz,y-player.y);if(d<.8&&d>.001){const push=(.8-d)*.45;x+=dx/d*push;z+=dz/d*push;}}
       ({x,z,y}=this.keepInWater(x,z,y));const previous=this.previous[i],first=previous.lengthSq()===0;let target=this.yaws[i];if(!first){const dx=x-previous.x,dz=z-previous.z;if(dx*dx+dz*dz>.0000001)target=Math.atan2(-dz,dx);}else target=Math.atan2(-Math.cos(angle),Math.sin(angle));
       const dt=Math.max(0,Math.min(.1,time-this.previousTime)),turn=1-Math.exp(-dt*8),difference=Math.atan2(Math.sin(target-this.yaws[i]),Math.cos(target-this.yaws[i])),step=Math.max(-.22,Math.min(.22,difference*turn));const yaw=this.yaws[i]=first?target:this.yaws[i]+step;previous.set(x,y,z);
+      const model=this.models[i];if(model){model.position.set(x,y,z);model.rotation.y=yaw+Math.PI/2;}
       for(let p=0;p<4;p++) {
         const part=this.parts[p],c=Math.cos(yaw),s=Math.sin(yaw),px=c*part[0]+s*part[2],pz=-s*part[0]+c*part[2];this.dummy.position.set(x+px,y+part[1],z+pz);this.dummy.scale.set(part[3],part[4],part[5]);this.dummy.rotation.set(0,yaw+(p===1?Math.sin(time*7+phase)*.28:0),0);this.dummy.updateMatrix();this.mesh.setMatrixAt(i*4+p,this.dummy.matrix);
       }
@@ -37,6 +40,6 @@ export class FishSystem extends Group {
     const radius=.16;for(let attempt=0;attempt<16;attempt++){const solid=terrainCellsNear(x,z,radius).find(cell=>y+radius>cell.solidMinY&&y-radius<cell.solidMaxY&&x>cell.minX-radius&&x<cell.maxX+radius&&z>cell.minZ-radius&&z<cell.maxZ+radius);if(!solid)break;const dx=x+.85,dz=z+.12,length=Math.hypot(dx/1.9,dz/1.04)||1;x+=dx/length*.08;z+=dz/length*.08;}
     const bed=seabedCellAt(x,z);if(bed)y=Math.max(y,bed.top+radius);const bottle=bottleRadiusAt(x)-.2,vertical=y-3.72,zLimit=Math.sqrt(Math.max(.04,bottle*bottle-vertical*vertical));z=Math.max(-zLimit,Math.min(zLimit,z));return {x,z,y};
   }
-  setCount(count:number) {this.fishCount=Math.min(count,this.randoms.length/3);this.mesh.count=this.fishCount*4;}
+  setCount(count:number) {this.fishCount=Math.min(count,this.randoms.length/3);this.mesh.count=this.fishCount*4;this.models.forEach((m,i)=>m.visible=i<this.fishCount);}
 }
 

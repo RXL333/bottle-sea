@@ -1,0 +1,43 @@
+{
+  "number": 3,
+  "id": "main_cottage",
+  "label": "主岛小屋",
+  "file": "main_cottage.glb",
+  "blend": "main_cottage.blend",
+  "dimensions": {
+    "width": 7.233001947402954,
+    "height": 4.695229530334473,
+    "depth": 5.496112823486328
+  },
+  "boundsBlender": {
+    "min": [
+      -3.4857120513916016,
+      -3.0999999046325684,
+      0.0
+    ],
+    "max": [
+      3.7472898960113525,
+      2.3961129188537598,
+      4.695229530334473
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "front_door",
+    "palm_left",
+    "palm_right"
+  ],
+  "triangles": 5306,
+  "meshCount": 31,
+  "bytes": 297732,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [],
+  "degenerateTriangles": 0,
+  "preview": "previews/main_cottage.png"
+}

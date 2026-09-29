@@ -1,0 +1,958 @@
+{
+  "assetCount": 12,
+  "moduleCount": 38,
+  "files": [
+    {
+      "file": "main_sailboat.glb",
+      "bytes": 163984,
+      "triangles": 3184,
+      "meshes": 14,
+      "bounds": {
+        "min": [
+          -1.1924999952316284,
+          -0.6000000238418579,
+          -2.5
+        ],
+        "max": [
+          1.1924999952316284,
+          4.900000095367432,
+          3.209339141845703
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "main_cottage.glb",
+      "bytes": 297732,
+      "triangles": 5306,
+      "meshes": 31,
+      "bounds": {
+        "min": [
+          -3.4857120513916016,
+          0,
+          -2.3961129188537598
+        ],
+        "max": [
+          3.7472898960113525,
+          4.695229543372989,
+          3.0999999046325684
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "main_lighthouse.glb",
+      "bytes": 87716,
+      "triangles": 1502,
+      "meshes": 13,
+      "bounds": {
+        "min": [
+          -1.9733290672302246,
+          0,
+          -2.0521860122680664
+        ],
+        "max": [
+          1.9509652853012085,
+          7.0327476263046265,
+          2.0027995109558105
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "main_dock_kit.glb",
+      "bytes": 131220,
+      "triangles": 2334,
+      "meshes": 40,
+      "bounds": {
+        "min": [
+          -1.5799999237060547,
+          -1.0299999713897705,
+          -1.380000114440918
+        ],
+        "max": [
+          1.5799999237060547,
+          2.200000047683716,
+          2.281844139099121
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__lamp.glb",
+      "bytes": 12516,
+      "triangles": 178,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.0700000524520874,
+          0,
+          -0.11899995803833008
+        ],
+        "max": [
+          0.6190000176429749,
+          2.200000047683716,
+          0.11899995803833008
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__life_ring.glb",
+      "bytes": 10088,
+      "triangles": 176,
+      "meshes": 2,
+      "bounds": {
+        "min": [
+          -0.3149999976158142,
+          -0.3149999976158142,
+          -0.0549999475479126
+        ],
+        "max": [
+          0.31499993801116943,
+          0.3149999976158142,
+          0.09000003337860107
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__pile_0.glb",
+      "bytes": 11604,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000006675720215
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000006675720215
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__pile_1.glb",
+      "bytes": 11604,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000006675720215
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000006675720215
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__pile_2.glb",
+      "bytes": 11604,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000006675720215
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000006675720215
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__pile_3.glb",
+      "bytes": 11604,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000006675720215
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000006675720215
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__pile_4.glb",
+      "bytes": 11604,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000000715255737
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000000715255737
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__pile_5.glb",
+      "bytes": 11604,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000000715255737
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000000715255737
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__platform.glb",
+      "bytes": 13296,
+      "triangles": 192,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -1.5,
+          -0.3100000023841858,
+          -1.350000023841858
+        ],
+        "max": [
+          1.5,
+          0,
+          1.350000023841858
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__rope_rails.glb",
+      "bytes": 9116,
+      "triangles": 160,
+      "meshes": 1,
+      "bounds": {
+        "min": [
+          -1.4399999380111694,
+          0.18566285073757172,
+          -1.2045782804489136
+        ],
+        "max": [
+          1.4399999380111694,
+          0.33433717489242554,
+          1.2045782804489136
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_dock_kit__stairs.glb",
+      "bytes": 6664,
+      "triangles": 84,
+      "meshes": 2,
+      "bounds": {
+        "min": [
+          -0.5099999904632568,
+          -0.9885481595993042,
+          -0.131844162940979
+        ],
+        "max": [
+          0.5099999904632568,
+          0.03854820132255554,
+          1.0818440914154053
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "main_fishing_deck.glb",
+      "bytes": 129052,
+      "triangles": 2258,
+      "meshes": 42,
+      "bounds": {
+        "min": [
+          -1.5799999237060547,
+          -1.0299999713897705,
+          -1.380000114440918
+        ],
+        "max": [
+          1.5799999237060547,
+          2.7125285156071186,
+          1.4600000381469727
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__fishing_rod.glb",
+      "bytes": 9964,
+      "triangles": 144,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -0.5275000333786011,
+          -0.012530989944934845,
+          -0.03089466691017151
+        ],
+        "max": [
+          0.03308802843093872,
+          2.6625285148620605,
+          1.5875000953674316
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__lamp.glb",
+      "bytes": 12540,
+      "triangles": 178,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.0700000524520874,
+          0,
+          -0.11899995803833008
+        ],
+        "max": [
+          0.6190000176429749,
+          2.200000047683716,
+          0.11899995803833008
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__life_ring.glb",
+      "bytes": 10104,
+      "triangles": 176,
+      "meshes": 2,
+      "bounds": {
+        "min": [
+          -0.3149999976158142,
+          -0.3149999976158142,
+          -0.0549999475479126
+        ],
+        "max": [
+          0.31499993801116943,
+          0.3149999976158142,
+          0.09000003337860107
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__pile_0.glb",
+      "bytes": 11628,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000006675720215
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000006675720215
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__pile_1.glb",
+      "bytes": 11628,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000006675720215
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000006675720215
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__pile_2.glb",
+      "bytes": 11628,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000006675720215
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000006675720215
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__pile_3.glb",
+      "bytes": 11628,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000006675720215
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000006675720215
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__pile_4.glb",
+      "bytes": 11628,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000000715255737
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000000715255737
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__pile_5.glb",
+      "bytes": 11628,
+      "triangles": 176,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.1799999475479126,
+          -1.0299999713897705,
+          -0.18000000715255737
+        ],
+        "max": [
+          0.1799999475479126,
+          0.550000011920929,
+          0.18000000715255737
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__platform.glb",
+      "bytes": 13316,
+      "triangles": 192,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -1.5,
+          -0.3100000023841858,
+          -1.350000023841858
+        ],
+        "max": [
+          1.5,
+          0,
+          1.350000023841858
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/main_fishing_deck__rope_rails.glb",
+      "bytes": 9128,
+      "triangles": 160,
+      "meshes": 1,
+      "bounds": {
+        "min": [
+          -1.4399999380111694,
+          0.18566285073757172,
+          -1.2045782804489136
+        ],
+        "max": [
+          1.4399999380111694,
+          0.33433717489242554,
+          1.2045782804489136
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "treasure_chest.glb",
+      "bytes": 83088,
+      "triangles": 1452,
+      "meshes": 11,
+      "bounds": {
+        "min": [
+          -0.7850000262260437,
+          0,
+          -0.5926091074943542
+        ],
+        "max": [
+          0.7850000262260437,
+          1.3744490146636963,
+          0.6624999642372131
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "ancient_anchor.glb",
+      "bytes": 140144,
+      "triangles": 2888,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -1.059999942779541,
+          0,
+          -0.23369385302066803
+        ],
+        "max": [
+          1.434999942779541,
+          2.9799999594688416,
+          0.2337295413017273
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "underwater_ruins.glb",
+      "bytes": 40608,
+      "triangles": 600,
+      "meshes": 13,
+      "bounds": {
+        "min": [
+          -1.2850000858306885,
+          0,
+          -0.699999988079071
+        ],
+        "max": [
+          3.380000114440918,
+          2.93999981880188,
+          0.6499999761581421
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/underwater_ruins__arch.glb",
+      "bytes": 20084,
+      "triangles": 300,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -1.2100000381469727,
+          0,
+          -0.3799999952316284
+        ],
+        "max": [
+          1.2100000381469727,
+          2.2849998474121094,
+          0.3799999952316284
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/underwater_ruins__short_column.glb",
+      "bytes": 8852,
+      "triangles": 96,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.3799999952316284,
+          0,
+          -0.3799999952316284
+        ],
+        "max": [
+          0.37999987602233887,
+          1.4900000095367432,
+          0.3799999952316284
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/underwater_ruins__tall_column.glb",
+      "bytes": 12664,
+      "triangles": 168,
+      "meshes": 4,
+      "bounds": {
+        "min": [
+          -0.38000011444091797,
+          0,
+          -0.3799999952316284
+        ],
+        "max": [
+          0.38000011444091797,
+          2.93999981880188,
+          0.3799999952316284
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "coral_kit.glb",
+      "bytes": 127844,
+      "triangles": 2400,
+      "meshes": 12,
+      "bounds": {
+        "min": [
+          -0.488944411277771,
+          0,
+          -1.9112257957458496
+        ],
+        "max": [
+          1.9850000143051147,
+          1.3924999237060547,
+          0.41390955448150635
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/coral_kit__coral_0.glb",
+      "bytes": 35376,
+      "triangles": 600,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -0.488944411277771,
+          0,
+          -0.4112258553504944
+        ],
+        "max": [
+          0.48500001430511475,
+          1.3924999237060547,
+          0.41390955448150635
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/coral_kit__coral_1.glb",
+      "bytes": 35376,
+      "triangles": 600,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -0.488944411277771,
+          0,
+          -0.4112258553504944
+        ],
+        "max": [
+          0.48500001430511475,
+          1.3924999237060547,
+          0.41390955448150635
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/coral_kit__coral_2.glb",
+      "bytes": 35384,
+      "triangles": 600,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -0.488944411277771,
+          0,
+          -0.4112257957458496
+        ],
+        "max": [
+          0.48500001430511475,
+          1.3924999237060547,
+          0.41390955448150635
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/coral_kit__coral_3.glb",
+      "bytes": 35376,
+      "triangles": 600,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -0.488944411277771,
+          0,
+          -0.4112257957458496
+        ],
+        "max": [
+          0.48500001430511475,
+          1.3924999237060547,
+          0.41390955448150635
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "seagrass_kit.glb",
+      "bytes": 80448,
+      "triangles": 1440,
+      "meshes": 12,
+      "bounds": {
+        "min": [
+          -0.42757898569107056,
+          0,
+          -1.9112257957458496
+        ],
+        "max": [
+          1.9850000143051147,
+          1.3924999237060547,
+          0.41390955448150635
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/seagrass_kit__seagrass_0.glb",
+      "bytes": 22444,
+      "triangles": 360,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -0.42757898569107056,
+          0,
+          -0.4112258553504944
+        ],
+        "max": [
+          0.48500001430511475,
+          1.3924999237060547,
+          0.41390955448150635
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/seagrass_kit__seagrass_1.glb",
+      "bytes": 22448,
+      "triangles": 360,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -0.4275789260864258,
+          0,
+          -0.4112258553504944
+        ],
+        "max": [
+          0.48500001430511475,
+          1.3924999237060547,
+          0.41390955448150635
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/seagrass_kit__seagrass_2.glb",
+      "bytes": 22456,
+      "triangles": 360,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -0.42757898569107056,
+          0,
+          -0.4112257957458496
+        ],
+        "max": [
+          0.48500001430511475,
+          1.3924999237060547,
+          0.41390955448150635
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/seagrass_kit__seagrass_3.glb",
+      "bytes": 22452,
+      "triangles": 360,
+      "meshes": 3,
+      "bounds": {
+        "min": [
+          -0.4275789260864258,
+          0,
+          -0.4112257957458496
+        ],
+        "max": [
+          0.48500001430511475,
+          1.3924999237060547,
+          0.41390955448150635
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "tropical_fish.glb",
+      "bytes": 73908,
+      "triangles": 1080,
+      "meshes": 28,
+      "bounds": {
+        "min": [
+          -0.33281511068344116,
+          0.12000000476837158,
+          -1.6800000667572021
+        ],
+        "max": [
+          2.832815170288086,
+          0.8399999737739563,
+          0.5350000262260437
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/tropical_fish__fish_0.glb",
+      "bytes": 16044,
+      "triangles": 216,
+      "meshes": 5,
+      "bounds": {
+        "min": [
+          -0.33281511068344116,
+          -0.22999998927116394,
+          -0.6800000071525574
+        ],
+        "max": [
+          0.33281511068344116,
+          0.320000022649765,
+          0.5350000262260437
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/tropical_fish__fish_1.glb",
+      "bytes": 15968,
+      "triangles": 216,
+      "meshes": 5,
+      "bounds": {
+        "min": [
+          -0.33281511068344116,
+          -0.35999998450279236,
+          -0.6800000071525574
+        ],
+        "max": [
+          0.33281517028808594,
+          0.35999998450279236,
+          0.5350000262260437
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/tropical_fish__fish_2.glb",
+      "bytes": 16596,
+      "triangles": 216,
+      "meshes": 6,
+      "bounds": {
+        "min": [
+          -0.33281517028808594,
+          -0.22999998927116394,
+          -0.6800000071525574
+        ],
+        "max": [
+          0.33281517028808594,
+          0.320000022649765,
+          0.5350000262260437
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/tropical_fish__fish_3.glb",
+      "bytes": 16592,
+      "triangles": 216,
+      "meshes": 6,
+      "bounds": {
+        "min": [
+          -0.33281511068344116,
+          -0.22999998927116394,
+          -0.6800000667572021
+        ],
+        "max": [
+          0.33281511068344116,
+          0.320000022649765,
+          0.5349999666213989
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "modules/tropical_fish__fish_4.glb",
+      "bytes": 16584,
+      "triangles": 216,
+      "meshes": 6,
+      "bounds": {
+        "min": [
+          -0.33281511068344116,
+          -0.22999998927116394,
+          -0.6800000667572021
+        ],
+        "max": [
+          0.33281517028808594,
+          0.320000022649765,
+          0.5349999666213989
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    },
+    {
+      "file": "island_palm.glb",
+      "bytes": 39080,
+      "triangles": 672,
+      "meshes": 5,
+      "bounds": {
+        "min": [
+          -1.2120269536972046,
+          0,
+          -1.5999372005462646
+        ],
+        "max": [
+          1.9076199531555176,
+          3.488275846466422,
+          1.5999372005462646
+        ]
+      },
+      "parsedBy": "Three.js GLTFLoader"
+    }
+  ],
+  "totalMainAssetBytes": 1394824,
+  "status": "passed"
+}

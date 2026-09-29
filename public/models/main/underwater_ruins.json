@@ -1,0 +1,56 @@
+{
+  "number": 9,
+  "id": "underwater_ruins",
+  "label": "水下遗迹套件",
+  "file": "underwater_ruins.glb",
+  "blend": "underwater_ruins.blend",
+  "dimensions": {
+    "width": 4.6650002002716064,
+    "height": 2.93999981880188,
+    "depth": 1.3499999642372131
+  },
+  "boundsBlender": {
+    "min": [
+      -1.2850000858306885,
+      -0.6499999761581421,
+      0.0
+    ],
+    "max": [
+      3.380000114440918,
+      0.699999988079071,
+      2.93999981880188
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "arch",
+    "short_column",
+    "tall_column"
+  ],
+  "triangles": 600,
+  "meshCount": 13,
+  "bytes": 40608,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [
+    {
+      "id": "arch",
+      "file": "modules/underwater_ruins__arch.glb"
+    },
+    {
+      "id": "short_column",
+      "file": "modules/underwater_ruins__short_column.glb"
+    },
+    {
+      "id": "tall_column",
+      "file": "modules/underwater_ruins__tall_column.glb"
+    }
+  ],
+  "degenerateTriangles": 0,
+  "preview": "previews/underwater_ruins.png"
+}

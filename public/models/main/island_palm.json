@@ -1,0 +1,40 @@
+{
+  "number": 13,
+  "id": "island_palm",
+  "label": "额外：椰树",
+  "file": "island_palm.glb",
+  "blend": "island_palm.blend",
+  "dimensions": {
+    "width": 3.119646906852722,
+    "height": 3.4882757663726807,
+    "depth": 3.1998744010925293
+  },
+  "boundsBlender": {
+    "min": [
+      -1.2120269536972046,
+      -1.5999372005462646,
+      0.0
+    ],
+    "max": [
+      1.9076199531555176,
+      1.5999372005462646,
+      3.4882757663726807
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 672,
+  "meshCount": 5,
+  "bytes": 39080,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [],
+  "degenerateTriangles": 0,
+  "preview": "previews/island_palm.png"
+}

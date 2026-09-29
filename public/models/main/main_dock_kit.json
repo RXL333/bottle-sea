@@ -1,0 +1,96 @@
+{
+  "number": 5,
+  "id": "main_dock_kit",
+  "label": "主码头套件",
+  "file": "main_dock_kit.glb",
+  "blend": "main_dock_kit.blend",
+  "dimensions": {
+    "width": 3.1599998474121094,
+    "height": 3.2300000190734863,
+    "depth": 3.661844253540039
+  },
+  "boundsBlender": {
+    "min": [
+      -1.5799999237060547,
+      -2.281844139099121,
+      -1.0299999713897705
+    ],
+    "max": [
+      1.5799999237060547,
+      1.380000114440918,
+      2.200000047683716
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "deck",
+  "parts": [
+    "body",
+    "platform",
+    "pile_0",
+    "pile_1",
+    "pile_2",
+    "pile_3",
+    "pile_4",
+    "pile_5",
+    "rope_rails",
+    "lamp",
+    "life_ring",
+    "stairs"
+  ],
+  "triangles": 2334,
+  "meshCount": 40,
+  "bytes": 131220,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [
+    {
+      "id": "lamp",
+      "file": "modules/main_dock_kit__lamp.glb"
+    },
+    {
+      "id": "life_ring",
+      "file": "modules/main_dock_kit__life_ring.glb"
+    },
+    {
+      "id": "pile_0",
+      "file": "modules/main_dock_kit__pile_0.glb"
+    },
+    {
+      "id": "pile_1",
+      "file": "modules/main_dock_kit__pile_1.glb"
+    },
+    {
+      "id": "pile_2",
+      "file": "modules/main_dock_kit__pile_2.glb"
+    },
+    {
+      "id": "pile_3",
+      "file": "modules/main_dock_kit__pile_3.glb"
+    },
+    {
+      "id": "pile_4",
+      "file": "modules/main_dock_kit__pile_4.glb"
+    },
+    {
+      "id": "pile_5",
+      "file": "modules/main_dock_kit__pile_5.glb"
+    },
+    {
+      "id": "platform",
+      "file": "modules/main_dock_kit__platform.glb"
+    },
+    {
+      "id": "rope_rails",
+      "file": "modules/main_dock_kit__rope_rails.glb"
+    },
+    {
+      "id": "stairs",
+      "file": "modules/main_dock_kit__stairs.glb"
+    }
+  ],
+  "degenerateTriangles": 0,
+  "preview": "previews/main_dock_kit.png"
+}

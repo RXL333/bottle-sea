@@ -1,0 +1,66 @@
+{
+  "number": 12,
+  "id": "tropical_fish",
+  "label": "热带鱼群",
+  "file": "tropical_fish.glb",
+  "blend": "tropical_fish.blend",
+  "dimensions": {
+    "width": 3.165630280971527,
+    "height": 0.7199999690055847,
+    "depth": 2.215000092983246
+  },
+  "boundsBlender": {
+    "min": [
+      -0.33281511068344116,
+      -0.5350000262260437,
+      0.12000000476837158
+    ],
+    "max": [
+      2.832815170288086,
+      1.6800000667572021,
+      0.8399999737739563
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "center",
+  "parts": [
+    "body",
+    "fish_0",
+    "fish_1",
+    "fish_2",
+    "fish_3",
+    "fish_4"
+  ],
+  "triangles": 1080,
+  "meshCount": 28,
+  "bytes": 73908,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [
+    {
+      "id": "fish_0",
+      "file": "modules/tropical_fish__fish_0.glb"
+    },
+    {
+      "id": "fish_1",
+      "file": "modules/tropical_fish__fish_1.glb"
+    },
+    {
+      "id": "fish_2",
+      "file": "modules/tropical_fish__fish_2.glb"
+    },
+    {
+      "id": "fish_3",
+      "file": "modules/tropical_fish__fish_3.glb"
+    },
+    {
+      "id": "fish_4",
+      "file": "modules/tropical_fish__fish_4.glb"
+    }
+  ],
+  "degenerateTriangles": 0,
+  "preview": "previews/tropical_fish.png"
+}

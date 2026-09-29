@@ -3,7 +3,7 @@ export type ShipPose={x:number;z:number;yaw:number};
 /** Compact open-water circuit, kept east of the island and dock. */
 export function sampleShipPath(time:number):ShipPose{
   const angle=time*.065+.3,rx=.68,rz=.68;
-  return {x:2.42+Math.cos(angle)*rx,z:Math.sin(angle)*rz,yaw:Math.atan2(-rx*Math.sin(angle),rz*Math.cos(angle))};
+  return {x:2.72+Math.cos(angle)*rx,z:Math.sin(angle)*rz,yaw:Math.atan2(-rx*Math.sin(angle),rz*Math.cos(angle))};
 }
 
 /** 2D SAT for an oriented ship footprint against an axis-aligned solid. */

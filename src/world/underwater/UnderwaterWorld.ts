@@ -7,24 +7,23 @@ export class UnderwaterWorld extends Group {
   constructor() {
     super();this.name='UnderwaterWorld';const b=new VoxelBatch();const random=seededRandom(1601);
     for(const cell of SEABED_CELLS){b.add(cell.color,cell.x,cell.centerY,cell.z,.239,.16,.239);if(random()<.05)b.add('#647b68',cell.x,cell.centerY+.12,cell.z,.16,.14,.17);}
+    b.build(this).name='Seabed';const decorations=new VoxelBatch();
     for(let i=0;i<90;i++) {
       const x=-5.3+random()*9.4,z=-1.2+random()*2.5;
       if((Math.abs(x+1.8)<.5&&z>.8)||(x>2.5&&x<4&&z>0))continue;
       const h=.18+random()*.55;
-      for(let j=0;j<h/.12;j++) b.add(['#366746','#428752','#6b944f'][i%3],x+Math.sin(j*.9+i)*.04,1.79+j*.12,z,.07,.118,.07);
-      if(i%3===0)b.add('#4a8251',x+.1,1.87+h*.4,z,.19,.08,.08);
+      for(let j=0;j<h/.12;j++) decorations.add(['#366746','#428752','#6b944f'][i%3],x+Math.sin(j*.9+i)*.04,1.79+j*.12,z,.07,.118,.07);
+      if(i%3===0)decorations.add('#4a8251',x+.1,1.87+h*.4,z,.19,.08,.08);
     }
     for(let i=0;i<19;i++) {
       const x=-5+random()*9.1,z=.35+random()*.95,color=['#aa6686','#9a789f','#c27a68','#6f8ea0'][i%4];
       for(let arm=0;arm<4;arm++) {
         const h=.12+random()*.35;
-        b.add(color,x+(arm-1.5)*.095,1.79+h/2,z+(arm%2)*.08,.09,h,.09);
-        if(arm%2===0)b.add(color,x+(arm-1.5)*.095+.045,1.84+h*.45,z,.18,.08,.08);
+        decorations.add(color,x+(arm-1.5)*.095,1.79+h/2,z+(arm%2)*.08,.09,h,.09);
+        if(arm%2===0)decorations.add(color,x+(arm-1.5)*.095+.045,1.84+h*.45,z,.18,.08,.08);
       }
     }
-    b.build(this);
+    decorations.build(this).name='LegacyReef';
     for(const [name,build] of [['anchor',anchor],['chest',treasureChest],['ruins',ruins]] as const){const group=new Group(),batch=new VoxelBatch();group.name=name;build(batch);batch.build(group);this.add(group);}
   }
 }
-
-

@@ -1,0 +1,43 @@
+{
+  "number": 2,
+  "id": "main_sailboat",
+  "label": "主岛帆船",
+  "file": "main_sailboat.glb",
+  "blend": "main_sailboat.blend",
+  "dimensions": {
+    "width": 2.384999990463257,
+    "height": 5.5000001192092896,
+    "depth": 5.709339141845703
+  },
+  "boundsBlender": {
+    "min": [
+      -1.1924999952316284,
+      -3.209339141845703,
+      -0.6000000238418579
+    ],
+    "max": [
+      1.1924999952316284,
+      2.5,
+      4.900000095367432
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "waterline",
+  "parts": [
+    "body",
+    "mainsail",
+    "jib",
+    "rudder"
+  ],
+  "triangles": 3184,
+  "meshCount": 14,
+  "bytes": 163984,
+  "notes": [],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "modules": [],
+  "degenerateTriangles": 0,
+  "preview": "previews/main_sailboat.png"
+}
