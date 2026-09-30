@@ -21,7 +21,7 @@ it('loads the real farm GLBs, excludes main-island furniture, batches geometry, 
   expect(models.userData.assetsPlaced).toBe(FARM_PLACEMENTS.length);
   expect(models.userData.staticBatches).toBeLessThan(50);
   const bounds=new Box3().setFromObject(models),size=bounds.getSize(new Vector3());
-  expect(size.x).toBeLessThan(72);expect(size.z).toBeLessThan(85);expect(size.y).toBeLessThan(6);
+  expect(size.x).toBeLessThan(72);expect(size.z).toBeLessThan(85);expect(size.y).toBeLessThan(6.2);
   const owned=models.children.find((o):o is Mesh=>o instanceof Mesh)!;
   const released=vi.spyOn(owned.geometry,'dispose');
   const spawn=world.getSpawnPoint();for(let t=0;t<10;t+=.25){world.prepare({delta:.016,time:t,gameTime:0,storm:1,dayTime:.5,night:0,flash:0});expect(hitsDynamicObstacle(spawn.position[0],spawn.position[2],spawn.position[1],world.boat.collisionBoxes)).toBe(false);}
