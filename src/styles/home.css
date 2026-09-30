@@ -1,0 +1,8 @@
+.home-panel{color:#e7e6cf;background:#172c2cf7;border:1px solid #bccca6;width:min(640px,calc(100vw - 32px));box-sizing:border-box;padding:26px;box-shadow:6px 6px 0 #06191bab;font:inherit;max-height:88vh;overflow:auto}
+.home-panel::backdrop{background:#061b2580}.home-panel h2{margin:0 0 14px;font-size:22px;font-weight:normal;letter-spacing:2px}.home-panel>p{font-size:14px;line-height:1.7;color:#bfccb9}
+.home-panel button{border:1px solid #b4c8a555;padding:9px 12px;background:#b8cba3;color:#20392d;cursor:pointer;font:inherit;font-size:13px}.home-panel button:hover{background:#d1ddb9}.home-panel button:focus-visible{outline:2px solid #f6d28c;outline-offset:3px}
+.home-actions{display:flex;flex-wrap:wrap;gap:8px}.storage-columns{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px}.storage-columns h3{font-weight:normal;font-size:16px;color:#e1dfbf}.storage-row{padding:10px 0 16px;border-top:1px solid #b4c8a533}.storage-row p{font-size:14px}.storage-empty{font-size:13px;color:#aebfa9;padding:20px 0}.storage-status{min-height:24px}.home-back{margin-top:8px}
+.cottage-world .weather{display:block!important}.cottage-world #forecast{display:none}.cottage-world .weather #day{color:#e4dbb6}.home-stats{font-size:12px;margin-top:9px;color:#c5cfb7}.home-stats[hidden]{display:none}
+.cottage-world.exploring .weather{opacity:1}.cottage-world .hud.transitioning .weather{opacity:0}
+.sleeping .hud .bottom,.sleeping #crosshair,.sleeping .quality,.sleeping .focus-menu{visibility:hidden}.sleeping .travel-cover{pointer-events:auto}.sleeping .travel-caption{top:45%;font-size:16px;letter-spacing:3px}
+@media(max-width:520px){.home-panel{padding:20px}.storage-columns{grid-template-columns:1fr;gap:10px}.storage-empty{padding:8px 0}}

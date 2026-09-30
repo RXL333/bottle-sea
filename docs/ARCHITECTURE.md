@@ -1,5 +1,21 @@
 # 架构
 
+## Home System
+
+GameplayFoundation 同时持有 HomeSystem，其快照为 `home: { chest }`；24 格小屋箱子复用 Inventory 的整笔容器转移。没有 Home 字段的旧存档首次补木材 8、石头 4，已有空箱子不补发；旧 doorOpen 字段忽略，门保持关闭。
+
+CottageWorld 从实际家具布局建立门、床、箱子、炉灶的交互目标。门 E 直接执行场景切换，航海桌及配套物件靠右墙，模型与碰撞使用同一布局。床和箱子由 Game 注册行为打开 HomePanel，家具面板冻结日历并暂停探索，关闭后保留当前位置；睡觉采用独立 SleepTransition 和 SleepOverlay，按实际 6 秒播放月光到日出的 SVG 动画，接近结束时调用次日时间 API 和体力恢复。
+
+HUD 右侧中央的按键卡片显示 InteractionSystem 的提示。ExploreController 的过场暂停保留 Pointer Lock，面板暂停记录之前锁定状态，点击关闭 / 选择时恢复；动画过程中阻止鼠标旋转和移动，场景交接后恢复输入，不要求重新双击。
+
+航行身份仍为 HOME / FARM；`PlayerState.currentSpawnId = cottage_entry` 记录人在屋内，刷新加载 COTTAGE 并恢复安全入口。真实模型、handler、UI 与相机坐标均不写入存档。功能说明与待验收项见 [HOME_SYSTEM.md](HOME_SYSTEM.md)。
+
+## Gameplay Foundation
+
+Game 唯一持有 GameplayFoundation，包含 ItemRegistry、Inventory、PlayerProgress 和 GameplayTime；世界切换或销毁不重建这些服务。WorldManager 通过 enter 上下文传递服务，统一 E 键交互也收到相同实例。InteractionSystem 负责目标距离、可用性、提示、行为分发及异步防重入；Game 注册旅行与小屋过场行为，并处理统一结果和发现反馈。世界新增玩法可在目标上注册 onInteract，无需继续扩展 Game 的 action 判断。
+
+SaveSystem 当前采用 v2 新 key，并从 v1 迁移；保存公共背包、玩家进度以及原有世界、时间和设置。GameplayTime 提供分钟推进和次日时刻推进，不改变动画时钟、倍速和暂停。公共状态变更请求节流保存；旅行到达和页面关闭仍立即 flush。容器转移整笔提交，失败无部分扣除。详细接口与边界见 [GAMEPLAY_FOUNDATION.md](GAMEPLAY_FOUNDATION.md)。下方为世界扩展及视觉系统说明，其中 v1 内容为历史基础。
+
 ## 生命周期
 
 ### World Expansion Foundation 分支

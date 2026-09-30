@@ -12,6 +12,11 @@ export function configurePreview(game:Game){
   if(game.worldManager.currentWorldId==='HOME'&&params.get('view')==='home-island'){
     game.overview.suspend();game.explorer.suspend();game.overview.target.set(-.7,4.25,0);game.overview.minDistance=2;game.camera.position.set(4,7.2,8);game.camera.lookAt(-.7,4.25,0);game.camera.fov=35;game.camera.updateProjectionMatrix();
   }
+  if(game.worldManager.currentWorldId==='COTTAGE'){
+    const checkpoints:Record<string,string>={'cottage-bed':'cottage_bed','cottage-chest':'cottage_chest','cottage-stove':'cottage_stove','cottage-door':'cottage_door','cottage-exit':'cottage_exit'};
+    const id=checkpoints[params.get('view')??''];
+    if(id){const spawn=game.worldManager.currentWorld!.getSpawnPoint(id);game.camera.position.fromArray(spawn.position);game.camera.lookAt(...spawn.lookAt);game.explorer.syncLook();}
+  }
   if(game.worldManager.currentWorldId==='FARM'){
     const views:Record<string,{position:[number,number,number];target:[number,number,number]}>={
       'farm-overview':{position:[21,24,30],target:[0,4.1,0]},

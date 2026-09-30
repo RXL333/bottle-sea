@@ -4,6 +4,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Vector3 } from 'three';
 import { CottageWorld } from './CottageWorld';
 import type { InteriorLayout } from './CottageWorld';
+import { InteractionActions } from '../../systems/InteractionSystem';
+import { GameClock } from '../../core/GameClock';
+import { GameplayFoundation } from '../../gameplay/GameplayFoundation';
+import { defaultWorldState } from '../../state/WorldStateRegistry';
 it('loads actual modular room with full enclosure, clear entrance and furniture collisions',async()=>{
  const layout=JSON.parse(await readFile('public/models/interior/layout.json','utf8')) as InteriorLayout;
  const world=new CottageWorld(async url=>{const b=await readFile('public'+url);return (await new GLTFLoader().parseAsync(b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength),'' )).scene;},layout);
@@ -13,6 +17,11 @@ it('loads actual modular room with full enclosure, clear entrance and furniture 
  expect(world.navigation.hitsObstacle(4,0,1.555)).toBe(true);
  const box=world.colliders[0];expect(world.navigation.hitsObstacle((box.minX+box.maxX)/2,(box.minZ+box.maxZ)/2,1.555)).toBe(true);
  expect(world.root.children.length).toBeGreaterThan(250);
- world.interaction.update(new Vector3(...p));expect(world.interaction.nearest?.action).toBe('EXIT_COTTAGE');world.interaction.interact();expect(world.interaction.discovered.size).toBe(0);
+ const position=new Vector3(...p),gameplay=new GameplayFoundation(new GameClock()),actions=new InteractionActions().register('EXIT_COTTAGE',()=>({status:'success'}));
+ world.enter({gameTime:gameplay.time.gameTime,state:defaultWorldState(),spawn:world.getSpawnPoint(),gameplay});
+ world.interaction.update(position);expect(world.interaction.nearest?.action).toBe('EXIT_COTTAGE');
+ expect((await world.interaction.interact({position,worldId:'COTTAGE',gameplay},actions)).status).toBe('success');
+ position.fromArray(world.getSpawnPoint('cottage_exit').position);
+ expect((await world.interaction.interact({position,worldId:'COTTAGE',gameplay},actions)).status).toBe('success');expect(world.interaction.discovered.size).toBe(0);
  world.dispose();expect(world.root.children.length).toBe(0);
 });

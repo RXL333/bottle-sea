@@ -4,10 +4,12 @@ import { WorldStateRegistry } from '../state/WorldStateRegistry';
 import { WorldRegistry } from './WorldRegistry';
 import { WorldManager } from './WorldManager';
 import type { GameWorld, WorldId } from './types';
+import { GameClock } from '../core/GameClock';
+import { GameplayFoundation } from '../gameplay/GameplayFoundation';
 function fixture(){
   const order:string[]=[],registry=new WorldRegistry(),scene=new Scene(),states=new WorldStateRegistry();
   const create=(id:WorldId,fail=false):GameWorld=>({id,root:new Group(),load:vi.fn(async()=>{order.push(`${id}:load`);if(fail)throw Error('load failed');}),enter:vi.fn(()=>{order.push(`${id}:enter`);}),leave:vi.fn(({gameTime})=>{order.push(`${id}:leave`);return {lastSimulatedGameTime:gameTime,discoveries:id==='HOME'?['anchor','lighthouse']:[]};}),dispose:vi.fn(()=>{order.push(`${id}:dispose`);}),update:vi.fn(),getSpawnPoint:()=>({id:`${id}:dock`,position:[0,1,0],lookAt:[0,1,-1]}),applyQuality:vi.fn(()=>{order.push(`${id}:quality`);})});
-  const place=vi.fn(()=>{order.push('spawn');});return {order,registry,scene,states,create,place,manager:new WorldManager(scene,registry,states,place)};
+  const place=vi.fn(()=>{order.push('spawn');}),gameplay=new GameplayFoundation(new GameClock());return {order,registry,scene,states,create,place,gameplay,manager:new WorldManager(scene,registry,states,place,gameplay)};
 }
 describe('lazy world lifecycle',()=>{
   it('preloads a detached destination and activates it without loading twice',async()=>{

@@ -11,6 +11,7 @@ export class ExploreController {
   readonly pointer:PointerLockControls;active=false;swimming=false;underwater=false;renderOffsetY=0;
   private keys=new Set<string>();private velocityY=0;private forward=new Vector3();private right=new Vector3();private move=new Vector3();private up=new Vector3(0,1,0);
   private safePosition=new Vector3();
+  private holdPointerLock=false;private relockAfterPanel=false;
   private dragging=false;private euler=new Euler(0,0,0,'YXZ');private lookX=0;private lookY=0;private dragX=0;private dragY=0;private dragId:number|null=null;private eyeHeight=PLAYER_FOOT_OFFSET;private headInitialized=false;
   onInteract=()=>{};onLockChange=(locked:boolean)=>{void locked;};
   grounded=false;
@@ -22,9 +23,10 @@ export class ExploreController {
       this.cancelLook();if(!locked)this.keys.clear();this.onLockChange(locked);
     });
     window.addEventListener('keydown',event=>{
-      if(!this.active||event.target instanceof HTMLButtonElement)return;
+      const target=event.target as HTMLElement|null;
+      if(!this.active||target?.isContentEditable||['BUTTON','INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;
       if(['Space','KeyW','KeyA','KeyS','KeyD','KeyC','ShiftLeft','ShiftRight','KeyE'].includes(event.code))event.preventDefault();
-      this.keys.add(event.code);if(event.code==='KeyE'&&!event.repeat)this.onInteract();
+      const pressed=!this.keys.has(event.code);this.keys.add(event.code);if(event.code==='KeyE'&&!event.repeat&&pressed)this.onInteract();
     });
     window.addEventListener('keyup',event=>this.keys.delete(event.code));
     window.addEventListener('blur',()=>{this.keys.clear();this.cancelLook();});
@@ -48,15 +50,22 @@ export class ExploreController {
     element.addEventListener('dblclick',()=>{if(this.active)this.lock();});
   }
   setNavigation(navigation:NavigationSurface){this.navigation=navigation;this.eyeHeight=navigation.eyeHeight??PLAYER_FOOT_OFFSET;this.swimming=false;this.underwater=false;this.keys.clear();this.cancelLook();}
-  enter(requestLock=true,spawn?:SpawnPoint){this.active=true;this.camera.near=.08;this.camera.far=40;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);if(spawn){this.camera.position.fromArray(spawn.position);this.camera.lookAt(...spawn.lookAt);}this.velocityY=0;this.renderOffsetY=0;this.headInitialized=false;this.syncLook();if(requestLock)this.lock();}
-  exit(){this.active=false;this.releaseLock();this.keys.clear();this.camera.near=.12;this.camera.far=200;this.camera.fov=34;this.camera.updateProjectionMatrix();this.swimming=false;this.underwater=false;this.renderOffsetY=0;this.headInitialized=false;}
-  suspend(){this.active=false;this.keys.clear();this.cancelLook();this.releaseLock();}
+  enter(requestLock=true,spawn?:SpawnPoint){this.active=true;this.holdPointerLock=false;this.camera.near=.08;this.camera.far=40;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);if(spawn){this.camera.position.fromArray(spawn.position);this.camera.lookAt(...spawn.lookAt);}this.velocityY=0;this.renderOffsetY=0;this.headInitialized=false;this.syncLook();if(requestLock)this.lock();}
+  exit(){this.active=false;this.holdPointerLock=false;this.relockAfterPanel=false;this.releaseLock();this.keys.clear();this.camera.near=.12;this.camera.far=200;this.camera.fov=34;this.camera.updateProjectionMatrix();this.swimming=false;this.underwater=false;this.renderOffsetY=0;this.headInitialized=false;}
+  /** Cutscenes stop input without leaving the browser's existing pointer lock. */
+  suspend(preservePointerLock=false){this.active=false;this.holdPointerLock=preservePointerLock;this.keys.clear();this.cancelLook();if(!preservePointerLock)this.releaseLock();}
+  suspendForPanel(){this.relockAfterPanel=this.element.ownerDocument?.pointerLockElement===this.element;this.suspend();}
+  resume(){this.active=true;this.holdPointerLock=false;this.keys.clear();this.cancelLook();this.element.focus();}
+  resumeFromPanel(){const relock=this.relockAfterPanel;this.relockAfterPanel=false;this.resume();if(relock)this.lock();}
+  /** Called in the panel's click event, while browser user activation is still valid. */
+  beginTransitionFromPanel(){const relock=this.relockAfterPanel;this.relockAfterPanel=false;this.suspend(true);if(relock)this.lock();}
   private releaseLock(){const doc=this.element.ownerDocument;if(doc?.pointerLockElement===this.element)doc.exitPointerLock();else this.pointer.isLocked=false;}
   private lock(){
     // Some embedded browsers deny Pointer Lock. Drag-look remains fully usable.
+    const doc=this.element.ownerDocument;if(doc?.pointerLockElement===this.element)return;
     try {void Promise.resolve(this.element.requestPointerLock()).then(()=>{
-      if(!this.active){document.exitPointerLock();return;}
-      if(document.pointerLockElement===this.element){this.pointer.isLocked=true;this.syncLook();this.onLockChange(true);}
+      if(!this.active&&!this.holdPointerLock){this.releaseLock();return;}
+      if(doc?.pointerLockElement===this.element){this.pointer.isLocked=true;this.syncLook();this.onLockChange(true);}
     }).catch(()=>this.onLockChange(false));}catch{this.onLockChange(false);}
   }
   update(delta:number,waterSurface=WATER_LEVEL){

@@ -44,7 +44,7 @@ export class HomeModels extends Group {
     this.solid(this.place('bed',-1.94,3.97,-.40,.23));
     this.solid(this.place('stove',-1.09,3.97,-.59,.14));
     this.solid(this.place('storage',-1.02,3.97,.02,.13,Math.PI/2));
-    // Closed cottage is reserved for a future separate interior scene.
+    // Exterior remains solid; E transfers to the full-scale interior scene.
     this.slab(-2.212,-.788,3.97,5.03,-.832,.452);
     // Foundation and porch surfaces.
     this.slab(-2.26,-.74,3.83,3.97,-.89,.49);

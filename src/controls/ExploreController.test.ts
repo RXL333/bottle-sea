@@ -8,6 +8,9 @@ import { LANDMARKS } from '../world/underwater/Landmarks';
 import { insideBottle } from '../world/bottle/Bounds';
 import { WaterCrossing } from '../systems/WaterEntrySystem';
 import { islandBottomHeight } from '../world/island/Island';
+import { GameClock } from '../core/GameClock';
+import { GameplayFoundation } from '../gameplay/GameplayFoundation';
+import type { InteractionContext,InteractionPosition } from '../systems/InteractionSystem';
 class FakeButton extends EventTarget {}
 class FakeElement extends EventTarget { requestPointerLock(){return Promise.reject(new Error('embedded browser'));} }
 let events:EventTarget;
@@ -16,6 +19,7 @@ afterEach(()=>vi.unstubAllGlobals());
 function setup(){const camera=new PerspectiveCamera(),element=new FakeElement(),controls=new ExploreController(camera,element as unknown as HTMLElement);controls.active=true;camera.position.set(.65,4.12,1.8);camera.lookAt(.65,4.12,0);return {camera,controls};}
 function key(code:string,down=true){const event=new Event(down?'keydown':'keyup');Object.defineProperties(event,{code:{value:code},repeat:{value:false}});events.dispatchEvent(event);}
 function advance(controls:ExploreController,seconds:number){for(let t=0;t<seconds;t+=1/60)controls.update(1/60);}
+const interactionContext=(position:InteractionPosition):InteractionContext=>({position,worldId:'HOME',gameplay:new GameplayFoundation(new GameClock())});
 describe('exploration integration',()=>{
   it('swims through the open passage beneath the island',()=>{
     const {camera,controls}=setup();camera.position.set(-3.15,2.1,0);camera.lookAt(1.2,2.1,0);controls.syncLook();key('KeyW');advance(controls,4.5);key('KeyW',false);
@@ -53,12 +57,12 @@ describe('exploration integration',()=>{
     key('KeyW',false);expect(camera.position.x).toBeLessThan(1.1);expect(camera.position.y).toBeCloseTo(2.6);expect(controls.swimming).toBe(true);
   });
   it('uses a stable depth range while exploring and restores the overview camera',()=>{const {camera,controls}=setup();controls.active=false;controls.enter(false);expect(camera.near).toBe(.08);expect(camera.far).toBe(40);controls.exit();expect(camera.near).toBe(.12);expect(camera.far).toBe(200);});
-  it('walks along the dock, steps onto the island and discovers the lighthouse',()=>{const {camera,controls}=setup();key('KeyW');advance(controls,1.35);key('KeyW',false);expect(camera.position.z).toBeLessThan(.65);expect(camera.position.y).toBeGreaterThan(4.05);const interaction=new InteractionSystem();interaction.update(camera.position);expect(interaction.nearest?.id,camera.position.toArray().join(',')).toBe('lighthouse');expect(interaction.interact()).toContain('发现');});
+  it('walks along the dock, steps onto the island and discovers the lighthouse',async()=>{const {camera,controls}=setup();key('KeyW');advance(controls,1.35);key('KeyW',false);expect(camera.position.z).toBeLessThan(.65);expect(camera.position.y).toBeGreaterThan(4.05);const interaction=new InteractionSystem();interaction.update(camera.position);expect(interaction.nearest?.id,camera.position.toArray().join(',')).toBe('lighthouse');expect((await interaction.interact(interactionContext(camera.position))).message).toContain('发现');});
   it('smooths only the rendered step offset while physical support changes immediately',()=>{const {camera,controls}=setup();key('KeyW');let previous=camera.position.y+controls.renderOffsetY,maxVisualDelta=0,sawOffset=false;for(let i=0;i<100;i++){controls.update(1/60);const visual=camera.position.y+controls.renderOffsetY;maxVisualDelta=Math.max(maxVisualDelta,Math.abs(visual-previous));previous=visual;sawOffset||=controls.renderOffsetY<-.01;}key('KeyW',false);expect(sawOffset).toBe(true);expect(maxVisualDelta).toBeLessThan(.035);expect(Math.abs(controls.renderOffsetY)).toBeLessThan(.01);});
   it.each(['KeyA','KeyD'])('never jumps during shore strafing with %s',code=>{const {camera,controls}=setup();camera.position.set(-.8,4.36,0);camera.lookAt(-.8,4.36,-1);controls.syncLook();key(code);let maxStep=0;for(let i=0;i<240;i++){const before=camera.position.clone();controls.update(1/60);maxStep=Math.max(maxStep,Math.hypot(camera.position.x-before.x,camera.position.z-before.z));}key(code,false);expect(maxStep).toBeLessThanOrEqual(1.05/60+.0001);});
   it('dives, swims, rises, and stays within the bottle',()=>{const {camera,controls}=setup();camera.position.set(2,3.4,1);key('KeyC');advance(controls,1);key('KeyC',false);expect(controls.underwater).toBe(true);expect(camera.position.y).toBeLessThan(2.5);key('Space');advance(controls,1.5);key('Space',false);expect(camera.position.y).toBeGreaterThan(3.3);key('KeyD');advance(controls,20);expect(insideBottle(camera.position.x,camera.position.y,camera.position.z,0)).toBe(true);});
   it('blocks walls and jumps under gravity',()=>{const {camera,controls}=setup();camera.position.set(-1.5,4.36,.6);camera.lookAt(-1.5,4.36,-1);key('KeyW');advance(controls,2);key('KeyW',false);expect(camera.position.z).toBeGreaterThan(.3);key('Space');advance(controls,.15);key('Space',false);expect(camera.position.y).toBeGreaterThan(4.45);advance(controls,1);expect(camera.position.y).toBeCloseTo(4.36,1);});
-  it('discovers all four targets only within range and without duplicates',()=>{const {camera}=setup(),interaction=new InteractionSystem();camera.position.set(10,10,10);interaction.update(camera.position);interaction.interact();expect(interaction.discovered.size).toBe(0);for(const target of LANDMARKS){camera.position.set(target.x,target.y,target.z);interaction.update(camera.position);interaction.interact();interaction.interact();}expect(interaction.discovered.size).toBe(4);});
+  it('discovers all four targets only within range and without duplicates',async()=>{const {camera}=setup(),interaction=new InteractionSystem();camera.position.set(10,10,10);await interaction.interact(interactionContext(camera.position));expect(interaction.discovered.size).toBe(0);for(const target of LANDMARKS){camera.position.set(target.x,target.y,target.z);await interaction.interact(interactionContext(camera.position));await interaction.interact(interactionContext(camera.position));}expect(interaction.discovered.size).toBe(4);});
 });
 
 
@@ -73,4 +77,20 @@ it('uses room eye height and restores outdoor height without a fall or stale inp
  const {camera,controls}=setup();const world=new FarmWorld();controls.setNavigation({...world.navigation,eyeHeight:1.55,groundHeight:()=>0,waterLevel:()=>-100,hitsObstacle:()=>false,resolveVertical:(_x,_z,_from,to)=>Math.max(1.55,to),isInside:()=>true,constrain:()=>{}});
  camera.position.set(0,1.55,0);controls.syncLook();for(let i=0;i<60;i++)controls.update(1/60,-100);expect(camera.position.y).toBeCloseTo(1.55);expect(controls.swimming).toBe(false);
  controls.setNavigation(world.navigation);camera.position.fromArray(world.getSpawnPoint().position);advance(controls,1);expect(camera.position.y).toBeCloseTo(4.44);world.dispose();
+});
+
+it('fires E once per physical press and clears the press on release or suspension',()=>{
+  const {controls}=setup(),interact=vi.fn();controls.onInteract=interact;
+  key('KeyE');key('KeyE');const repeated=new Event('keydown');Object.defineProperties(repeated,{code:{value:'KeyE'},repeat:{value:true}});events.dispatchEvent(repeated);
+  expect(interact).toHaveBeenCalledOnce();key('KeyE',false);key('KeyE');expect(interact).toHaveBeenCalledTimes(2);
+  controls.suspend();key('KeyE');expect(interact).toHaveBeenCalledTimes(2);
+  controls.active=true;key('KeyE');expect(interact).toHaveBeenCalledTimes(3);
+});
+
+it('ignores E and movement keys while typing in controls or editable content',()=>{
+  const {camera,controls}=setup(),interact=vi.fn();controls.onInteract=interact;const before=camera.position.clone();
+  for(const target of [{tagName:'INPUT'},{tagName:'TEXTAREA'},{tagName:'SELECT'},{tagName:'BUTTON'},{isContentEditable:true}]){
+    for(const code of ['KeyE','KeyW']){const event=new Event('keydown');Object.defineProperties(event,{code:{value:code},repeat:{value:false},target:{value:target}});events.dispatchEvent(event);}
+  }
+  controls.update(1/60);expect(interact).not.toHaveBeenCalled();expect(camera.position.x).toBe(before.x);expect(camera.position.z).toBe(before.z);
 });

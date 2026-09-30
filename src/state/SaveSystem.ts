@@ -5,28 +5,37 @@ import { defaultPlayerState, discoveryIds } from './PlayerState';
 import type { PlayerState, PlayableWorldId } from './PlayerState';
 import { WorldStateRegistry } from './WorldStateRegistry';
 import type { WorldStates } from './WorldStateRegistry';
-export const SAVE_KEY='bottle-sea.save.v1';
-export interface SaveData {
-  version: 1; gameTime: ClockSnapshot; player: PlayerState; worlds: WorldStates;
+import { Inventory,normalizeInventory } from '../gameplay/Inventory';
+import { ITEMS } from '../gameplay/ItemRegistry';
+import type { ItemRegistry } from '../gameplay/ItemRegistry';
+import { defaultPlayerProgressState,normalizePlayerProgress } from '../gameplay/PlayerProgressState';
+import type { GameplaySnapshot } from '../gameplay/GameplayFoundation';
+import { normalizeHome } from '../gameplay/HomeSystem';
+export const SAVE_KEY='bottle-sea.save.v2';
+export const LEGACY_SAVE_KEY='bottle-sea.save.v1';
+export interface SaveData extends GameplaySnapshot {
+  version: 2; gameTime: ClockSnapshot; player: PlayerState; worlds: WorldStates;
   lastSuccessfulWorld: PlayableWorldId;
   global: {storm: boolean; intensity: number; quality: Quality};
 }
 export interface SaveStorage { getItem(key: string): string | null; setItem(key: string, value: string): void }
-export function defaultSave(): SaveData {
-  return {version:1,gameTime:new GameClock().snapshot(),player:defaultPlayerState(),worlds:new WorldStateRegistry().snapshot(),lastSuccessfulWorld:'HOME',global:{storm:false,intensity:0,quality:'MEDIUM'}};
+export function defaultSave(items:ItemRegistry=ITEMS): SaveData {
+  return {version:2,gameTime:new GameClock().snapshot(),player:defaultPlayerState(),worlds:new WorldStateRegistry().snapshot(),lastSuccessfulWorld:'HOME',global:{storm:false,intensity:0,quality:'MEDIUM'},inventory:new Inventory(items).snapshot(),progress:defaultPlayerProgressState(),home:normalizeHome(undefined,items)};
 }
 const record=(value: unknown): Record<string,unknown> => value!==null && typeof value==='object' && !Array.isArray(value) ? value as Record<string,unknown> : {};
 // Version routing is intentionally small; unknown future schemas are not guessed.
-export function migrateSave(value: unknown): SaveData {
+export function migrateSave(value: unknown,items:ItemRegistry=ITEMS): SaveData {
   const raw=record(value);
-  if(raw.version!==1)throw new Error('Unsupported save version');
-  const result=defaultSave(),clock=new GameClock();clock.restore(record(raw.gameTime));result.gameTime=clock.snapshot();
+  if(raw.version!==1&&raw.version!==2)throw new Error('Unsupported save version');
+  const result=defaultSave(items),clock=new GameClock();clock.restore(record(raw.gameTime));result.gameTime=clock.snapshot();
+  if(raw.version===2){result.inventory=normalizeInventory(raw.inventory,items);result.progress=normalizePlayerProgress(raw.progress);}
+  result.home=normalizeHome(raw.version===2?raw.home:undefined,items);
   const player=record(raw.player),worlds=new WorldStateRegistry();worlds.restore(record(raw.worlds));result.worlds=worlds.snapshot();
   const last=raw.lastSuccessfulWorld??player.currentWorldId;
   result.lastSuccessfulWorld=last==='FARM'?'FARM':'HOME';
   result.player.currentWorldId=result.lastSuccessfulWorld;
-  // A saved travel phase never becomes a runtime spawn. Only stable named docks are accepted.
-  result.player.currentSpawnId=result.lastSuccessfulWorld==='FARM'?'farm_dock_arrival':'home_dock_arrival';
+  // Interior resumes at its clear entrance, never a saved furniture-overlapping position.
+  result.player.currentSpawnId=result.lastSuccessfulWorld==='FARM'?'farm_dock_arrival':raw.version===2&&player.currentSpawnId==='cottage_entry'?'cottage_entry':player.currentSpawnId==='home_cottage_exit'?'home_cottage_exit':'home_dock_arrival';
   result.player.lastTravelDestination=player.lastTravelDestination==='HOME'||player.lastTravelDestination==='FARM'?player.lastTravelDestination:null;
   result.player.discoveries=discoveryIds([...(Array.isArray(player.discoveries)?player.discoveries:[]),...result.worlds.HOME.discoveries]);
   result.worlds.HOME.discoveries=[...result.player.discoveries];
@@ -39,14 +48,17 @@ export function migrateSave(value: unknown): SaveData {
 }
 export class SaveSystem {
   private timer: ReturnType<typeof setTimeout> | undefined;
-  constructor(private storage: SaveStorage, private warn: (message:string,error:unknown)=>void = console.warn) {}
+  constructor(private storage: SaveStorage, private warn: (message:string,error:unknown)=>void = console.warn,private items:ItemRegistry=ITEMS) {}
   load(): SaveData {
-    try {const raw=this.storage.getItem(SAVE_KEY);return raw===null?defaultSave():migrateSave(JSON.parse(raw));}
-    catch(error){this.warn('存档无法读取，使用默认状态。',error);return defaultSave();}
+    for(const key of [SAVE_KEY,LEGACY_SAVE_KEY]){
+      try {const raw=this.storage.getItem(key);if(raw!==null)return migrateSave(JSON.parse(raw),this.items);}
+      catch(error){this.warn('存档无法读取，尝试备用存档。',error);}
+    }
+    return defaultSave(this.items);
   }
   save(data: SaveData): boolean {
     this.cancel();
-    try {this.storage.setItem(SAVE_KEY,JSON.stringify(migrateSave(data)));return true;}
+    try {this.storage.setItem(SAVE_KEY,JSON.stringify(migrateSave(data,this.items)));return true;}
     catch(error){this.warn('无法保存游戏进度。',error);return false;}
   }
   schedule(snapshot: ()=>SaveData) {this.cancel();this.timer=setTimeout(()=>{this.timer=undefined;this.save(snapshot());},250);}

@@ -3,13 +3,14 @@ import type { Quality } from '../core/Renderer';
 import { WorldStateRegistry, defaultWorldState } from '../state/WorldStateRegistry';
 import { WorldRegistry } from './WorldRegistry';
 import type { GameWorld, SpawnPoint, WorldId, WorldUpdateContext } from './types';
+import type { GameplayServices } from '../gameplay/GameplayFoundation';
 export type WorldManagerState = 'IDLE' | 'LOADING' | 'SWITCHING' | 'READY' | 'ERROR';
 export class WorldManager {
   state: WorldManagerState='IDLE';
   currentWorld: GameWorld | null=null;
   private quality: Quality='MEDIUM';
   private pending=false;
-  constructor(private scene: Scene, private registry: WorldRegistry, readonly states: WorldStateRegistry, private placePlayer: (spawn: SpawnPoint)=>void) {}
+  constructor(private scene: Scene, private registry: WorldRegistry, readonly states: WorldStateRegistry, private placePlayer: (spawn: SpawnPoint)=>void,private gameplay:GameplayServices) {}
   get currentWorldId(){return this.currentWorld?.id??null;}
   async switchTo(id: WorldId, gameTime: number, spawnId?: string, prepared?:GameWorld): Promise<GameWorld> {
     if(this.pending)throw new Error('World switch already in progress');
@@ -22,13 +23,13 @@ export class WorldManager {
       if(old){const snapshot=old.leave({gameTime});if((old.id==='HOME'||old.id==='FARM'))this.states.set(old.id,snapshot);this.scene.remove(old.root);}
       this.state='LOADING';target=prepared??await this.registry.create(id);if(target.id!==id)throw new Error('Prepared world mismatch');if(!prepared)await target.load({gameTime});
       const spawn=target.getSpawnPoint(spawnId),state=id==='HOME'||id==='FARM'?this.states.get(id):defaultWorldState();
-      this.scene.add(target.root);target.enter({gameTime,state,spawn});target.applyQuality(this.quality);this.placePlayer(spawn);
+      this.scene.add(target.root);target.enter({gameTime,state,spawn,gameplay:this.gameplay});target.applyQuality(this.quality);this.placePlayer(spawn);
       this.currentWorld=target;this.state='READY';old?.dispose();return target;
     } catch(error) {
       if(target){this.scene.remove(target.root);target.dispose();}
       // Keep a valid visible world while the caller presents an error and attempts HOME.
       this.currentWorld=old;this.state='ERROR';
-      if(old){this.scene.add(old.root);old.enter({gameTime,state:old.id==='HOME'||old.id==='FARM'?this.states.get(old.id):defaultWorldState(),spawn:old.getSpawnPoint()});}
+      if(old){this.scene.add(old.root);old.enter({gameTime,state:old.id==='HOME'||old.id==='FARM'?this.states.get(old.id):defaultWorldState(),spawn:old.getSpawnPoint(),gameplay:this.gameplay});}
       throw error;
     } finally {this.pending=false;}
   }

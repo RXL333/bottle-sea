@@ -111,8 +111,8 @@ def assemble():
     def light(name,pos,power,color,size=.18):
         data=bpy.data.lights.new(name,'POINT');data.energy=power;data.color=color;data.shadow_soft_size=size
         o=bpy.data.objects.new(name,data);o.location=pos;collections['Lighting'].objects.link(o)
-    def lantern(pos,scale=1,power=22):
-        place('warm_lantern',pos,scale=scale);light('Lantern warm pool',(pos[0],pos[1]-.12,pos[2]+.23*scale),power*3,(1,.40,.055),.16)
+    def lantern(pos,scale=1,power=22,rotation=0):
+        place('warm_lantern',pos,rotation=rotation,scale=scale);light('Lantern warm pool',(pos[0],pos[1]-.12,pos[2]+.23*scale),power*3,(1,.40,.055),.16)
     # Eight by 7.4 m floor, laid as individual repeatable one-metre modules.
     for ix in range(8):
         for iy in range(7):place('floor_tile',(-3.5+ix,-3+iy,0))
@@ -172,15 +172,20 @@ def assemble():
     for i in range(3):place('preserve_jar',(2.27+i*.30,3.19,2.63),scale=.95)
     place('small_pot',(3.2,3.2,2.63),scale=.8);place('cheese_bread',(3.36,2.69,1.29),scale=.85)
     place('wooden_barrel',(3.69,2.09,0),scale=.67)
-    # Navigation workspace is foreground centre, with independent tabletop objects.
-    place('table_rug',(.40,-1.24,.012));place('navigation_table',(.40,-1.12,.055))
-    place('blue_chair',(.27,-2.37,.06),math.pi);place('sea_chart',(.43,-1.18,1.39),rotation=-.13)
-    place('brass_telescope',(-.34,-.79,1.39),math.pi/2,1.08)
-    place('compass',(.02,-1.52,1.42),scale=.85)
-    place('inkwell_quill',(.94,-1.51,1.40),rotation=-.6)
-    place('small_lockbox',(1.13,-.74,1.40),rotation=.15)
-    for i in range(2):place('blue_book',(.35,-.72,1.39+i*.14),rotation=.12 if i else -.08)
-    lantern((.78,-.65,1.40),.82,27)
+    # Rotate the whole workspace to the right wall, leaving the entrance/centre clear.
+    def desk_position(pos):
+        x,y,z=pos
+        return (2.9+y+1.12,-1.1-(x-.4),z)
+    def desk_place(slug,pos,rotation=0,scale=1):
+        return place(slug,desk_position(pos),rotation-math.pi/2,scale)
+    desk_place('table_rug',(.40,-1.24,.012),scale=(1,.65,1));desk_place('navigation_table',(.40,-1.12,.055))
+    desk_place('blue_chair',(.27,-2.37,.06),math.pi);desk_place('sea_chart',(.43,-1.18,1.39),rotation=-.13)
+    desk_place('brass_telescope',(-.34,-.79,1.39),math.pi/2,1.08)
+    desk_place('compass',(.02,-1.52,1.42),scale=.85)
+    desk_place('inkwell_quill',(.94,-1.51,1.40),rotation=-.6)
+    desk_place('small_lockbox',(1.13,-.74,1.40),rotation=.15)
+    for i in range(2):desk_place('blue_book',(.35,-.72,1.39+i*.14),rotation=.12 if i else -.08)
+    lantern(desk_position((.78,-.65,1.40)),.82,27,-math.pi/2)
     place('ceramic_fern',(-1.05,-2.78,.015),scale=.85);place('rope_coil',(-.49,-2.81,.015))
     place('wooden_barrel',(-1.04,-3.58,-.25));place('blue_book',(-1.04,-3.58,.5),scale=.9)
     # Wall story details face the room and stay separately selectable.

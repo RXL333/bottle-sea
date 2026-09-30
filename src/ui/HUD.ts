@@ -2,6 +2,7 @@ import type { GameClock } from '../core/GameClock';
 import { JOURNAL_TEXT,LANDMARKS } from '../world/underwater/Landmarks';
 import { icons } from './icons';
 import { FOCUS_LABELS } from '../systems/SceneFocusSystem';
+import type { PlayerProgress } from '../gameplay/PlayerProgressState';
 export class HUD {
   readonly element = document.createElement('div');
   private noticeTimeout=0;
@@ -10,14 +11,14 @@ export class HUD {
     this.element.className = 'hud';
     this.element.innerHTML = `
       <header class="identity"><p class="eyebrow">THE MARINER’S KEEPSAKE <span>/</span> No. 01</p><h1>瓶中沧海</h1><p class="tagline">一座孤岛，一段未完的航程。</p></header>
-      <aside class="weather"><div id="day">第 8 天 · 晴天</div><time id="clock">17:41</time><div id="forecast">微风 · 平静的海</div></aside>
+      <aside class="weather"><div id="day">第 8 天 · 晴天</div><time id="clock">17:41</time><div id="forecast">微风 · 平静的海</div><div class="home-stats" hidden></div></aside>
       <div class="bottom"><p class="hint" id="hint"><span>ⓘ</span> 点击拖动 · 移动视角 · 探索细节</p><nav class="toolbar" aria-label="世界控制">
         <button data-action="pause" aria-label="暂停时间" title="暂停时间">Ⅱ</button>
         <button data-speed="1" class="selected" aria-pressed="true">x1</button><button data-speed="4" aria-pressed="false">x4</button><button data-speed="12" aria-pressed="false">x12</button>
         <i></i><button data-action="storm" aria-pressed="false"><span class="icon">♧</span><span>风暴</span></button><button data-action="sound" aria-pressed="false"><span class="icon">♫</span><span>声音</span></button><button data-action="explore" aria-pressed="false"><span class="icon">⌖</span><span>探索模式</span></button>
       </nav></div><footer class="edition">✧ A SMALL WORLD IN TIME<br><span>VOXEL STORIES / 2026</span></footer><div class="voyage">◆ VOYAGE 01 <span id="fps">· — FPS</span></div>
       <section class="explore-panel" hidden><h2>航 海 手 记 <span id="progress">0 / 4</span></h2><ul id="quests"></ul><div class="key-help"><p><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动</p><p>鼠标 观察 · <kbd>E</kbd> 交互</p><p><kbd>Space</kbd> 跳跃 / 上升</p><p><kbd>C</kbd> 下潜 · <kbd>Shift</kbd> 加速</p><p><kbd>Esc</kbd> 释放鼠标</p></div></section>
-      <div id="depth" hidden></div><div id="crosshair" hidden>+</div><div id="notice" role="status" aria-live="polite"></div>
+      <div id="depth" hidden></div><div id="crosshair" hidden>+</div><div class="interaction-prompt" hidden role="status" aria-live="polite"><kbd>E</kbd><div><small>交互</small><strong></strong></div></div><div id="notice" role="status" aria-live="polite"></div>
       <section class="discovery-card" hidden aria-live="polite"><button aria-label="关闭航海手记">×</button><p class="eyebrow">航海手记</p><h2></h2><p class="journal-text"></p><small></small></section>
       <details class="focus-menu"><summary>⌖ 观察点</summary><nav aria-label="观察点">${Object.entries(FOCUS_LABELS).map(([id,label])=>`<button data-focus="${id}" aria-pressed="${id==='overview'}">${label}</button>`).join('')}</nav></details>
       <button class="quality" title="切换像素精度" aria-label="切换像素精度">PIXEL / MEDIUM</button>`;
@@ -40,7 +41,7 @@ export class HUD {
     this.element.querySelector<HTMLElement>('#crosshair')!.hidden=!active;
     this.element.querySelector('[data-action="explore"] span:last-child')!.textContent=active?'返回瓶外':'探索模式';
     this.setHint(active?'WASD 移动 · 拖动观察 · E 交互':'ⓘ 点击拖动 · 移动视角 · 探索细节');
-    if(!active){this.closeDiscovery();this.setInteractable(false);}
+    if(!active){this.closeDiscovery();this.setInteractable(false);this.setInteractionPrompt();}
   }
   updateDepth(underwater:boolean,depthWorld:number){const depth=this.element.querySelector<HTMLElement>('#depth')!;depth.hidden=!underwater;depth.textContent=`水下深度：${Math.max(0,depthWorld*5).toFixed(1)} m`;}
   updateQuests(discovered:Set<string>){this.element.querySelector('#quests')!.innerHTML=LANDMARKS.map(target=>`<li class="${discovered.has(target.id)?'found':''}">${discovered.has(target.id)?'▣':'□'} ${target.hint}</li>`).join('');this.element.querySelector('#progress')!.textContent=`${discovered.size} / 4`;}
@@ -52,9 +53,17 @@ export class HUD {
   }
   closeDiscovery(){const card=this.element.querySelector<HTMLElement>('.discovery-card')!;card.hidden=true;window.clearTimeout(this.cardTimeout);this.cardTimeout=0;}
   setInteractable(active:boolean){this.element.querySelector('#crosshair')!.textContent=active?'◇':'+';this.element.querySelector('#crosshair')!.classList.toggle('ready',active);}
+  setInteractionPrompt(prompt?:{text:string;available:boolean}){
+    const card=this.element.querySelector<HTMLElement>('.interaction-prompt')!;card.hidden=!prompt;
+    if(!prompt)return;card.classList.toggle('blocked',!prompt.available);
+    const label=prompt.text.replace(/^\[\s*E\s*\]\s*/,''),text=card.querySelector('strong')!,status=card.querySelector('small')!;
+    if(text.textContent!==label)text.textContent=label;
+    const state=prompt.available?'按键交互':'暂不可用';if(status.textContent!==state)status.textContent=state;
+  }
   updateClock(clock:GameClock,storm:boolean) {
     this.element.querySelector('#clock')!.textContent=clock.formatted;
     this.element.querySelector('#day')!.textContent=`第 ${clock.day} 天 · ${storm?'暴风':clock.hour>=19||clock.hour<6?'星夜':'晴天'}`;
     this.element.querySelector('#forecast')!.textContent=storm?'狂风 · 雷鸣的海':'微风 · 平静的海';
   }
+  updateHomeStats(progress:PlayerProgress,inside:boolean){const stats=this.element.querySelector<HTMLElement>('.home-stats')!;stats.hidden=!inside;stats.textContent=`体力 ${Math.round(progress.energy)} / ${progress.maxEnergy}`;}
 }
