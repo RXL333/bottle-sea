@@ -28,6 +28,11 @@ import type { PlayerState,PlayableWorldId } from '../state/PlayerState';
 import { DestinationPanel } from '../ui/DestinationPanel';
 import { HomePanel } from '../ui/HomePanel';
 import { SleepOverlay } from '../ui/SleepOverlay';
+import { CookingPanel } from '../ui/CookingPanel';
+import { InventoryPanel } from '../ui/InventoryPanel';
+import { HotbarView } from '../ui/HotbarView';
+import { FishingPresentation } from '../systems/FishingPresentation';
+import { FISHING_SPOT,FISHING_WATER } from '../gameplay/FishingCatalog';
 import { TravelSystem } from '../travel/TravelSystem';
 import { TravelCamera } from '../travel/TravelCamera';
 import { destination } from '../travel/DestinationRegistry';
@@ -39,6 +44,8 @@ import '../styles/polish.css';
 import '../styles/travel.css';
 import '../styles/home.css';
 import '../styles/interaction.css';
+import '../styles/production.css';
+import '../styles/inventory.css';
 
 export class Game {
   readonly renderer=new Renderer();readonly scene=new Scene();readonly camera=new PerspectiveCamera(34,innerWidth/innerHeight,.12,200);
@@ -54,6 +61,10 @@ export class Game {
   private panel:DestinationPanel;private travelCamera=new TravelCamera(this.camera);private cover=document.createElement('div');private caption=document.createElement('div');
   private homePanel:HomePanel;
   private sleepOverlay:SleepOverlay;
+  private cookingPanel:CookingPanel;
+  private inventoryPanel:InventoryPanel;
+  private hotbarView:HotbarView;
+  private fishingPresentation:FishingPresentation;
   private destinationCamera=new PerspectiveCamera();private underwaterFog=new FogExp2('#087b83',.14);private seaFog=new FogExp2('#899d9c',.025);
   private staged:GameWorld|null=null;private spawn:SpawnPoint={id:'',position:[0,0,0],lookAt:[0,0,-1]};
   private completedTrips=0;private interactionCount=0;
@@ -64,11 +75,17 @@ export class Game {
     root.append(this.renderer.domElement);this.renderer.domElement.tabIndex=0;this.scene.background=new Color('#21343a');this.scene.add(this.weather,this.waterEntry);
     this.dayNight=new DayNightSystem(this.scene);this.overview=new OverviewController(this.camera,this.renderer.domElement);this.focus=new SceneFocusSystem(this.camera,this.overview.target);
     this.explorer=new ExploreController(this.camera,this.renderer.domElement);this.hud=new HUD(root);this.panel=new DestinationPanel(root);this.homePanel=new HomePanel(root);this.sleepOverlay=new SleepOverlay(root);
+    this.cookingPanel=new CookingPanel(root);
+    this.inventoryPanel=new InventoryPanel(root);
     this.cover.className='travel-cover';this.caption.className='travel-caption';this.caption.hidden=true;root.append(this.cover);this.hud.element.append(this.caption);
     // Access to localStorage itself can throw in restricted embeds.
     this.save=new SaveSystem({getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)});
     const saved=this.preview&&!this.persistPreview?defaultSave():this.save.load();this.player=saved.player;this.lastSuccessfulWorld=saved.lastSuccessfulWorld;this.clock.restore(saved.gameTime);this.states.restore(saved.worlds);
     this.gameplay=new GameplayFoundation(this.clock,saved,undefined,()=>this.persist());
+    this.hotbarView=new HotbarView(this.gameplay.hotbar);this.hotbarView.element.hidden=true;this.hud.element.append(this.hotbarView.element);this.hotbarView.onSelect=()=>this.renderer.domElement.focus();
+    this.fishingPresentation=new FishingPresentation(this.camera,this.gameplay.fishing);this.scene.add(this.fishingPresentation);
+    this.gameplay.fishing.onEvent=event=>{this.hud.notify(event.message);if(event.kind==='bite'||event.kind==='caught')this.sound.play('ui-discover');if(event.kind==='caught'||event.kind==='stored')this.persist(true);};
+    this.gameplay.cooking.onResult=result=>{this.cookingPanel.refresh(result.message);this.hud.notify(result.message);if(result.ok){this.sound.play('ui-discover');this.persist(true);}};
     this.weather.storm=saved.global.storm;this.weather.intensity=saved.global.intensity;
     const failure=import.meta.env.DEV?new URLSearchParams(location.search).get('fail'):null;
     const registry=new WorldRegistry().register('HOME',async()=>{const world=new (await import('../worlds/home/HomeWorld')).HomeWorld();if(failure==='fallback'&&this.worldManager.currentWorldId==='TRAVEL')world.load=()=>{throw new Error('DEV: HOME fallback failure');};return world;}).register('FARM',async()=>{const world=new (await import('../worlds/farm/FarmWorld')).FarmWorld();if(failure==='farm'||failure==='fallback')world.load=()=>{throw new Error('DEV: FARM load failure');};return world;}).register('COTTAGE',async()=>{const world=new (await import('../worlds/cottage/CottageWorld')).CottageWorld();if(failure==='cottage')world.load=async()=>{throw new Error('DEV: cottage load failure');};return world;}).register('TRAVEL',async()=>new (await import('../worlds/travel/TravelWorld')).TravelWorld());
@@ -93,14 +110,22 @@ export class Game {
         this.homePanel.showSleep(this.gameplay,()=>this.sleepAtHome(),()=>this.resumeFurnitureExplore());
         return {status:'success'};
       }).register('HOME_STORAGE',()=>{
-        this.explorer.suspendForPanel();this.hud.closeDiscovery();this.hud.setInteractionPrompt();
-        this.homePanel.showStorage(this.gameplay,()=>{this.persist(true);this.resumeFurnitureExplore();});
+        this.openInventory(true);
         return {status:'success'};
-      }).register('HOME_STOVE',()=>({status:'success',message:'烹饪尚未解锁'}));
+      }).register('HOME_STOVE',()=>{this.openCooking('stove');return {status:'success'};})
+      .register('FISH',()=>{
+        const idle=!this.gameplay.fishing.active,result=this.gameplay.fishing.interact();
+        if(idle&&this.gameplay.fishing.state==='CASTING'){this.hud.closeDiscovery();this.camera.lookAt(FISHING_WATER.x,3.38,FISHING_WATER.z);this.explorer.syncLook();this.playerFeedback.reset();}
+        return result;
+      });
+    this.explorer.onFood=()=>this.openCooking('food');this.explorer.onFishingMode=()=>this.toggleFishingMode();
+    this.explorer.onInventory=()=>this.openInventory();this.explorer.onHotbarSelect=index=>this.gameplay.hotbar.select(index);this.explorer.onHotbarUse=()=>this.useHotbar();
+    this.explorer.onPrimaryDown=()=>this.gameplay.fishing.press();this.explorer.onPrimaryUp=()=>this.gameplay.fishing.release();
     this.explorer.onInteract=()=>{void this.interact();};this.explorer.onLockChange=locked=>{if(this.explorer.active)this.hud.setHint(locked?'WASD 移动 · Space 上升 · C 下潜 · E 交互':'拖动观察 · WASD 移动 · 双击画面锁定鼠标');};
     this.performance=new PerformanceMonitor(this.renderer,this.hud.element.querySelector<HTMLElement>('#fps')!,this.camera);this.bindUI();this.applyQuality(saved.global.quality);
     window.addEventListener('resize',()=>{this.camera.aspect=innerWidth/innerHeight;this.camera.updateProjectionMatrix();this.renderer.resize();this.overview.fit(this.worldManager.currentWorldId==='HOME'&&this.transition.state==='OVERVIEW'&&!this.focus.active&&this.focus.selected==='overview');});
-    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')this.persist(true);});window.addEventListener('beforeunload',()=>this.persist(true));
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){this.gameplay.fishing.cancel('钓鱼已暂停，本次鱼竿已收起。');this.persist(true);}});window.addEventListener('beforeunload',()=>this.persist(true));
+    window.addEventListener('keydown',event=>{if(event.code==='Escape'&&this.gameplay.fishing.active)this.gameplay.fishing.cancel();});
     this.loop=new GameLoop(this.update);this.loop.start();void this.initialize(saved);
   }
   private async initialize(saved:SaveData){
@@ -119,11 +144,35 @@ export class Game {
     this.weather.visible=!inside;this.waterEntry.visible=!inside;this.dayNight.sky.visible=!inside;this.dayNight.sun.visible=!inside;this.dayNight.ambient.visible=!inside;this.dayNight.hemi.visible=!inside;
     this.dayNight.sky.scale.setScalar(home?1:3);this.dayNight.sky.position.set(0,home?0:-6,0);
     this.weather.scale.set(home?1:3,home?1:2,home?1:5);this.weather.position.set(0,home?0:-3,0);
-    const shadow=this.dayNight.sun.shadow.camera;Object.assign(shadow,home?{left:-13,right:13,top:10,bottom:-10,far:35}:{left:-25,right:25,top:25,bottom:-25,far:90});shadow.updateProjectionMatrix();
+    const shadow=this.dayNight.sun.shadow.camera;Object.assign(shadow,home?{left:-13,right:13,top:10,bottom:-10,far:35}:this.worldManager.currentWorldId==='FARM'?{left:-45,right:45,top:70,bottom:-25,far:120}:{left:-25,right:25,top:25,bottom:-25,far:90});shadow.updateProjectionMatrix();
     if(this.worldManager.currentWorld?.navigation)this.explorer.setNavigation(this.worldManager.currentWorld.navigation);
   }
   private resumeExplore(){this.overview.suspend();this.focus.cancel();this.explorer.enter(false,this.spawn);this.camera.far=this.worldManager.currentWorldId==='HOME'?40:150;this.camera.updateProjectionMatrix();this.transition.state='EXPLORE';this.playerFeedback.reset();this.hud.setExplore(true);this.hud.setTransition(false);this.renderer.domElement.focus();}
   private resumeFurnitureExplore(){this.explorer.resumeFromPanel();this.hud.setTransition(false);}
+  private get gameplayPanelOpen(){return this.homePanel.open||this.cookingPanel.open||this.inventoryPanel.open;}
+  private openInventory(storage=false){
+    if(!this.ready||!this.explorer.active||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen)return;
+    if(storage&&this.worldManager.currentWorldId!=='COTTAGE')return;
+    if(this.gameplay.fishing.active){this.hud.notify('先收起鱼竿，再打开背包。');return;}
+    this.explorer.suspendForPanel();this.hud.closeDiscovery();this.hud.setInteractionPrompt();
+    this.inventoryPanel.show(this.gameplay,storage,()=>{this.persist(true);this.resumeFurnitureExplore();});
+  }
+  private useHotbar(){
+    if(!this.ready||!this.explorer.active||this.transition.active||this.travel.active||this.doorTransition.active||this.sleepTransition.active||this.gameplayPanelOpen)return;
+    if(this.gameplay.fishing.active){this.hud.notify('先收起鱼竿，再使用食物。');return;}
+    const item=this.gameplay.hotbar.selectedItem;
+    if(!item){this.hud.notify('快捷栏为空，按 B 打开背包绑定物品。');return;}
+    if(item.category==='food'){const result=this.gameplay.cooking.eat(item.id);if(!result.ok)this.hud.notify(result.message);}
+    else this.hud.notify(`${item.name}用于${item.category==='fish'?'炉灶烹饪':'对应玩法'}，可在背包或储物箱管理。`);
+  }
+  private openCooking(mode:'stove'|'food'){
+    if(!this.ready||!this.explorer.active||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen)return;
+    if(mode==='stove'&&this.worldManager.currentWorldId!=='COTTAGE')return;
+    if(this.gameplay.fishing.active){this.hud.notify('先收起鱼竿，再打开食物面板。');return;}
+    this.explorer.suspendForPanel();this.hud.closeDiscovery();this.hud.setInteractionPrompt();
+    this.cookingPanel.show(this.gameplay,mode,()=>{this.persist(true);this.resumeFurnitureExplore();});
+  }
+  private toggleFishingMode(){if(!this.explorer.active||this.worldManager.currentWorldId!=='HOME')return;this.gameplay.fishing.setInputMode(this.gameplay.fishing.inputMode==='hold'?'click':'hold');this.renderer.domElement.focus();}
   private sleepAtHome(){
     if(this.sleepTransition.active||this.worldManager.currentWorldId!=='COTTAGE'){this.resumeFurnitureExplore();return;}
     this.explorer.beginTransitionFromPanel();this.hud.setTransition(true);this.playerFeedback.reset();document.body.classList.add('sleeping');
@@ -152,7 +201,7 @@ export class Game {
   }
   private async interact(){
     const world=this.worldManager.currentWorld,interaction=world?.interaction;
-    if(!this.ready||!this.explorer.active||!world||!interaction||interaction.busy||this.worldManager.state!=='READY'||this.transition.active||this.travel.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.homePanel.open)return;
+    if(!this.ready||!this.explorer.active||!world||!interaction||interaction.busy||this.worldManager.state!=='READY'||this.transition.active||this.travel.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen)return;
     this.interactionCount++;
     const result=await interaction.interact(this.interactionContext(world),this.interactionActions);
     if(this.worldManager.currentWorld!==world)return;
@@ -182,11 +231,15 @@ export class Game {
   }
   private applyQuality(quality:Quality){this.renderer.quality=quality;this.renderer.resize();this.worldManager.applyQuality(quality);this.weather.rain.setCount(QUALITY[quality].rain);this.waterEntry.setDensity(QUALITY[quality].waterStep);this.hud.element.querySelector('.quality')!.textContent=`PIXEL / ${quality}`;}
   private bindUI(){
+    this.hud.element.querySelector('[data-action="inventory"]')!.addEventListener('click',()=>this.openInventory());
+    this.hud.element.querySelector('[data-action="food"]')!.addEventListener('click',()=>this.openCooking('food'));
+    this.hud.element.querySelector('[data-action="fishing-mode"]')!.addEventListener('click',()=>this.toggleFishingMode());
     this.hud.element.querySelectorAll<HTMLButtonElement>('[data-speed]').forEach(button=>button.addEventListener('click',()=>{this.clock.timeScale=Number(button.dataset.speed);this.clock.paused=false;this.hud.setSpeed(this.clock.timeScale,false);this.persist();}));
     this.hud.element.querySelector('[data-action="pause"]')!.addEventListener('click',()=>{this.clock.paused=!this.clock.paused;this.hud.setSpeed(this.clock.timeScale,this.clock.paused);this.persist();});
     this.hud.element.querySelector('[data-action="storm"]')!.addEventListener('click',()=>{this.weather.storm=!this.weather.storm;this.hud.setActive('storm',this.weather.storm);this.persist();});
     this.hud.element.querySelector('[data-action="explore"]')!.addEventListener('click',()=>{
-      if(!this.ready||this.transition.active||this.travel.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.homePanel.open||this.worldManager.currentWorldId!=='HOME')return;
+      if(!this.ready||this.transition.active||this.travel.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen||this.worldManager.currentWorldId!=='HOME')return;
+      this.gameplay.fishing.cancel();
       const entering=this.transition.state==='OVERVIEW';this.focus.cancel();this.overview.suspend();this.explorer.suspend();
       if(entering){const spawn=this.worldManager.currentWorld!.getSpawnPoint();this.destinationCamera.position.fromArray(spawn.position);this.destinationCamera.lookAt(...spawn.lookAt);}else{this.destinationCamera.position.copy(this.overview.position0);this.destinationCamera.lookAt(this.overview.target0);}
       this.transition.start(entering?'EXPLORE':'OVERVIEW',this.destinationCamera.position,this.destinationCamera.quaternion,entering?68:34);this.hud.setTransition(true);(document.activeElement as HTMLElement)?.blur();
@@ -210,16 +263,31 @@ export class Game {
   }
   private update=(delta:number)=>{
     const cpuStart=performance.now();if(!this.ready){this.renderer.render(this.scene,this.camera);return;}
-    if(this.travel.active||this.doorTransition.active||this.sleepTransition.active||this.homePanel.open)this.clock.updateAnimation(delta);else this.clock.update(delta);
-    const time=this.clock.elapsed;this.weather.update(this.clock.paused?0:delta,time);const storm=this.weather.intensity;
+    if(this.travel.active||this.doorTransition.active||this.sleepTransition.active||this.gameplayPanelOpen)this.clock.updateAnimation(delta);else this.clock.update(delta);
+    const time=this.clock.elapsed;
+    if(this.worldManager.currentWorldId==='FARM'){
+      // Keep the local sky/rain around the explorer on the expanded farm island.
+      this.weather.position.x=this.camera.position.x;this.weather.position.z=this.camera.position.z;
+      this.dayNight.sky.position.x=this.camera.position.x;this.dayNight.sky.position.z=this.camera.position.z;
+    }
+    this.weather.update(this.clock.paused?0:delta,time);const storm=this.weather.intensity;
+    this.seaFog.density=this.worldManager.currentWorldId==='FARM'?.008+storm*.004:.025;
     const context:WorldUpdateContext={delta,time,gameTime:this.clock.simulationTime,storm,dayTime:this.clock.normalizedDayTime,night:1-daylightAt(this.clock.normalizedDayTime),flash:this.weather.lightning.flash,player:this.explorer.active?this.camera.position:undefined};
     this.worldManager.currentWorld?.prepare?.(context);this.travel.update(delta);
     const home=this.worldManager.currentWorldId==='HOME';let water=this.worldManager.currentWorld?.navigation?.waterLevel(this.camera.position.x,this.camera.position.z,time,storm)??3.3;
-    if(!this.travel.active&&!this.doorTransition.active&&!this.sleepTransition.active&&this.travel.state!=='ERROR'&&!this.panel.open&&!this.homePanel.open){
+    this.explorer.blockLook=this.gameplay.fishing.state==='FIGHTING';
+    if(!this.travel.active&&!this.doorTransition.active&&!this.sleepTransition.active&&this.travel.state!=='ERROR'&&!this.panel.open&&!this.gameplayPanelOpen){
       if(this.transition.active){if(this.transition.update(delta)){if(this.transition.state==='EXPLORE')this.resumeExplore();else{this.explorer.exit();this.focus.selected='overview';this.overview.target.copy(this.overview.target0);this.overview.minDistance=12;this.overview.enabled=true;this.overview.update();}this.hud.setExplore(this.explorer.active);this.hud.setTransition(false);}}
       else if(this.explorer.active)this.explorer.update(delta,water);
       else if(home){if(this.focus.active){if(this.focus.update(delta)){this.overview.minDistance=this.focus.selected==='overview'?12:2;this.overview.enabled=true;this.overview.update();}}else this.overview.update();}
     }
+    if(this.gameplay.fishing.active){
+      const distance=Math.hypot(this.camera.position.x-FISHING_SPOT.x,this.camera.position.y-FISHING_SPOT.y,this.camera.position.z-FISHING_SPOT.z);
+      if(!home||!this.explorer.active||this.explorer.swimming||distance>=FISHING_SPOT.range)this.gameplay.fishing.cancel('已离开钓鱼台，鱼竿已收起。');
+      else if(document.visibilityState!=='hidden')this.gameplay.fishing.update(delta);
+    }
+    if(this.cookingPanel.open&&document.visibilityState!=='hidden')this.gameplay.cooking.update(delta);
+    this.cookingPanel.update();this.inventoryPanel.update();this.hud.updateFishing(this.gameplay.fishing);this.hotbarView.update();this.hotbarView.element.hidden=!this.explorer.active;
     water=this.worldManager.currentWorld?.navigation?.waterLevel(this.camera.position.x,this.camera.position.z,time,storm)??3.3;
     const underwater=this.explorer.active&&this.explorer.underwater;this.scene.fog=underwater?this.underwaterFog:(home&&!this.travel.active)||this.worldManager.currentWorldId==='COTTAGE'?null:this.seaFog;
     this.waterEntry.update(delta,this.camera.position,this.explorer.active,this.explorer.swimming,this.explorer.sprinting,water);
@@ -230,11 +298,11 @@ export class Game {
     if(this.sleepTransition.active){this.sleepTransition.update(delta);if(this.sleepTransition.active)this.sleepOverlay.render(this.sleepTransition.progress);}
     this.sound.update(time,storm,this.worldManager.currentWorldId==='COTTAGE'?'INDOOR':underwater?'UNDERWATER':this.explorer.active||this.travel.active?'ISLAND':'OVERVIEW',this.weather.lightning.flash);
     const interaction=this.worldManager.currentWorld?.interaction;if(this.explorer.active)interaction?.update(this.camera.position);
-    this.hudTimer+=delta;if(this.hudTimer>.25){this.hudTimer=0;this.hud.updateClock(this.clock,this.weather.storm);this.hud.updateHomeStats(this.gameplay.progress,this.worldManager.currentWorldId==='COTTAGE');this.hud.updateDepth(underwater,water-this.camera.position.y);
+    this.hudTimer+=delta;if(this.hudTimer>.25){this.hudTimer=0;this.hud.updateClock(this.clock,this.weather.storm);this.hud.updateHomeStats(this.gameplay.progress,false);this.hud.updateProductionStats(this.gameplay,this.explorer.active||this.gameplayPanelOpen);this.hud.updateDepth(underwater,water-this.camera.position.y);
       if(import.meta.env.DEV){Object.assign(this.renderer.domElement.dataset,{world:this.worldManager.currentWorldId,travel:this.travel.state,door:this.doorTransition.state,sleep:this.sleepTransition.state,energy:String(this.gameplay.progress.energy),cameraMode:this.transition.state,waterEntries:String(this.waterEntry.entries),waterLeaves:String(this.waterEntry.leaves),fov:this.camera.fov.toFixed(2),gameTime:String(this.clock.simulationTime),storm:String(this.weather.storm),quality:this.renderer.quality,discoveries:this.player.discoveries.join(','),completedTrips:String(this.completedTrips),interactionCount:String(this.interactionCount),audio:JSON.stringify(this.sound.diagnostics)});}
-      if(this.explorer.active){const world=this.worldManager.currentWorld!,prompt=interaction?.getPrompt(this.interactionContext(world),this.interactionActions);this.hud.setInteractable(prompt?.available??false);this.hud.setInteractionPrompt(prompt);this.hud.setHint(world.id==='COTTAGE'?'WASD 移动 · E 使用家具 / 出屋':'WASD 移动 · 拖动 / 鼠标观察 · Space 上升 · C 下潜 · E 交互');}
+      if(this.explorer.active){const world=this.worldManager.currentWorld!,prompt=interaction?.getPrompt(this.interactionContext(world),this.interactionActions);this.hud.setInteractable(prompt?.available??false);this.hud.setInteractionPrompt(this.gameplay.fishing.state==='FIGHTING'?undefined:prompt);this.hud.setHint(world.id==='COTTAGE'?'WASD 移动 · E 使用家具 / 出屋 · B 背包 · 1～8 快捷栏 · Q 使用':this.gameplay.fishing.active?'E 提钩 · 左键控制张力 · R 切换操作 · Esc 放弃':'WASD 移动 · E 交互 · B 背包 · 1～8 快捷栏 · Q 使用');}
       else this.hud.setInteractionPrompt();
     }
-    const bob=this.explorer.active?this.playerFeedback.offsetY+this.explorer.renderOffsetY:0;this.camera.position.y+=bob;this.renderer.render(this.scene,this.camera);this.camera.position.y-=bob;this.performance.update(performance.now()-cpuStart);
+    const bob=this.explorer.active?this.playerFeedback.offsetY+this.explorer.renderOffsetY:0;this.camera.position.y+=bob;this.fishingPresentation.update(time,storm,delta);this.renderer.render(this.scene,this.camera);this.camera.position.y-=bob;this.performance.update(performance.now()-cpuStart);
   };
 }

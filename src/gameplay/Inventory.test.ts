@@ -2,8 +2,8 @@ import { expect, it, vi } from 'vitest';
 import { Inventory, normalizeInventory, MAX_INVENTORY_CAPACITY } from './Inventory';
 import { ItemRegistry } from './ItemRegistry';
 
-const items = () => new ItemRegistry().register({ id: 'fish', name: '测试鱼', maxStack: 5 })
-  .register({ id: 'wood', name: '测试木材', maxStack: 10 });
+const items = () => new ItemRegistry().register({ id: 'fish', name: '测试鱼', maxStack: 5,category:'fish',description:'测试鱼',icon:'sardine' })
+  .register({ id: 'wood', name: '测试木材', maxStack: 10,category:'material',description:'测试木材',icon:'wood' });
 
 it('fills existing stacks, splits counts, removes across stacks and reuses empty slots', () => {
   const changed = vi.fn(), bag = new Inventory(items(), 3, undefined, changed);
@@ -68,7 +68,7 @@ it('restores bounded JSON state, ignores unknown/invalid stacks and isolates sna
     { itemId: 'wood', quantity: 2 }, { itemId: 'wood', quantity: Infinity },
   ] };
   const bag = new Inventory(items(), 6, raw);
-  expect(bag.snapshot()).toEqual({ capacity: 6, slots: [{ itemId: 'fish', quantity: 5 }, null, null, null, { itemId: 'wood', quantity: 2 }, null] });
+  expect(bag.snapshot()).toEqual({ capacity: 6, slots: [{ itemId: 'fish', quantity: 5 }, null, null, null, { itemId: 'wood', quantity: 2 }, null],selectedSlot:null });
   raw.slots[0].quantity = 1;const saved = bag.snapshot();saved.slots[0]!.quantity = 1;
   expect(bag.count('fish')).toBe(5);
   const restored = new Inventory(items(), 6, JSON.parse(JSON.stringify(bag.snapshot())));

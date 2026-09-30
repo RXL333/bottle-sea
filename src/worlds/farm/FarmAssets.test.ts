@@ -21,7 +21,7 @@ it('loads the real farm GLBs, excludes main-island furniture, batches geometry, 
   expect(models.userData.assetsPlaced).toBe(FARM_PLACEMENTS.length);
   expect(models.userData.staticBatches).toBeLessThan(50);
   const bounds=new Box3().setFromObject(models),size=bounds.getSize(new Vector3());
-  expect(size.x).toBeLessThan(28);expect(size.z).toBeLessThan(28);expect(size.y).toBeLessThan(5);
+  expect(size.x).toBeLessThan(72);expect(size.z).toBeLessThan(85);expect(size.y).toBeLessThan(6);
   const owned=models.children.find((o):o is Mesh=>o instanceof Mesh)!;
   const released=vi.spyOn(owned.geometry,'dispose');
   const spawn=world.getSpawnPoint();for(let t=0;t<10;t+=.25){world.prepare({delta:.016,time:t,gameTime:0,storm:1,dayTime:.5,night:0,flash:0});expect(hitsDynamicObstacle(spawn.position[0],spawn.position[2],spawn.position[1],world.boat.collisionBoxes)).toBe(false);}
@@ -31,13 +31,13 @@ it('loads the real farm GLBs, excludes main-island furniture, batches geometry, 
 it('keeps the approach, pasture entrance and cottage doorway clear, with the bed inside the room',()=>{
   const world=new FarmWorld();
   for(let z=14.5;z>=-4;z-=.1)expect(world.navigation.hitsObstacle(-4,z,4.44),`central lane at ${z}`).toBe(false);
-  for(let x=3;x<=6.2;x+=.1)expect(world.navigation.hitsObstacle(x,1,4.44),`pasture entrance at ${x}`).toBe(false);
-  const doorX=COTTAGE.x-.15*COTTAGE.scale;
-  for(let z=-4.4;z>=-6.35;z-=.04){const height=world.navigation.groundHeight(doorX,z,4);expect(world.navigation.hitsObstacle(doorX,z,height+PLAYER_FOOT_OFFSET),`cottage doorway at ${z}`).toBe(false);}
-  expect(world.navigation.groundHeight(-8,-6.6,4)).toBeCloseTo(COTTAGE.floor);
-  expect(world.navigation.hitsObstacle(-8.92,-6.6,4.7)).toBe(true);
-  expect(world.navigation.hitsObstacle(-7.6,-6.95,4.7)).toBe(true);
-  const barn=FARM_OBSTACLES[0];expect(world.navigation.hitsObstacle(7,barn.maxZ+PLAYER_RADIUS-.01,4.44)).toBe(true);
+  for(let x=11;x<=18;x+=.1)expect(world.navigation.hitsObstacle(x,-55,4.44),`pasture entrance at ${x}`).toBe(false);
+  const doorX=COTTAGE.x+.15*COTTAGE.scale;
+  for(let localZ=3.4;localZ>=.55;localZ-=.04){const z=COTTAGE.z-localZ*COTTAGE.scale,height=world.navigation.groundHeight(doorX,z,4);expect(world.navigation.hitsObstacle(doorX,z,height+PLAYER_FOOT_OFFSET),`cottage doorway at ${z}`).toBe(false);}
+  expect(world.navigation.groundHeight(COTTAGE.x,COTTAGE.z,4)).toBeCloseTo(COTTAGE.floor);
+  expect(world.navigation.hitsObstacle(COTTAGE.x-1.67*COTTAGE.scale,COTTAGE.z,4.7)).toBe(true);
+  const bed=FARM_PLACEMENTS.find(p=>p.id==='bed')!;expect(world.navigation.hitsObstacle(bed.x,bed.z,4.8)).toBe(true);
+  const barn=FARM_OBSTACLES[0];expect(world.navigation.hitsObstacle(20,barn.minZ-PLAYER_RADIUS+.01,4.44)).toBe(true);
   expect(world.navigation.resolveVertical(-4,14,3.7,4.5)).toBeLessThan(4);
   expect(world.navigation.groundHeight(-4,15.8,4)).toBeLessThan(1);
   world.dispose();

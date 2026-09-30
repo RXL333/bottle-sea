@@ -11,6 +11,8 @@ import type { ItemRegistry } from '../gameplay/ItemRegistry';
 import { defaultPlayerProgressState,normalizePlayerProgress } from '../gameplay/PlayerProgressState';
 import type { GameplaySnapshot } from '../gameplay/GameplayFoundation';
 import { normalizeHome } from '../gameplay/HomeSystem';
+import { normalizeFishing } from '../gameplay/FishingSystem';
+import { normalizeHotbar } from '../gameplay/Hotbar';
 export const SAVE_KEY='bottle-sea.save.v2';
 export const LEGACY_SAVE_KEY='bottle-sea.save.v1';
 export interface SaveData extends GameplaySnapshot {
@@ -20,7 +22,7 @@ export interface SaveData extends GameplaySnapshot {
 }
 export interface SaveStorage { getItem(key: string): string | null; setItem(key: string, value: string): void }
 export function defaultSave(items:ItemRegistry=ITEMS): SaveData {
-  return {version:2,gameTime:new GameClock().snapshot(),player:defaultPlayerState(),worlds:new WorldStateRegistry().snapshot(),lastSuccessfulWorld:'HOME',global:{storm:false,intensity:0,quality:'MEDIUM'},inventory:new Inventory(items).snapshot(),progress:defaultPlayerProgressState(),home:normalizeHome(undefined,items)};
+  return {version:2,gameTime:new GameClock().snapshot(),player:defaultPlayerState(),worlds:new WorldStateRegistry().snapshot(),lastSuccessfulWorld:'HOME',global:{storm:false,intensity:0,quality:'MEDIUM'},inventory:new Inventory(items).snapshot(),progress:defaultPlayerProgressState(),home:normalizeHome(undefined,items),fishing:normalizeFishing(undefined,items),hotbar:normalizeHotbar(undefined,items)};
 }
 const record=(value: unknown): Record<string,unknown> => value!==null && typeof value==='object' && !Array.isArray(value) ? value as Record<string,unknown> : {};
 // Version routing is intentionally small; unknown future schemas are not guessed.
@@ -30,6 +32,8 @@ export function migrateSave(value: unknown,items:ItemRegistry=ITEMS): SaveData {
   const result=defaultSave(items),clock=new GameClock();clock.restore(record(raw.gameTime));result.gameTime=clock.snapshot();
   if(raw.version===2){result.inventory=normalizeInventory(raw.inventory,items);result.progress=normalizePlayerProgress(raw.progress);}
   result.home=normalizeHome(raw.version===2?raw.home:undefined,items);
+  result.fishing=normalizeFishing(raw.version===2?raw.fishing:undefined,items);
+  result.hotbar=normalizeHotbar(raw.version===2?raw.hotbar:undefined,items);
   const player=record(raw.player),worlds=new WorldStateRegistry();worlds.restore(record(raw.worlds));result.worlds=worlds.snapshot();
   const last=raw.lastSuccessfulWorld??player.currentWorldId;
   result.lastSuccessfulWorld=last==='FARM'?'FARM':'HOME';

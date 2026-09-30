@@ -5,6 +5,9 @@ export function configurePreview(game:Game){
   const params=new URLSearchParams(location.search),hour=Number(params.get('hour'));
   if(params.has('hour')&&Number.isFinite(hour)&&hour>=0&&hour<24)game.clock.simulationTime=DAY_DURATION*(7+hour/24);
   if(params.get('weather')==='storm'){game.weather.storm=true;game.weather.intensity=1;game.hud.setActive('storm',true);}
+  if(game.worldManager.currentWorldId==='HOME'&&params.get('view')==='home-fishing'){
+    game.overview.suspend();game.explorer.enter(false,game.worldManager.currentWorld!.getSpawnPoint('home_fishing'));game.hud.setExplore(true);
+  }
   if(game.worldManager.currentWorldId==='HOME'&&params.get('view')==='home-cottage'){
     game.overview.enabled=false;game.explorer.enter(false);game.hud.setExplore(true);
     game.camera.position.set(-1.564,4.446,.72);game.camera.lookAt(-1.6,4.30,-.4);game.explorer.syncLook();
@@ -19,14 +22,17 @@ export function configurePreview(game:Game){
   }
   if(game.worldManager.currentWorldId==='FARM'){
     const views:Record<string,{position:[number,number,number];target:[number,number,number]}>={
-      'farm-overview':{position:[21,24,30],target:[0,4.1,0]},
-      'farm-yard':{position:[-3,4.44,-3.8],target:[2,5,-6.6]},
-      'farm-cottage':{position:[-8.0825,4.642,-5.13],target:[-7.85,4.65,-6.9]},
-      'farm-pasture':{position:[4.5,4.44,1.0],target:[8,4.5,1.8]},
+      'farm-overview':{position:[48,65,43],target:[0,4.1,-26]},
+      'farm-yard':{position:[-21,4.464,-1],target:[-25,5.2,4]},
+      'farm-cottage':{position:[5.12,4.72,2.15],target:[5.12,4.75,4.5]},
+      'farm-fields':{position:[-11,4.464,-16],target:[0,4.472,-19]},
+      'farm-pasture':{position:[11,4.464,-55],target:[19,4.7,-55]},
+      'farm-livestock':{position:[18,4.44,-40.5],target:[22,4.7,-46]},
+      'farm-expansion':{position:[-11,4.464,-48],target:[-22,4.5,-50]},
       'farm-fishing':{position:[-8,4.44,9.2],target:[-8,4.5,10.5]},
     };
     const view=params.get('view')??'',checkpoint=views[view];
-    if(checkpoint){game.camera.position.fromArray(checkpoint.position);game.camera.lookAt(...checkpoint.target);game.explorer.syncLook();if(view==='farm-overview'){game.explorer.suspend();game.camera.fov=43;game.camera.updateProjectionMatrix();}}
+    if(checkpoint){game.camera.position.fromArray(checkpoint.position);game.camera.lookAt(...checkpoint.target);game.explorer.syncLook();if(view==='farm-overview'){game.explorer.suspend();game.camera.fov=48;game.camera.far=230;game.camera.updateProjectionMatrix();}}
   }
   if(['underwater','under-island','dock','water-entry','chest','lighthouse','ruins'].includes(params.get('view')??'')){
     game.overview.enabled=false;game.explorer.enter(false);game.hud.setExplore(true);

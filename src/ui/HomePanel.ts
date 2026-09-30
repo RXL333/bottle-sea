@@ -1,7 +1,7 @@
 import type { GameplayServices } from '../gameplay/GameplayFoundation';
-import type { Inventory } from '../gameplay/Inventory';
 
-/** Only the two furniture workflows; no general equipment or inventory UI. */
+
+/** Sleep confirmation; storage uses the shared InventoryPanel. */
 export class HomePanel {
   readonly element = document.createElement('dialog');
   private onClose = () => {};
@@ -31,47 +31,6 @@ export class HomePanel {
       this.element.close();confirm();
     }), this.button('暂时不睡', () => this.close()));
     this.element.append(status, actions);this.element.showModal();
-  }
-  showStorage(gameplay: GameplayServices, close: () => void): void {
-    this.begin('小屋储物箱', close);
-    this.heading('小屋储物箱', '随身背包与储物箱之间存取物品。');
-    const columns = document.createElement('div');columns.className = 'storage-columns';
-    const status = document.createElement('p');status.className = 'storage-status';status.setAttribute('role', 'status');status.setAttribute('aria-live', 'polite');
-    const render = (focus?: string) => {
-      columns.replaceChildren();
-      for (const [title, source, target, verb] of [
-        ['随身背包', gameplay.inventory, gameplay.home.chest, '存入'],
-        ['储物箱', gameplay.home.chest, gameplay.inventory, '取出'],
-      ] as const) {
-        const section = document.createElement('section'), heading = document.createElement('h3');
-        const snapshot = source.snapshot();heading.textContent = `${title} · ${snapshot.slots.filter(Boolean).length}/${source.capacity} 格`;
-        section.append(heading);
-        const totals = new Map<string, number>();
-        for (const stack of snapshot.slots) if (stack) totals.set(stack.itemId, (totals.get(stack.itemId) ?? 0) + stack.quantity);
-        if (!totals.size) { const empty = document.createElement('p');empty.className = 'storage-empty';empty.textContent = '暂时没有物品';section.append(empty); }
-        for (const [itemId, quantity] of totals) {
-          const row = document.createElement('div');row.className = 'storage-row';
-          const name = document.createElement('p');name.textContent = `${gameplay.items.get(itemId)!.name} × ${quantity}`;row.append(name);
-          const actions = document.createElement('div');actions.className = 'home-actions';
-          for (const [label, amount, suffix] of [[`${verb} 1 个`, 1, 'one'], [`${verb}全部`, quantity, 'all']] as const) {
-            const key = `${verb}-${itemId}-${suffix}`;
-            const button = this.button(label, () => transfer(source, target, itemId, amount, verb, key));
-            button.dataset.transfer = key;button.setAttribute('aria-label', `${label} ${gameplay.items.get(itemId)!.name}`);actions.append(button);
-          }
-          row.append(actions);section.append(row);
-        }
-        columns.append(section);
-      }
-      if (focus) (Array.from(columns.querySelectorAll<HTMLButtonElement>('button')).find(b => b.dataset.transfer === focus) ?? back).focus();
-    };
-    const transfer = (source: Inventory, target: Inventory, itemId: string, amount: number, verb: string, focus: string) => {
-      const result = source.transferTo(target, itemId, amount);
-      status.textContent = result.ok ? `已${verb} ${gameplay.items.get(itemId)!.name} × ${amount}`
-        : result.reason === 'full' ? '空间不足，请先腾出空位。' : '物品数量已变化，请重试。';
-      if (result.ok) render(focus);
-    };
-    const back = this.button('关闭储物箱', () => this.close());back.className = 'home-back';
-    render();this.element.append(columns, status, back);this.element.showModal();
   }
   close(): void { if (!this.open) return;this.element.close();this.onClose(); }
 }

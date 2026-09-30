@@ -27,7 +27,7 @@ it('loads v1, preserves the original key and writes v2 with default gameplay sta
 });
 
 it('round trips gameplay mutations using the same registered item definitions',()=>{
-  const f=fixture(),registry=createItemRegistry().register({id:'fish.test',name:'测试鱼',maxStack:5});
+  const f=fixture(),registry=createItemRegistry().register({id:'fish.test',name:'测试鱼',maxStack:5,category:'fish',description:'测试鱼',icon:'sardine'});
   const save=new SaveSystem(f.storage,vi.fn(),registry),clock=new GameClock(),runtime=new GameplayFoundation(clock,undefined,registry);
   runtime.inventory.add('wood',8);runtime.inventory.add('fish.test',7);runtime.progress.spendEnergy(35);runtime.progress.earnMoney(50);runtime.time.advanceMinutes(30);
   const data={...defaultSave(registry),...runtime.snapshot(),gameTime:clock.snapshot()};

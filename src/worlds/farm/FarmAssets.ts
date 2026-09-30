@@ -9,7 +9,7 @@ export const FARM_MODEL_FILES={
   fence_segment:'modules/fence_kit__fence_straight.glb',fence_gate:'modules/fence_kit__fence_gate.glb',
   dock_kit:'dock_kit.glb',dock_platform:'modules/dock_kit__dock_platform.glb',dock_pile:'modules/dock_kit__dock_pile_1.glb',
   fishing_deck:'fishing_deck.glb',bed:'bed.glb',chicken:'chicken.glb',cow:'cow.glb',sheep:'sheep.glb',
-  orchard_tree:'orchard_tree.glb',wheat_cluster:'wheat_cluster.glb',hay_bale:'hay_bale.glb',
+  orchard_tree:'orchard_tree.glb',hay_bale:'hay_bale.glb',
 } as const;
 export type FarmAssetId=keyof typeof FARM_MODEL_FILES;
 export type ModelLoader=(url:string)=>Promise<Group>;

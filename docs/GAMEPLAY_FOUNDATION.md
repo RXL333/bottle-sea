@@ -2,6 +2,10 @@
 
 本文前半部分记录公共底座阶段的范围与交付。当前已在同一接口上接入 [Home System](HOME_SYSTEM.md)：`GameplayServices.home`、储物面板、睡觉和门口场景切换；底座阶段的测试记录不代表新增 Home 功能已完成游玩验收。
 
+后续 [Fishing / Cooking](FISHING_COOKING.md) 已注册 6 种鱼与 4 种食物，并扩展 `GameplayServices.fishing/cooking`；`Inventory.canExchange/exchange` 支持整笔扣料与产物放入。新增玩法本轮仅进行编译检查，功能验收由用户完成。
+
+当前进一步接入 [正式背包](INVENTORY_SYSTEM.md)：统一物品元数据、网格 UI、槽位操作、双栏仓库和 `GameplayServices.hotbar`。ItemRegistry 为全部物品数据唯一来源，玩家 Stack 只保存引用与数量，快捷栏不持有库存。以下底座阶段描述保留为历史记录。
+
 ## 范围与决定
 
 本阶段只建立后续 Home / Fishing / Cooking / Farm 共用接口，不启用睡觉、储物家具、钓鱼、生产、农机、养殖或经济玩法，不新增背包 UI、装备、Buff 或任务系统。

@@ -1,5 +1,33 @@
 # 架构
 
+## FarmWorld 地图基础
+
+FarmMap 统一定义 FARM_MAP version=1、约 72×76 岛体边界、道路、田头、各类分区、泊船落点及基于 Blender manifest 的农机尺寸。三块 12×18 主田拥有固定 id 与 1 单位网格原点 / 列行数；farmFieldCell / farmCellCenter 仅提供纯空间映射。预留地块没有农业运行状态，未修改 SaveSystem。
+
+FarmTopography 统一体素地面与模型基础高度；FarmTerrain 提供道路、空田、边界刻度、草地与岛缘坡地，NavigationSurface 使用同一高度和表面数据。FarmLayout 的建筑、农机、树干、围栏及路牌碰撞独立于主岛。FarmOcean 的矩形细分区域覆盖全岛海岸，继续复用 WaveMath，不修改 TravelOcean。
+
+FarmModels 对环境做材质合批，车辆 / 动物保留独立实例及语义节点，在节点内合并 primitive。所有源资产、合并几何及实体路牌纹理由 FarmWorld 通过 disposeWorld 释放。FarmWayfinding 放置实体路标，Game 仅对 FARM 的远景雾、阴影范围与局部天空 / 雨覆盖作适配。HOME / TRAVEL 的世界架构与原船位、TRAVEL 交互、farm_dock_arrival 保持原接口。详见 [FARM_MAP_FOUNDATION.md](FARM_MAP_FOUNDATION.md)。
+
+## Inventory / Hotbar
+
+ItemRegistry 统一保存 ItemDefinition：id、name、category、description、icon、maxStack，以及可选 sellPrice、energyRestore、cropId、fishing。鱼的权重、颜色和稀有度也位于该注册表；FishingCatalog / CookingCatalog 仅提供视图、钓鱼点或食谱规则。注册定义及嵌套 fishing 属性冻结，玩家 ItemStack 只包含 itemId / quantity。
+
+Inventory 的 slots 数组保持真实槽位索引，每格为 ItemStack 或 null。原 add / remove / transferTo / exchange 保留，并增加 getSlot、occupiedSlots、emptySlots、firstEmptySlot、selectSlot、moveStack、moveSlotTo、splitStack、removeFromSlot、transferSlotTo、transferAllTo。整笔自动入包和跨容器转移失败不提交；槽位拖拽同物品允许填满目标堆叠、剩余留在源槽，整堆不同物品可交换。所有写操作统一提升 revision 和请求保存，UI 不修改快照。
+
+GameplayFoundation 额外持有 Hotbar，8 个 bindings 保存 itemId 引用，selectedIndex 记录当前快捷位。每次显示与使用都从 Inventory 读取真实数量；不持有额外堆叠。物品用完后保留灰色引用，重新获得会自动可用。InventoryPanel 共享背包 / 仓库网格和物品详情，HotbarView 在 HUD 及面板内复用，HomePanel 只负责睡觉确认；Game 的 gameplayPanelOpen 统一阻止面板期间的移动、交互和场景切换。
+
+存档 v2 保留原 key，inventory / home.chest 的快照新增 selectedSlot，GameplaySnapshot 新增 hotbar 字段。旧档默认未选中背包槽、空快捷栏并选第 1 快捷位。容量按运行时限制，未知物品及越界引用归一化，不写入图标或三维对象。详见 [INVENTORY_SYSTEM.md](INVENTORY_SYSTEM.md)。
+
+## Fishing / Cooking
+
+GameplayFoundation 持有跨世界的 FishingSystem、CookingSystem，ItemRegistry 注册 6 种鱼与 4 种食物。FishingCatalog / CookingCatalog 管理权重、食谱、产物、体力成本和恢复值。HomeWorld 的钓鱼台与 CottageWorld 的炉灶均通过统一 InteractionSystem / E 接入；Game 协调玩法更新、鼠标输入、面板和音效反馈。
+
+FishingSystem 的状态为 IDLE → CASTING → WAITING → BITE → FIGHTING → REELING → IDLE。提钩后通过左键按住/松开或点击控制张力，移动最佳区决定进度增加/减少；常见/少见/稀有鱼影响区域宽度与难度，猛烈挣扎加快张力变化，零进度超过宽限后逃脱。只有完成进度及收杆动画才奖励物品。Game 使用不受倍速/暂停影响的 frame delta 更新钓鱼逻辑，离开交互范围、进入水中、Esc 或页面隐藏取消；进行中的钓鱼不写入存档。FishingPresentation 复用几何体绘制鱼竿、鱼线、浮漂、波纹及收杆鱼形。
+
+CookingSystem 预检鱼、材料、体力及产物空间，3 秒完成时再次检查并使用 Inventory.exchange 一次提交扣料与产物。食用仅接受已制作食物，满体力不扣食物，恢复按上限截断。CookingPanel 提供炉灶食谱和 F 随身食物两种模式；取消烹饪不扣材料。面板沿用 Home 的鼠标释放/恢复和日历暂停方式。
+
+存档保持 v2 key，新增 `fishing: { pendingCatch, inputMode }`，旧存档默认无暂存、长按模式。鱼、料理均走原 Inventory / Home 箱子快照；收杆结算若空间变化则持久化暂存一条鱼，在钓鱼台领取后清空。奖励、烹饪、食用成功后立即保存完整快照，中间状态不独立保存。功能规则与用户验收项见 [FISHING_COOKING.md](FISHING_COOKING.md)。
+
 ## Home System
 
 GameplayFoundation 同时持有 HomeSystem，其快照为 `home: { chest }`；24 格小屋箱子复用 Inventory 的整笔容器转移。没有 Home 字段的旧存档首次补木材 8、石头 4，已有空箱子不补发；旧 doorOpen 字段忽略，门保持关闭。

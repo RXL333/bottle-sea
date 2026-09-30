@@ -14,6 +14,8 @@ export class ExploreController {
   private holdPointerLock=false;private relockAfterPanel=false;
   private dragging=false;private euler=new Euler(0,0,0,'YXZ');private lookX=0;private lookY=0;private dragX=0;private dragY=0;private dragId:number|null=null;private eyeHeight=PLAYER_FOOT_OFFSET;private headInitialized=false;
   onInteract=()=>{};onLockChange=(locked:boolean)=>{void locked;};
+  onFood=()=>{};onFishingMode=()=>{};onPrimaryDown=()=>false;onPrimaryUp=()=>{};blockLook=false;
+  onInventory=()=>{};onHotbarSelect=(index:number)=>{void index;};onHotbarUse=()=>{};
   grounded=false;
   get sprinting(){return this.keys.has('ShiftLeft')||this.keys.has('ShiftRight');}
   constructor(private camera:PerspectiveCamera,private element:HTMLElement,dynamicObstacles:()=>readonly DynamicObstacle[]=()=>[], private navigation:NavigationSurface=homeNavigation(dynamicObstacles)) {
@@ -25,12 +27,18 @@ export class ExploreController {
     window.addEventListener('keydown',event=>{
       const target=event.target as HTMLElement|null;
       if(!this.active||target?.isContentEditable||['BUTTON','INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;
-      if(['Space','KeyW','KeyA','KeyS','KeyD','KeyC','ShiftLeft','ShiftRight','KeyE'].includes(event.code))event.preventDefault();
+      if(['Space','KeyW','KeyA','KeyS','KeyD','KeyC','ShiftLeft','ShiftRight','KeyE','KeyF','KeyR','KeyB','KeyQ'].includes(event.code)||/^Digit[1-8]$/.test(event.code))event.preventDefault();
       const pressed=!this.keys.has(event.code);this.keys.add(event.code);if(event.code==='KeyE'&&!event.repeat&&pressed)this.onInteract();
+      if(event.code==='KeyF'&&!event.repeat&&pressed)this.onFood();
+      if(event.code==='KeyR'&&!event.repeat&&pressed)this.onFishingMode();
+      if(event.code==='KeyB'&&!event.repeat&&pressed)this.onInventory();
+      if(event.code==='KeyQ'&&!event.repeat&&pressed)this.onHotbarUse();
+      if(/^Digit[1-8]$/.test(event.code)&&!event.repeat&&pressed)this.onHotbarSelect(Number(event.code.slice(5))-1);
     });
     window.addEventListener('keyup',event=>this.keys.delete(event.code));
     window.addEventListener('blur',()=>{this.keys.clear();this.cancelLook();});
     element.addEventListener('pointerdown',event=>{
+      if(this.active&&event.button===0&&this.onPrimaryDown()){event.preventDefault();this.cancelLook();return;}
       if(!this.active||this.pointer.isLocked||this.dragging||event.button!==0)return;
       this.dragX=event.clientX;this.dragY=event.clientY;this.dragId=event.pointerId;this.dragging=true;element.setPointerCapture(event.pointerId);
     });
@@ -38,16 +46,18 @@ export class ExploreController {
     element.addEventListener('pointercancel',()=>this.cancelLook());
     element.addEventListener('lostpointercapture',()=>{this.dragging=false;this.dragId=null;});
     element.addEventListener('pointermove',event=>{
-      if(!this.active||this.pointer.isLocked||!this.dragging||event.pointerId!==this.dragId)return;
+      if(!this.active||this.pointer.isLocked||this.blockLook||!this.dragging||event.pointerId!==this.dragId)return;
       if(!Number.isFinite(event.clientX)||!Number.isFinite(event.clientY))return;
       this.rotateView(event.clientX-this.dragX,event.clientY-this.dragY,.002*this.pointer.pointerSpeed);
       this.dragX=event.clientX;this.dragY=event.clientY;
     });
     element.ownerDocument?.addEventListener('mousemove',event=>{
-      if(!this.active||!this.pointer.isLocked)return;
+      if(!this.active||!this.pointer.isLocked||this.blockLook)return;
       this.rotateView(event.movementX,event.movementY,.002*this.pointer.pointerSpeed);
     });
-    element.addEventListener('dblclick',()=>{if(this.active)this.lock();});
+    window.addEventListener('pointerup',()=>this.onPrimaryUp());window.addEventListener('pointercancel',()=>this.onPrimaryUp());
+    window.addEventListener('blur',()=>this.onPrimaryUp());
+    element.addEventListener('dblclick',()=>{if(this.active&&!this.blockLook)this.lock();});
   }
   setNavigation(navigation:NavigationSurface){this.navigation=navigation;this.eyeHeight=navigation.eyeHeight??PLAYER_FOOT_OFFSET;this.swimming=false;this.underwater=false;this.keys.clear();this.cancelLook();}
   enter(requestLock=true,spawn?:SpawnPoint){this.active=true;this.holdPointerLock=false;this.camera.near=.08;this.camera.far=40;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);if(spawn){this.camera.position.fromArray(spawn.position);this.camera.lookAt(...spawn.lookAt);}this.velocityY=0;this.renderOffsetY=0;this.headInitialized=false;this.syncLook();if(requestLock)this.lock();}
@@ -120,6 +130,7 @@ export class ExploreController {
   syncLook(){this.lookX=0;this.lookY=0;}
   private cancelLook(){this.dragging=false;this.dragId=null;this.syncLook();}
   private applyLook(delta:number){
+    if(this.blockLook){this.syncLook();return;}
     if(this.lookX===0&&this.lookY===0)return;
     const dt=Math.min(delta,1/60),blend=1-Math.exp(-dt/.012),limit=6*dt;
     const consume=(pending:number)=>Math.max(-limit,Math.min(limit,pending*blend));

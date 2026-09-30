@@ -3,10 +3,11 @@ import type { ItemRegistry } from './ItemRegistry';
 export const PLAYER_INVENTORY_CAPACITY = 24;
 export const MAX_INVENTORY_CAPACITY = 200;
 export interface ItemStack { itemId: string; quantity: number }
-export interface InventorySnapshot { capacity: number; slots: (ItemStack | null)[] }
+export type InventorySlot=ItemStack|null;
+export interface InventorySnapshot { capacity: number; slots: InventorySlot[]; selectedSlot?:number|null }
 export type InventoryResult = { ok: true } | {
   ok: false;
-  reason: 'unknown-item' | 'invalid-quantity' | 'full' | 'insufficient-items' | 'same-inventory';
+  reason: 'unknown-item' | 'invalid-quantity' | 'full' | 'insufficient-items' | 'same-inventory' | 'invalid-slot' | 'empty-slot' | 'occupied-slot';
 };
 
 /** Restore is bounded by the runtime capacity; save data cannot enlarge a bag. */
@@ -24,27 +25,97 @@ export function normalizeInventory(value: unknown, items: ItemRegistry, capacity
     if (!item || !Number.isSafeInteger(candidate.quantity) || candidate.quantity! <= 0) return null;
     return { itemId: item.id, quantity: Math.min(candidate.quantity!, item.maxStack) };
   });
-  return { capacity, slots };
+  const selectedSlot=typeof raw.selectedSlot==='number'&&Number.isInteger(raw.selectedSlot)&&raw.selectedSlot>=0&&raw.selectedSlot<capacity?raw.selectedSlot:null;
+  return { capacity, slots, selectedSlot };
 }
 
 export class Inventory {
   private slots: (ItemStack | null)[];
+  private selection:number|null;
+  revision=0;
 
   constructor(readonly items: ItemRegistry, readonly capacity = PLAYER_INVENTORY_CAPACITY,
     saved?: unknown, private onChange: () => void = () => {}) {
-    this.slots = normalizeInventory(saved, items, capacity).slots;
+    const state=normalizeInventory(saved,items,capacity);this.slots=state.slots;this.selection=state.selectedSlot??null;
   }
 
   snapshot(): InventorySnapshot {
-    return { capacity: this.capacity, slots: this.slots.map(stack => stack ? { ...stack } : null) };
+    return { capacity: this.capacity, slots: this.slots.map(stack => stack ? { ...stack } : null),selectedSlot:this.selection };
   }
 
   restore(value: unknown): void {
-    const next = normalizeInventory(value, this.items, this.capacity).slots;
-    if (JSON.stringify(next) === JSON.stringify(this.slots)) return;
-    this.slots = next;
-    this.onChange();
+    const next = normalizeInventory(value, this.items, this.capacity);
+    if (JSON.stringify(next) === JSON.stringify(this.snapshot())) return;
+    this.slots = next.slots;this.selection=next.selectedSlot??null;
+    this.changed();
   }
+
+  get selectedSlot(){return this.selection;}
+  get occupiedSlots(){return this.slots.filter(Boolean).length;}
+  get emptySlots(){return this.capacity-this.occupiedSlots;}
+  firstEmptySlot(){return this.slots.findIndex(stack=>stack===null);}
+  getSlot(index:number):ItemStack|null {const stack=this.slots[index];return stack?{...stack}:null;}
+  selectSlot(index:number|null):InventoryResult {
+    if(index!==null&&!this.validSlot(index))return {ok:false,reason:'invalid-slot'};
+    if(this.selection!==index){this.selection=index;this.changed();}return {ok:true};
+  }
+  removeFromSlot(index:number,quantity=1):InventoryResult {
+    if(!this.validSlot(index))return {ok:false,reason:'invalid-slot'};
+    const stack=this.slots[index];if(!stack)return {ok:false,reason:'empty-slot'};
+    const valid=this.validate(stack.itemId,quantity);if(!valid.ok)return valid;
+    if(stack.quantity<quantity)return {ok:false,reason:'insufficient-items'};
+    this.slots[index]=stack.quantity===quantity?null:{...stack,quantity:stack.quantity-quantity};this.changed();return {ok:true};
+  }
+  /** Dragging a whole stack swaps different items; matching items merge up to the cap. */
+  moveSlotTo(target:Inventory,from:number,to:number,quantity?:number):InventoryResult {
+    if(!this.validSlot(from)||!target.validSlot(to))return {ok:false,reason:'invalid-slot'};
+    const stack=this.slots[from];if(!stack)return {ok:false,reason:'empty-slot'};
+    const amount=quantity??stack.quantity,valid=target.validate(stack.itemId,amount);if(!valid.ok)return valid;
+    if(amount>stack.quantity)return {ok:false,reason:'insufficient-items'};
+    if(target===this&&from===to)return {ok:true};
+    const other=target.slots[to],source=this.snapshot().slots,dest=target===this?source:target.snapshot().slots;
+    if(other&&other.itemId!==stack.itemId){
+      if(amount!==stack.quantity)return {ok:false,reason:'occupied-slot'};
+      if(!this.items.has(other.itemId))return {ok:false,reason:'unknown-item'};
+      if(other.quantity>this.items.get(other.itemId)!.maxStack||amount>target.items.get(stack.itemId)!.maxStack)return {ok:false,reason:'full'};
+      source[from]={...other};dest[to]={...stack};
+    }else{
+      const room=target.items.get(stack.itemId)!.maxStack-(other?.quantity??0),moved=Math.min(amount,room);
+      if(moved<=0)return {ok:false,reason:'full'};
+      dest[to]={itemId:stack.itemId,quantity:(other?.quantity??0)+moved};source[from]=stack.quantity===moved?null:{...stack,quantity:stack.quantity-moved};
+    }
+    this.slots=source;if(target!==this)target.slots=dest;
+    this.changed();if(target!==this)target.changed();return {ok:true};
+  }
+  moveStack(from:number,to:number,quantity?:number){return this.moveSlotTo(this,from,to,quantity);}
+  splitStack(from:number,to:number,quantity:number):InventoryResult {
+    if(!this.validSlot(from)||!this.validSlot(to))return {ok:false,reason:'invalid-slot'};
+    const stack=this.slots[from];if(!stack)return {ok:false,reason:'empty-slot'};
+    if(this.slots[to])return {ok:false,reason:'occupied-slot'};
+    if(quantity>=stack.quantity)return {ok:false,reason:'invalid-quantity'};
+    return this.moveStack(from,to,quantity);
+  }
+  /** Transfer from the selected stack, rather than removing matching items elsewhere. */
+  transferSlotTo(target:Inventory,from:number,quantity?:number):InventoryResult {
+    if(target===this)return {ok:false,reason:'same-inventory'};
+    if(!this.validSlot(from))return {ok:false,reason:'invalid-slot'};
+    const stack=this.slots[from];if(!stack)return {ok:false,reason:'empty-slot'};
+    const amount=quantity??stack.quantity,valid=this.validate(stack.itemId,amount);if(!valid.ok)return valid;
+    if(amount>stack.quantity)return {ok:false,reason:'insufficient-items'};
+    const planned=target.planAdd(stack.itemId,amount);if(!planned.ok)return planned;
+    this.slots[from]=stack.quantity===amount?null:{...stack,quantity:stack.quantity-amount};target.slots=planned.slots;
+    this.changed();target.changed();return {ok:true};
+  }
+  /** All-or-nothing bulk storage; both inventories commit before save callbacks. */
+  transferAllTo(target:Inventory):InventoryResult {
+    if(target===this)return {ok:false,reason:'same-inventory'};
+    if(!this.occupiedSlots)return {ok:true};
+    const trial=new Inventory(target.items,target.capacity,target.snapshot());
+    for(const stack of this.slots)if(stack){const result=trial.add(stack.itemId,stack.quantity);if(!result.ok)return result;}
+    this.slots=this.slots.map(()=>null);target.slots=trial.snapshot().slots;this.changed();target.changed();return {ok:true};
+  }
+  private validSlot(index:number){return Number.isInteger(index)&&index>=0&&index<this.capacity;}
+  private changed(){this.revision++;this.onChange();}
 
   count(itemId: string): number {
     return this.slots.reduce((total, stack) => total + (stack?.itemId === itemId ? stack.quantity : 0), 0);
@@ -56,11 +127,26 @@ export class Inventory {
 
   canAdd(itemId: string, quantity = 1): boolean { return this.planAdd(itemId, quantity).ok; }
 
+  canExchange(consumed:readonly ItemStack[],produced:readonly ItemStack[]):InventoryResult {
+    const plan=this.planExchange(consumed,produced);return plan.ok?{ok:true}:plan;
+  }
+  /** Crafting frees ingredient slots before placing outputs, then commits once. */
+  exchange(consumed:readonly ItemStack[],produced:readonly ItemStack[]):InventoryResult {
+    const plan=this.planExchange(consumed,produced);if(!plan.ok)return plan;
+    this.slots=plan.slots;this.changed();return {ok:true};
+  }
+  private planExchange(consumed:readonly ItemStack[],produced:readonly ItemStack[]):{ok:true;slots:(ItemStack|null)[]}|Extract<InventoryResult,{ok:false}> {
+    const trial=new Inventory(this.items,this.capacity,this.snapshot());
+    for(const stack of consumed){const result=trial.remove(stack.itemId,stack.quantity);if(!result.ok)return result;}
+    for(const stack of produced){const result=trial.add(stack.itemId,stack.quantity);if(!result.ok)return result;}
+    return {ok:true,slots:trial.snapshot().slots};
+  }
+
   add(itemId: string, quantity = 1): InventoryResult {
     const planned = this.planAdd(itemId, quantity);
     if (!planned.ok) return planned;
     this.slots = planned.slots;
-    this.onChange();
+    this.changed();
     return { ok: true };
   }
 
@@ -68,7 +154,7 @@ export class Inventory {
     const planned = this.planRemove(itemId, quantity);
     if (!planned.ok) return planned;
     this.slots = planned.slots;
-    this.onChange();
+    this.changed();
     return { ok: true };
   }
 
@@ -81,8 +167,8 @@ export class Inventory {
     if (!destination.ok) return destination;
     this.slots = source.slots;
     target.slots = destination.slots;
-    this.onChange();
-    target.onChange();
+    this.changed();
+    target.changed();
     return { ok: true };
   }
 

@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="1230" viewBox="0 0 1160 1230"><style>text{font-family:'Microsoft YaHei',sans-serif;fill:#2f4035} .title{font-size:30px;font-weight:700}.small{font-size:14px}.label{font-size:17px;font-weight:600}</style><rect width="1160" height="1230" fill="#f2eedf"/><text x="48" y="52" class="title">瓶中沧海 · FarmWorld 布局</text><text x="48" y="79" font-size="16">空间定义 v1 · 世界单位 · 静态地图基础</text><rect x="42" y="96" width="910" height="1032" rx="20" fill="#428c88"/><rect x="65" y="116" width="864" height="912" rx="60" fill="#719545" stroke="#b5bd88" stroke-width="8"/>
+<rect x="161" y="452" width="144" height="120" fill="#91905f"  />
+<rect x="161" y="788" width="144" height="120" fill="#91905f"  />
+<rect x="425" y="452" width="144" height="120" fill="#91905f"  />
+<rect x="425" y="788" width="144" height="120" fill="#91905f"  />
+<rect x="689" y="452" width="144" height="120" fill="#91905f"  />
+<rect x="689" y="788" width="144" height="120" fill="#91905f"  />
+<rect x="149" y="212" width="168" height="192" fill="#7e9c57" stroke="#d1d5a0" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="425" y="212" width="144" height="192" fill="#7e9c57" stroke="#d1d5a0" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="665" y="338" width="96" height="72" fill="#7e9c57" stroke="#d1d5a0" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="761" y="338" width="96" height="72" fill="#7e9c57" stroke="#d1d5a0" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="761" y="236" width="96" height="96" fill="#7e9c57" stroke="#d1d5a0" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="665" y="158" width="96" height="168" fill="#7e9c57" stroke="#d1d5a0" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="365" y="896" width="216" height="108" fill="#b9a47d"  />
+<rect x="125" y="908" width="252" height="36" fill="#a29980"  />
+<rect x="419" y="884" width="60" height="144" fill="#c2ad83"  />
+<rect x="125" y="818" width="744" height="60" fill="#c2ad83"  />
+<rect x="125" y="482" width="744" height="60" fill="#c2ad83"  />
+<rect x="335" y="266" width="60" height="612" fill="#c2ad83"  />
+<rect x="599" y="206" width="60" height="672" fill="#c2ad83"  />
+<rect x="125" y="410" width="744" height="60" fill="#c2ad83"  />
+<rect x="173" y="452" width="120" height="120" fill="none" stroke="#e4d3a9" stroke-dasharray="4 4" stroke-width="1.3"/>
+<text x="233" y="516.8" text-anchor="middle" class="small">掉头空地</text>
+<rect x="173" y="788" width="120" height="120" fill="none" stroke="#e4d3a9" stroke-dasharray="4 4" stroke-width="1.3"/>
+<text x="233" y="852.8" text-anchor="middle" class="small">掉头空地</text>
+<rect x="437" y="452" width="120" height="120" fill="none" stroke="#e4d3a9" stroke-dasharray="4 4" stroke-width="1.3"/>
+<text x="497" y="516.8" text-anchor="middle" class="small">掉头空地</text>
+<rect x="437" y="788" width="120" height="120" fill="none" stroke="#e4d3a9" stroke-dasharray="4 4" stroke-width="1.3"/>
+<text x="497" y="852.8" text-anchor="middle" class="small">掉头空地</text>
+<rect x="701" y="452" width="120" height="120" fill="none" stroke="#e4d3a9" stroke-dasharray="4 4" stroke-width="1.3"/>
+<text x="761" y="516.8" text-anchor="middle" class="small">掉头空地</text>
+<rect x="701" y="788" width="120" height="120" fill="none" stroke="#e4d3a9" stroke-dasharray="4 4" stroke-width="1.3"/>
+<text x="761" y="852.8" text-anchor="middle" class="small">掉头空地</text>
+<rect x="161" y="572" width="144" height="216" fill="#795b41" stroke="#e2c895" stroke-width="2"/>
+<text x="233" y="675.2" text-anchor="middle" class="label">西侧农田</text>
+<text x="233" y="701.5999999999999" text-anchor="middle" class="small">12 × 18 / 216 格</text>
+<rect x="425" y="572" width="144" height="216" fill="#795b41" stroke="#e2c895" stroke-width="2"/>
+<text x="497" y="675.2" text-anchor="middle" class="label">中央农田</text>
+<text x="497" y="701.5999999999999" text-anchor="middle" class="small">12 × 18 / 216 格</text>
+<rect x="689" y="572" width="144" height="216" fill="#795b41" stroke="#e2c895" stroke-width="2"/>
+<text x="761" y="675.2" text-anchor="middle" class="label">东侧农田</text>
+<text x="761" y="701.5999999999999" text-anchor="middle" class="small">12 × 18 / 216 格</text>
+<circle cx="197" cy="939.1999999999999" r="5" fill="#ddaa4d" stroke="#475345"/>
+<circle cx="251" cy="932" r="5" fill="#ddaa4d" stroke="#475345"/>
+<circle cx="287" cy="935.5999999999999" r="5" fill="#ddaa4d" stroke="#475345"/>
+<circle cx="323" cy="932" r="5" fill="#ddaa4d" stroke="#475345"/>
+<circle cx="359" cy="932" r="5" fill="#ddaa4d" stroke="#475345"/>
+<circle cx="797" cy="380" r="5" fill="#ede3c6" stroke="#475345"/>
+<circle cx="821" cy="360.79999999999995" r="5" fill="#ede3c6" stroke="#475345"/>
+<circle cx="791" cy="296" r="5" fill="#ede3c6" stroke="#475345"/>
+<circle cx="821" cy="278" r="5" fill="#ede3c6" stroke="#475345"/>
+<circle cx="809" cy="260" r="5" fill="#ede3c6" stroke="#475345"/>
+<circle cx="701" cy="380" r="2.5" fill="#ede3c6" stroke="#475345"/>
+<circle cx="713" cy="368" r="2.5" fill="#ede3c6" stroke="#475345"/>
+<circle cx="728.5999999999999" cy="386" r="2.5" fill="#ede3c6" stroke="#475345"/>
+<circle cx="101" cy="932" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="107" cy="788" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="101" cy="620" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="113" cy="428" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="113" cy="248" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="161" cy="176" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="257" cy="164" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="377" cy="152" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="497" cy="152" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="617" cy="152" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="797" cy="164" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="893" cy="848" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="893" cy="704" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="893" cy="548" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="893" cy="380" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="881" cy="260" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="353" cy="1001.5999999999999" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="635" cy="999.1999999999999" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="869" cy="1004" r="11" fill="#466c38" stroke="#abc37d"/>
+<circle cx="125" cy="992" r="11" fill="#466c38" stroke="#abc37d"/>
+<rect x="677" y="908" width="120" height="96" fill="#ad634a" stroke="#695b43" stroke-width="2"/>
+<text x="737" y="962" text-anchor="middle" class="label">谷仓</text>
+<rect x="155" y="920" width="84" height="72" fill="#907048" stroke="#695b43" stroke-width="2"/>
+<text x="197" y="962" text-anchor="middle" class="label">农机棚</text>
+<rect x="527" y="926" width="60" height="72" fill="#d9c5a1" stroke="#695b43" stroke-width="2"/>
+<text x="557" y="968" text-anchor="middle" class="label">农场小屋</text>
+<rect x="827" y="950" width="36" height="36" fill="#d9c5a1" stroke="#695b43" stroke-width="2"/>
+<text x="845" y="974" text-anchor="middle" class="label">水塔</text>
+<text x="233" y="305.59999999999997" text-anchor="middle" class="small">西侧扩展农田</text>
+<text x="233" y="324.79999999999995" text-anchor="middle" class="small">14 × 16</text>
+<text x="497" y="305.59999999999997" text-anchor="middle" class="small">中央扩展农田</text>
+<text x="497" y="324.79999999999995" text-anchor="middle" class="small">12 × 16</text>
+<text x="713" y="371.59999999999997" text-anchor="middle" class="small">鸡舍预留区</text>
+<text x="713" y="390.79999999999995" text-anchor="middle" class="small">8 × 6</text>
+<text x="809" y="371.59999999999997" text-anchor="middle" class="small">牛棚预留区</text>
+<text x="809" y="390.79999999999995" text-anchor="middle" class="small">8 × 6</text>
+<text x="809" y="281.59999999999997" text-anchor="middle" class="small">羊圈预留区</text>
+<text x="809" y="300.79999999999995" text-anchor="middle" class="small">8 × 8</text>
+<text x="713" y="239.59999999999997" text-anchor="middle" class="small">牧场预留区</text>
+<text x="713" y="258.79999999999995" text-anchor="middle" class="small">8 × 14</text>
+<text x="473" y="1004" text-anchor="middle" class="small">农场中心 · 客运道路</text>
+<text x="269" y="914" text-anchor="middle" class="small">农机停放</text>
+<rect x="437.552" y="1022.5999999999999" width="22.896" height="71.28" fill="#d6b47a" stroke="#5d4a35" />
+<text x="389" y="1085.6" text-anchor="middle" class="small">码头</text>
+<ellipse cx="466.40000000000003" cy="1082" rx="4" ry="10" fill="#efd9b0" stroke="#6b4937"/><text x="978" y="132" class="label">北 ↑</text><text x="978" y="178" class="label">空间预算</text><text x="978" y="208" class="small">道路宽 5</text><text x="978" y="233" class="small">田头深 10</text><text x="978" y="258" class="small">掉头区 10×10</text><text x="978" y="283" class="small">收割机宽 2.26</text><text x="978" y="326" class="label">分区顺序</text><text x="978" y="356" class="small">南：生活 / 农机</text><text x="978" y="381" class="small">中：三块主田</text><text x="978" y="406" class="small">北：扩田 / 畜牧</text><text x="978" y="453" class="label">资产状态</text><text x="978" y="483" class="small">农机 / 动物静态</text><text x="978" y="508" class="small">预留区保留草地</text><text x="978" y="553" class="small">图为布局示意</text><text x="978" y="578" class="small">非游戏渲染截图</text><text x="48" y="1165" font-size="16">码头 → 中心 → 农田 → 农机区 → 牧场区 → 码头返航</text><text x="48" y="1198" class="small">图形依据 FarmMap 与 FarmLayout；道路、地头与作业区保持无障碍。实际驾驶与游玩由后续阶段验收。</text><circle cx="665" cy="397.52631578947364" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="384.57894736842104" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="371.63157894736844" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="358.6842105263158" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="345.7368421052631" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="332.7894736842105" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="319.8421052631579" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="306.8947368421052" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="293.94736842105266" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="203.31578947368422" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="190.36842105263156" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="177.4210526315789" r="2.3" fill="#e9d5a4"/>
+<circle cx="665" cy="164.47368421052633" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="397.52631578947364" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="384.57894736842104" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="371.63157894736844" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="358.6842105263158" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="345.7368421052631" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="332.7894736842105" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="319.8421052631579" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="306.8947368421052" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="293.94736842105266" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="281" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="268.05263157894734" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="255.10526315789477" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="242.1578947368421" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="229.21052631578945" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="216.26315789473688" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="203.31578947368422" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="190.36842105263156" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="177.4210526315789" r="2.3" fill="#e9d5a4"/>
+<circle cx="860.5999999999999" cy="164.47368421052633" r="2.3" fill="#e9d5a4"/>
+<circle cx="671.52" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="684.5600000000001" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="697.6" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="710.64" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="723.6800000000001" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="736.72" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="749.76" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="762.8" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="775.8399999999999" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="788.88" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="801.92" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="814.96" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="828" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="841.04" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="854.0799999999999" cy="158" r="2.3" fill="#e9d5a4"/>
+<circle cx="671.52" cy="404" r="2.3" fill="#e9d5a4"/>
+<circle cx="749.76" cy="404" r="2.3" fill="#e9d5a4"/>
+<circle cx="762.8" cy="404" r="2.3" fill="#e9d5a4"/>
+<circle cx="775.8399999999999" cy="404" r="2.3" fill="#e9d5a4"/>
+<circle cx="788.88" cy="404" r="2.3" fill="#e9d5a4"/>
+<circle cx="801.92" cy="404" r="2.3" fill="#e9d5a4"/>
+<circle cx="814.96" cy="404" r="2.3" fill="#e9d5a4"/>
+<circle cx="828" cy="404" r="2.3" fill="#e9d5a4"/>
+<circle cx="841.04" cy="404" r="2.3" fill="#e9d5a4"/>
+<circle cx="854.0799999999999" cy="404" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="398.36" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="387.0799999999999" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="375.79999999999995" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="364.52" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="353.23999999999995" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="313.75" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="301.25" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="288.75" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="276.25" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="213.75000000000003" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="201.24999999999997" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="188.75" r="2.3" fill="#e9d5a4"/>
+<circle cx="761" cy="176.25000000000003" r="2.3" fill="#e9d5a4"/>
+</svg>
