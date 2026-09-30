@@ -64,7 +64,13 @@ describe('exploration integration',()=>{
 
 it('uses supplied navigation beyond Home bottle bounds and supplied arrival pose',()=>{
   const {camera,controls}=setup();controls.setNavigation({groundHeight:()=>0,hitsObstacle:()=>false,resolveVertical:(_x,_z,_from,to)=>to,isInside:()=>true,constrain:()=>{},waterLevel:()=>-100,dynamicObstacles:()=>[]});
-  controls.enter(false,{id:'test',position:[50,.44,50],lookAt:[50,.44,49]});key('KeyW');for(let i=0;i<60;i++)controls.update(1/60,-100);key('KeyW',false);expect(camera.position.x).toBe(50);expect(camera.position.z).toBeCloseTo(48.95);expect(camera.position.y).toBeCloseTo(.44);expect(controls.swimming).toBe(false);
+  controls.enter(false,{id:'test',position:[50,.44,50],lookAt:[50,.44,49]});key('KeyW');for(let i=0;i<60;i++)controls.update(1/60,-100);key('KeyW',false);expect(camera.position.x).toBe(50);expect(camera.position.z).toBeCloseTo(48.4);expect(camera.position.y).toBeCloseTo(.44);expect(controls.swimming).toBe(false);
 });
 
-it('walks the farm dock and wide road, and stops at the closed barn',()=>{const farm=new FarmWorld(),{camera,controls}=setup();controls.setNavigation(farm.navigation);controls.enter(false,farm.getSpawnPoint());key('KeyW');advance(controls,16);key('KeyW',false);expect(camera.position.x).toBeCloseTo(-4);expect(camera.position.z).toBeLessThan(-2);expect(camera.position.y).toBeCloseTo(4.44);camera.position.set(7,4.44,-4);camera.lookAt(7,4.44,-6);controls.syncLook();key('KeyW');advance(controls,3);key('KeyW',false);const stopZ=FARM_OBSTACLES[0].maxZ+.14;expect(camera.position.z).toBeGreaterThanOrEqual(stopZ);expect(camera.position.z).toBeLessThan(stopZ+.03);farm.dispose();});
+it('walks the farm dock and wide road, and stops at the closed barn',()=>{const farm=new FarmWorld(),{camera,controls}=setup();controls.setNavigation(farm.navigation);controls.enter(false,farm.getSpawnPoint());key('KeyW');advance(controls,10.5);key('KeyW',false);expect(camera.position.x).toBeCloseTo(-4);expect(camera.position.z).toBeLessThan(-2);expect(camera.position.y).toBeCloseTo(4.44);camera.position.set(7,4.44,-4);camera.lookAt(7,4.44,-6);controls.syncLook();key('KeyW');advance(controls,3);key('KeyW',false);const stopZ=FARM_OBSTACLES[0].maxZ+.14;expect(camera.position.z).toBeGreaterThanOrEqual(stopZ);expect(camera.position.z).toBeLessThan(stopZ+.03);farm.dispose();});
+
+it('uses room eye height and restores outdoor height without a fall or stale input',()=>{
+ const {camera,controls}=setup();const world=new FarmWorld();controls.setNavigation({...world.navigation,eyeHeight:1.55,groundHeight:()=>0,waterLevel:()=>-100,hitsObstacle:()=>false,resolveVertical:(_x,_z,_from,to)=>Math.max(1.55,to),isInside:()=>true,constrain:()=>{}});
+ camera.position.set(0,1.55,0);controls.syncLook();for(let i=0;i<60;i++)controls.update(1/60,-100);expect(camera.position.y).toBeCloseTo(1.55);expect(controls.swimming).toBe(false);
+ controls.setNavigation(world.navigation);camera.position.fromArray(world.getSpawnPoint().position);advance(controls,1);expect(camera.position.y).toBeCloseTo(4.44);world.dispose();
+});

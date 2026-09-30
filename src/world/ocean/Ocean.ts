@@ -10,7 +10,7 @@ export class Ocean extends Group {
   private foam!:InstancedMesh;private foamPositions:number[]=[];
   private depths:number[]=[];private shores:number[]=[];private color=new Color();private lastColorTime=-1;
   constructor(step=.16) {super();this.name='Ocean';this.create(step);
-    const shape=new Shape();const radius=2.37,top=3.24,center=3.72;
+    const shape=new Shape();const radius=bottleRadiusAt(0)-.12,top=3.24,center=3.72;
     const edge=Math.acos((center-top)/radius);shape.moveTo(-Math.sin(edge)*radius,top);
     for(let i=0;i<=24;i++){const angle=-edge+i*edge*2/24;shape.lineTo(Math.sin(angle)*radius,center-Math.cos(angle)*radius);}shape.closePath();
     const volume=new Mesh(new ExtrudeGeometry(shape,{depth:9.6,bevelEnabled:false,steps:1}),new MeshStandardMaterial({color:'#078a91',transparent:true,opacity:.18,depthWrite:false,side:DoubleSide,roughness:1}));
@@ -19,9 +19,9 @@ export class Ocean extends Group {
   create(step:number) {
     if(this.mesh){this.remove(this.mesh,this.foam);this.mesh.dispose();(this.mesh.material as MeshStandardMaterial).dispose();this.foam.dispose();(this.foam.material as MeshStandardMaterial).dispose();}
     this.positions=[];this.foamPositions=[];this.depths=[];this.shores=[];this.lastColorTime=-1;const random=seededRandom(60);
-    for(let x=-5.78;x<5.62;x+=step)for(let z=-2.22;z<2.22;z+=step) {
-      const radius=bottleRadiusAt(x)-.2;
-      if(z*z+1.03**2>radius*radius||islandHeight(x,z)>3.45)continue;
+    for(let x=-5.78;x<5.62;x+=step)for(let z=-3.1;z<3.1;z+=step) {
+      const radius=bottleRadiusAt(x)-.12-step*.5;
+      if(z*z+.42**2>radius*radius||islandHeight(x,z)>3.45)continue;
       this.positions.push(x,z);
       const shore=shoreProximity(x,z);this.depths.push(waterDepth(x,z));this.shores.push(shore);
       const dock=Math.max(0,1-Math.hypot(x-.65,z-1.28)/.7);

@@ -4,21 +4,25 @@ export type TerrainSurface='sand'|'grass';
 export type TerrainLayer={color:string;y:number;height:number};
 export type TerrainCell={x:number;z:number;minX:number;maxX:number;minZ:number;maxZ:number;solidMinY:number;solidMaxY:number;top:number;nominalHeight:number;surface:TerrainSurface;layers:TerrainLayer[];grass?:{color:string;y:number}};
 
-const START_X=-3.06,START_Z=-1.49,STEP=.21,SIZE=.209,HALF=SIZE/2;
+const START_X=-3.06,START_Z=-1.7,STEP=.21,SIZE=.209,HALF=SIZE/2;
 
 function analyticHeight(x:number,z:number){
-  const d=((x+.85)/2.05)**2+((z+.12)/1.25)**2;
+  const d=((x+.85)/2.05)**2+((z-.12)/1.8)**2;
+  // Keep the wooden berth above the shoreline, never coplanar with grass.
+  if(x>.10&&x<1.20&&z>.65)return d<1.08?3.46:0;
+  if(x>.3&&x<1.6&&z>-.9&&z<.4)return 3.83;
+  if(x>-2.5&&x<-.65&&z>.5&&z<1.45)return 3.83;
   if(d<.58)return 3.83;if(d<.87)return 3.65;if(d<1.08)return 3.46;return 0;
 }
 function analyticBottom(x:number,z:number){
-  const d=((x+.85)/2.05)**2+((z+.12)/1.25)**2;
+  const d=((x+.85)/2.05)**2+((z-.12)/1.8)**2;
   return 2.5+Math.min(1,d)*.78;
 }
 
 export const TERRAIN_CELLS:TerrainCell[]=[];
 const terrainGrid=new Map<string,TerrainCell>();
 const random=seededRandom(127);
-for(let ix=0,x=START_X;x<1.39;ix++,x=START_X+ix*STEP)for(let iz=0,z=START_Z;z<1.52;iz++,z=START_Z+iz*STEP){
+for(let ix=0,x=START_X;x<1.81;ix++,x=START_X+ix*STEP)for(let iz=0,z=START_Z;z<2.15;iz++,z=START_Z+iz*STEP){
   const nominalHeight=analyticHeight(x,z);if(!nominalHeight)continue;
   const solidMinY=analyticBottom(x,z)+random()*.06,sandBottom=nominalHeight-.3;
   const layers:TerrainLayer[]=[];

@@ -1,0 +1,763 @@
+{
+  "status": "passed",
+  "modules": 58,
+  "instances": 280,
+  "reused": 7,
+  "totalBytes": 4942564,
+  "assets": [
+    {
+      "id": "floor_tile",
+      "source": "original authored geometry",
+      "meshes": 4,
+      "triangles": 752,
+      "degenerate": 0,
+      "bytes": 51356,
+      "dimensionsGLTF": [
+        0.9940000176429749,
+        0.09300000360235572,
+        0.9930000305175781
+      ]
+    },
+    {
+      "id": "foundation_block",
+      "source": "original authored geometry",
+      "meshes": 1,
+      "triangles": 44,
+      "degenerate": 0,
+      "bytes": 3952,
+      "dimensionsGLTF": [
+        0.9900000095367432,
+        0.3700000047683716,
+        0.49000000953674316
+      ]
+    },
+    {
+      "id": "edge_beam",
+      "source": "original authored geometry",
+      "meshes": 2,
+      "triangles": 72,
+      "degenerate": 0,
+      "bytes": 6472,
+      "dimensionsGLTF": [
+        1,
+        0.19999999552965164,
+        0.20899999886751175
+      ]
+    },
+    {
+      "id": "wall_panel",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 2860,
+      "degenerate": 0,
+      "bytes": 166540,
+      "dimensionsGLTF": [
+        1.9930000305175781,
+        3.540999799966812,
+        0.18000000715255737
+      ]
+    },
+    {
+      "id": "wall_window",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 2684,
+      "degenerate": 0,
+      "bytes": 159840,
+      "dimensionsGLTF": [
+        1.9930000305175781,
+        3.540999799966812,
+        0.18000000715255737
+      ]
+    },
+    {
+      "id": "wall_door",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 2244,
+      "degenerate": 0,
+      "bytes": 134136,
+      "dimensionsGLTF": [
+        1.9930000305175781,
+        3.540999799966812,
+        0.18000000715255737
+      ]
+    },
+    {
+      "id": "roof_panel",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 2464,
+      "degenerate": 0,
+      "bytes": 146924,
+      "dimensionsGLTF": [
+        1.99399995803833,
+        0.17250000312924385,
+        2.0449999570846558
+      ]
+    },
+    {
+      "id": "wall_low",
+      "source": "original authored geometry",
+      "meshes": 2,
+      "triangles": 264,
+      "degenerate": 0,
+      "bytes": 17660,
+      "dimensionsGLTF": [
+        0.9930000305175781,
+        0.4410000145435333,
+        0.18000000715255737
+      ]
+    },
+    {
+      "id": "timber_post",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 400,
+      "degenerate": 0,
+      "bytes": 27032,
+      "dimensionsGLTF": [
+        0.23999999463558197,
+        3.559999942779541,
+        0.29999999701976776
+      ]
+    },
+    {
+      "id": "timber_beam",
+      "source": "original authored geometry",
+      "meshes": 2,
+      "triangles": 72,
+      "degenerate": 0,
+      "bytes": 6488,
+      "dimensionsGLTF": [
+        2,
+        0.2199999988079071,
+        0.2304999977350235
+      ]
+    },
+    {
+      "id": "diagonal_brace",
+      "source": "original authored geometry",
+      "meshes": 1,
+      "triangles": 44,
+      "degenerate": 0,
+      "bytes": 3948,
+      "dimensionsGLTF": [
+        1.0915580205619335,
+        0.7943800166249275,
+        0.15000012516975403
+      ]
+    },
+    {
+      "id": "roof_blue_trim",
+      "source": "original authored geometry",
+      "meshes": 2,
+      "triangles": 440,
+      "degenerate": 0,
+      "bytes": 27976,
+      "dimensionsGLTF": [
+        0.9959999918937683,
+        0.13499999977648258,
+        0.42000000923871994
+      ]
+    },
+    {
+      "id": "gable_left",
+      "source": "original authored geometry",
+      "meshes": 1,
+      "triangles": 32,
+      "degenerate": 0,
+      "bytes": 3288,
+      "dimensionsGLTF": [
+        3.9943151473999023,
+        1.348081350326538,
+        0.18000000715255737
+      ]
+    },
+    {
+      "id": "entry_frame",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 220,
+      "degenerate": 0,
+      "bytes": 15276,
+      "dimensionsGLTF": [
+        1.6799999475479126,
+        2.7149999141693115,
+        0.33000001311302185
+      ]
+    },
+    {
+      "id": "blue_door",
+      "source": "original authored geometry",
+      "meshes": 6,
+      "triangles": 1372,
+      "degenerate": 0,
+      "bytes": 82124,
+      "dimensionsGLTF": [
+        1.131999909877777,
+        2.380000114440918,
+        0.22500000521540642
+      ]
+    },
+    {
+      "id": "entry_steps",
+      "source": "original authored geometry",
+      "meshes": 2,
+      "triangles": 792,
+      "degenerate": 0,
+      "bytes": 45944,
+      "dimensionsGLTF": [
+        1.4909999370574951,
+        0.4599999785423279,
+        0.7900000214576721
+      ]
+    },
+    {
+      "id": "chimney_section",
+      "source": "original authored geometry",
+      "meshes": 2,
+      "triangles": 352,
+      "degenerate": 0,
+      "bytes": 21676,
+      "dimensionsGLTF": [
+        0.7120000123977661,
+        0.949999988079071,
+        0.5199999809265137
+      ]
+    },
+    {
+      "id": "chimney_cap",
+      "source": "original authored geometry",
+      "meshes": 2,
+      "triangles": 176,
+      "degenerate": 0,
+      "bytes": 11856,
+      "dimensionsGLTF": [
+        0.9100000262260437,
+        0.23999999463558197,
+        0.8600000143051147
+      ]
+    },
+    {
+      "id": "ocean_window",
+      "source": "original authored geometry",
+      "meshes": 10,
+      "triangles": 1160,
+      "degenerate": 0,
+      "bytes": 77064,
+      "dimensionsGLTF": [
+        1.6100000143051147,
+        1.9000000208616257,
+        0.33500001579523087
+      ]
+    },
+    {
+      "id": "navigation_table",
+      "source": "original authored geometry",
+      "meshes": 7,
+      "triangles": 2832,
+      "degenerate": 0,
+      "bytes": 178504,
+      "dimensionsGLTF": [
+        2.2309999465942383,
+        1.3450000286102295,
+        1.4924999475479126
+      ]
+    },
+    {
+      "id": "blue_chair",
+      "source": "original authored geometry",
+      "meshes": 4,
+      "triangles": 660,
+      "degenerate": 0,
+      "bytes": 42504,
+      "dimensionsGLTF": [
+        0.6899999976158142,
+        1.440000057220459,
+        0.6650000214576721
+      ]
+    },
+    {
+      "id": "nightstand",
+      "source": "original authored geometry",
+      "meshes": 4,
+      "triangles": 528,
+      "degenerate": 0,
+      "bytes": 34820,
+      "dimensionsGLTF": [
+        0.7100000381469727,
+        0.8700000047683716,
+        0.6785000264644623
+      ]
+    },
+    {
+      "id": "sailor_wardrobe",
+      "source": "original authored geometry",
+      "meshes": 12,
+      "triangles": 1792,
+      "degenerate": 0,
+      "bytes": 111772,
+      "dimensionsGLTF": [
+        1.5800000429153442,
+        2.740000009536743,
+        0.8974999785423279
+      ]
+    },
+    {
+      "id": "ironbound_chest",
+      "source": "original authored geometry",
+      "meshes": 6,
+      "triangles": 1436,
+      "degenerate": 0,
+      "bytes": 88180,
+      "dimensionsGLTF": [
+        1.3920000791549683,
+        1.0099999904632568,
+        0.9839999973773956
+      ]
+    },
+    {
+      "id": "wall_shelf",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 340,
+      "degenerate": 0,
+      "bytes": 23380,
+      "dimensionsGLTF": [
+        1.600000023841858,
+        0.49885981157422066,
+        0.38200001418590546
+      ]
+    },
+    {
+      "id": "bed_rug",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 4308,
+      "degenerate": 0,
+      "bytes": 255016,
+      "dimensionsGLTF": [
+        2.917500138282776,
+        0.0540000107139349,
+        2.7139999866485596
+      ]
+    },
+    {
+      "id": "table_rug",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 3812,
+      "degenerate": 0,
+      "bytes": 227772,
+      "dimensionsGLTF": [
+        2.917500138282776,
+        0.047599999234080315,
+        2.7139999866485596
+      ]
+    },
+    {
+      "id": "hearth_rug",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 2228,
+      "degenerate": 0,
+      "bytes": 134020,
+      "dimensionsGLTF": [
+        1.5674999356269836,
+        0.047599999234080315,
+        0.9140000343322754
+      ]
+    },
+    {
+      "id": "entry_mat",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 1876,
+      "degenerate": 0,
+      "bytes": 113444,
+      "dimensionsGLTF": [
+        1.2674999833106995,
+        0.047599999234080315,
+        0.8140000104904175
+      ]
+    },
+    {
+      "id": "warm_lantern",
+      "source": "original authored geometry",
+      "meshes": 4,
+      "triangles": 576,
+      "degenerate": 0,
+      "bytes": 36108,
+      "dimensionsGLTF": [
+        0.3430294394493103,
+        0.6474999785423279,
+        0.3430294394493103
+      ]
+    },
+    {
+      "id": "brass_telescope",
+      "source": "original authored geometry",
+      "meshes": 4,
+      "triangles": 2124,
+      "degenerate": 0,
+      "bytes": 114604,
+      "dimensionsGLTF": [
+        0.28999999165534973,
+        0.52183997631073,
+        1.138878732919693
+      ]
+    },
+    {
+      "id": "compass",
+      "source": "original authored geometry",
+      "meshes": 4,
+      "triangles": 442,
+      "degenerate": 0,
+      "bytes": 29212,
+      "dimensionsGLTF": [
+        0.3199999928474426,
+        0.07300000078976154,
+        0.3199999928474426
+      ]
+    },
+    {
+      "id": "sea_chart",
+      "source": "original authored geometry",
+      "meshes": 6,
+      "triangles": 1964,
+      "degenerate": 0,
+      "bytes": 124308,
+      "dimensionsGLTF": [
+        1.0214078426361084,
+        0.05070389807224274,
+        0.7599999904632568
+      ]
+    },
+    {
+      "id": "blue_book",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 260,
+      "degenerate": 0,
+      "bytes": 18528,
+      "dimensionsGLTF": [
+        0.28850001096725464,
+        0.1440000096336007,
+        0.3499999940395355
+      ]
+    },
+    {
+      "id": "green_book",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 260,
+      "degenerate": 0,
+      "bytes": 18536,
+      "dimensionsGLTF": [
+        0.28850001096725464,
+        0.1440000096336007,
+        0.3499999940395355
+      ]
+    },
+    {
+      "id": "red_book",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 260,
+      "degenerate": 0,
+      "bytes": 18524,
+      "dimensionsGLTF": [
+        0.28850001096725464,
+        0.1440000096336007,
+        0.3499999940395355
+      ]
+    },
+    {
+      "id": "inkwell_quill",
+      "source": "original authored geometry",
+      "meshes": 4,
+      "triangles": 588,
+      "degenerate": 0,
+      "bytes": 38496,
+      "dimensionsGLTF": [
+        0.31230467557907104,
+        0.49000000953674316,
+        0.14456059038639069
+      ]
+    },
+    {
+      "id": "small_lockbox",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 176,
+      "degenerate": 0,
+      "bytes": 13072,
+      "dimensionsGLTF": [
+        0.33000001311302185,
+        0.2849999964237213,
+        0.30249999463558197
+      ]
+    },
+    {
+      "id": "ceramic_mug",
+      "source": "original authored geometry",
+      "meshes": 2,
+      "triangles": 468,
+      "degenerate": 0,
+      "bytes": 25904,
+      "dimensionsGLTF": [
+        0.2459999993443489,
+        0.17249999940395355,
+        0.1720000058412552
+      ]
+    },
+    {
+      "id": "preserve_jar",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 244,
+      "degenerate": 0,
+      "bytes": 15940,
+      "dimensionsGLTF": [
+        0.1899999976158142,
+        0.26499998569488525,
+        0.1899999976158142
+      ]
+    },
+    {
+      "id": "cutting_board",
+      "source": "original authored geometry",
+      "meshes": 2,
+      "triangles": 88,
+      "degenerate": 0,
+      "bytes": 7388,
+      "dimensionsGLTF": [
+        0.41999998688697815,
+        0.03999999910593033,
+        0.4150000065565109
+      ]
+    },
+    {
+      "id": "cheese_bread",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 296,
+      "degenerate": 0,
+      "bytes": 20232,
+      "dimensionsGLTF": [
+        0.42100000381469727,
+        0.17000000178813934,
+        0.1900000050663948
+      ]
+    },
+    {
+      "id": "rope_coil",
+      "source": "original authored geometry",
+      "meshes": 1,
+      "triangles": 19628,
+      "degenerate": 0,
+      "bytes": 1117108,
+      "dimensionsGLTF": [
+        0.6575595736503601,
+        0.15925054205581546,
+        0.5265926718711853
+      ]
+    },
+    {
+      "id": "hanging_rope",
+      "source": "original authored geometry",
+      "meshes": 1,
+      "triangles": 6572,
+      "degenerate": 0,
+      "bytes": 379076,
+      "dimensionsGLTF": [
+        0.49421411752700806,
+        0.7750544100999832,
+        0.10822858288884163
+      ]
+    },
+    {
+      "id": "ceramic_fern",
+      "source": "original authored geometry",
+      "meshes": 5,
+      "triangles": 2256,
+      "degenerate": 0,
+      "bytes": 136572,
+      "dimensionsGLTF": [
+        0.858892410993576,
+        1.0049999952316284,
+        0.8193654417991638
+      ]
+    },
+    {
+      "id": "trailing_ivy",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 1773,
+      "degenerate": 0,
+      "bytes": 109632,
+      "dimensionsGLTF": [
+        0.41837719082832336,
+        1.278499960899353,
+        0.5577110052108765
+      ]
+    },
+    {
+      "id": "small_pot",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 356,
+      "degenerate": 0,
+      "bytes": 23920,
+      "dimensionsGLTF": [
+        0.32329998910427094,
+        0.5246999859809875,
+        0.28026096522808075
+      ]
+    },
+    {
+      "id": "island_picture",
+      "source": "original authored geometry",
+      "meshes": 9,
+      "triangles": 744,
+      "degenerate": 0,
+      "bytes": 51284,
+      "dimensionsGLTF": [
+        1.1449999809265137,
+        0.9249999523162842,
+        0.12950001284480095
+      ]
+    },
+    {
+      "id": "mini_sailboat",
+      "source": "original authored geometry",
+      "meshes": 5,
+      "triangles": 173,
+      "degenerate": 0,
+      "bytes": 14428,
+      "dimensionsGLTF": [
+        0.4629136919975281,
+        0.6600000187754631,
+        0.1599999964237213
+      ]
+    },
+    {
+      "id": "striped_fish",
+      "source": "original authored geometry",
+      "meshes": 3,
+      "triangles": 396,
+      "degenerate": 0,
+      "bytes": 25084,
+      "dimensionsGLTF": [
+        0.23704519867897034,
+        0.5484999977052212,
+        0.09050000086426735
+      ]
+    },
+    {
+      "id": "wooden_barrel",
+      "source": "original authored geometry",
+      "meshes": 4,
+      "triangles": 1240,
+      "degenerate": 0,
+      "bytes": 72352,
+      "dimensionsGLTF": [
+        0.6189299821853638,
+        0.7409999966621399,
+        0.6189299821853638
+      ]
+    },
+    {
+      "id": "reused_bed",
+      "source": "farm/modules/bed__bed_frame.glb",
+      "meshes": 7,
+      "triangles": 1416,
+      "degenerate": 0,
+      "bytes": 83084,
+      "dimensionsGLTF": [
+        1.5299999713897705,
+        1.25,
+        2.190000057220459
+      ]
+    },
+    {
+      "id": "reused_food_cupboard",
+      "source": "farm/modules/storage_set__food_cupboard.glb",
+      "meshes": 10,
+      "triangles": 912,
+      "degenerate": 0,
+      "bytes": 51704,
+      "dimensionsGLTF": [
+        1.3399999737739563,
+        2.129999876022339,
+        0.7924999594688416
+      ]
+    },
+    {
+      "id": "reused_grain_sack",
+      "source": "farm/modules/storage_set__grain_sack.glb",
+      "meshes": 3,
+      "triangles": 120,
+      "degenerate": 0,
+      "bytes": 8332,
+      "dimensionsGLTF": [
+        0.47999998927116394,
+        0.5099999718368053,
+        0.48000001907348633
+      ]
+    },
+    {
+      "id": "reused_stove_firebox",
+      "source": "farm/kitchen_stove.glb",
+      "meshes": 9,
+      "triangles": 564,
+      "degenerate": 0,
+      "bytes": 51780,
+      "dimensionsGLTF": [
+        1.440000057220459,
+        2.0399999618530273,
+        1.0199999809265137
+      ]
+    },
+    {
+      "id": "reused_cooking_pot",
+      "source": "farm/kitchen_stove.glb",
+      "meshes": 2,
+      "triangles": 340,
+      "degenerate": 0,
+      "bytes": 28964,
+      "dimensionsGLTF": [
+        0.9099999666213989,
+        0.559999942779541,
+        0.6800000071525574
+      ]
+    },
+    {
+      "id": "reused_firewood_rack",
+      "source": "farm/kitchen_stove.glb",
+      "meshes": 4,
+      "triangles": 720,
+      "degenerate": 0,
+      "bytes": 58000,
+      "dimensionsGLTF": [
+        1.0199999809265137,
+        0.8899999856948853,
+        0.8199999928474426
+      ]
+    },
+    {
+      "id": "reused_utensil_rack",
+      "source": "farm/kitchen_stove.glb",
+      "meshes": 4,
+      "triangles": 348,
+      "degenerate": 0,
+      "bytes": 31428,
+      "dimensionsGLTF": [
+        1.2000000476837158,
+        2.490000009536743,
+        0.10250002145767212
+      ]
+    }
+  ]
+}

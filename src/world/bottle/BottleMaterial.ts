@@ -17,7 +17,7 @@ export function bottleMaterial(interior=false){return new ShaderMaterial({
       tint+=flash*0.23;
       // Broad reflection remains visible from shore, where Fresnel alone is weak.
       float innerReflection=pow(max(0.0,dot(reflect(-v,n),normalize(vec3(-0.5,0.85,0.65)))),4.0);
-      float alpha=0.014+interior*(0.065+innerReflection*0.12)+rim*(0.38+thickness*0.08+interior*0.16)+soft+band*(0.07+interior*0.16);
+      float alpha=0.035+interior*(0.085+innerReflection*0.18)+rim*(0.38+thickness*0.08+interior*0.16)+soft+band*(0.16+interior*0.20);
       gl_FragColor=vec4(tint,min(0.68,alpha+flash*rim*0.1));
     }`,
 });}

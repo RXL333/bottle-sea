@@ -1,0 +1,4246 @@
+{
+  "units": "meters",
+  "coordinateSystem": "Blender Z up; convert to glTF with x,y,z -> x,z,-y",
+  "room": [
+    8,
+    7,
+    3.55
+  ],
+  "hiddenCollections": [
+    "Full_Enclosure_Hidden"
+  ],
+  "instances": [
+    {
+      "module": "floor_tile",
+      "position": [
+        -3.5,
+        -3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -3.5,
+        -2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -3.5,
+        -1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -3.5,
+        0,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -3.5,
+        1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -3.5,
+        2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -3.5,
+        3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -2.5,
+        -3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -2.5,
+        -2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -2.5,
+        -1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -2.5,
+        0,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -2.5,
+        1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -2.5,
+        2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -2.5,
+        3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -1.5,
+        -3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -1.5,
+        -2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -1.5,
+        -1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -1.5,
+        0,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -1.5,
+        1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -1.5,
+        2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -1.5,
+        3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -0.5,
+        -3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -0.5,
+        -2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -0.5,
+        -1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -0.5,
+        0,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -0.5,
+        1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -0.5,
+        2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        -0.5,
+        3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        0.5,
+        -3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        0.5,
+        -2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        0.5,
+        -1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        0.5,
+        0,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        0.5,
+        1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        0.5,
+        2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        0.5,
+        3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        1.5,
+        -3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        1.5,
+        -2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        1.5,
+        -1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        1.5,
+        0,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        1.5,
+        1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        1.5,
+        2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        1.5,
+        3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        2.5,
+        -3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        2.5,
+        -2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        2.5,
+        -1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        2.5,
+        0,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        2.5,
+        1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        2.5,
+        2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        2.5,
+        3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        3.5,
+        -3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        3.5,
+        -2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        3.5,
+        -1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        3.5,
+        0,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        3.5,
+        1,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        3.5,
+        2,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "floor_tile",
+      "position": [
+        3.5,
+        3,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -3.5,
+        -3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -3.5,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -3.5,
+        3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -3.5,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -2.5,
+        -3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -2.5,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -2.5,
+        3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -2.5,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -1.5,
+        -3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -1.5,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -1.5,
+        3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -1.5,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -0.5,
+        -3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -0.5,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -0.5,
+        3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -0.5,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        0.5,
+        -3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        0.5,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        0.5,
+        3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        0.5,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        1.5,
+        -3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        1.5,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        1.5,
+        3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        1.5,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        2.5,
+        -3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        2.5,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        2.5,
+        3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        2.5,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        3.5,
+        -3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        3.5,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        3.5,
+        3.5,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        3.5,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -4,
+        -3,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -4,
+        -3,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        4,
+        -3,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        4,
+        -3,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -4,
+        -2,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -4,
+        -2,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        4,
+        -2,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        4,
+        -2,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -4,
+        -1,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -4,
+        -1,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        4,
+        -1,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        4,
+        -1,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -4,
+        0,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -4,
+        0,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        4,
+        0,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        4,
+        0,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -4,
+        1,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -4,
+        1,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        4,
+        1,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        4,
+        1,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -4,
+        2,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -4,
+        2,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        4,
+        2,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        4,
+        2,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        -4,
+        3,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        -4,
+        3,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "foundation_block",
+      "position": [
+        4,
+        3,
+        -0.04
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "edge_beam",
+      "position": [
+        4,
+        3,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        -3,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        -1,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "wall_window",
+      "position": [
+        1,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        3,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        -4,
+        -2.5,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "wall_window",
+      "position": [
+        -4,
+        -0.5,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        -4,
+        1.5,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        -4,
+        3,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        0.5,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_post",
+      "position": [
+        -4,
+        3.38,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_post",
+      "position": [
+        -2,
+        3.38,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_post",
+      "position": [
+        0,
+        3.38,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_post",
+      "position": [
+        2,
+        3.38,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_post",
+      "position": [
+        4,
+        3.38,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_post",
+      "position": [
+        -3.88,
+        -3.5,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_post",
+      "position": [
+        -3.88,
+        -1.5,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_post",
+      "position": [
+        -3.88,
+        0.5,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_post",
+      "position": [
+        -3.88,
+        3.5,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3,
+        3.33,
+        0.18
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -1,
+        3.33,
+        0.18
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        1,
+        3.33,
+        0.18
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        3,
+        3.33,
+        0.18
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.84,
+        -2.5,
+        0.18
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.84,
+        -0.5,
+        0.18
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.84,
+        1.5,
+        0.18
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3,
+        3.33,
+        2.85
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -1,
+        3.33,
+        2.85
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        1,
+        3.33,
+        2.85
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        3,
+        3.33,
+        2.85
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.84,
+        -2.5,
+        2.85
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.84,
+        -0.5,
+        2.85
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.84,
+        1.5,
+        2.85
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3,
+        3.33,
+        3.5
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -1,
+        3.33,
+        3.5
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        1,
+        3.33,
+        3.5
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        3,
+        3.33,
+        3.5
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.84,
+        -2.5,
+        3.5
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.84,
+        -0.5,
+        3.5
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.84,
+        1.5,
+        3.5
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "diagonal_brace",
+      "position": [
+        -3.88,
+        3.19,
+        2.88
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "diagonal_brace",
+      "position": [
+        -1.9,
+        3.19,
+        2.88
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "diagonal_brace",
+      "position": [
+        0.1,
+        3.19,
+        2.88
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "diagonal_brace",
+      "position": [
+        2.1,
+        3.19,
+        2.88
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "gable_left",
+      "position": [
+        0,
+        3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "gable_left",
+      "position": [
+        0,
+        3.68,
+        0
+      ],
+      "rotationZ": 3.141592653589793,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -0.5,
+        3.32,
+        4.73125
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.5299999713897705,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -0.5,
+        3.41,
+        4.86125
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -1.5,
+        3.32,
+        4.393750000000001
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.5299999713897705,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -1.5,
+        3.41,
+        4.523750000000001
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -2.5,
+        3.32,
+        4.05625
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.5299999713897705,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -2.5,
+        3.41,
+        4.18625
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.5,
+        3.32,
+        3.71875
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.5299999713897705,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -3.5,
+        3.41,
+        3.84875
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        0.5,
+        3.32,
+        4.73125
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.5299999713897705,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        0.5,
+        3.41,
+        4.86125
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        1.5,
+        3.32,
+        4.393750000000001
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.5299999713897705,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        1.5,
+        3.41,
+        4.523750000000001
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        2.5,
+        3.32,
+        4.05625
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.5299999713897705,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        2.5,
+        3.41,
+        4.18625
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        3.5,
+        3.32,
+        3.71875
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.5299999713897705,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        3.5,
+        3.41,
+        3.84875
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -4,
+        -3,
+        3.65
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -4,
+        -2,
+        3.65
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -4,
+        -1,
+        3.65
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -4,
+        0,
+        3.65
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -4,
+        1,
+        3.65
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -4,
+        2,
+        3.65
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "roof_blue_trim",
+      "position": [
+        -4,
+        3,
+        3.65
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "ocean_window",
+      "position": [
+        1,
+        3.39,
+        1.15
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "ocean_window",
+      "position": [
+        -3.89,
+        -0.5,
+        1.15
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "entry_frame",
+      "position": [
+        -2.55,
+        -3.48,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "blue_door",
+      "position": [
+        -2.55,
+        -3.49,
+        0.02
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "entry_steps",
+      "position": [
+        -2.55,
+        -3.6,
+        -0.04
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "wall_low",
+      "position": [
+        -3.5,
+        -3.49,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -3.5,
+        -3.49,
+        0.54
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.5,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "wall_low",
+      "position": [
+        -1.5,
+        -3.49,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_beam",
+      "position": [
+        -1.5,
+        -3.49,
+        0.54
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.5,
+        1.0,
+        1.0
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "timber_post",
+      "position": [
+        -1.8,
+        -3.48,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        0.7699999809265137
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "entry_mat",
+      "position": [
+        -2.55,
+        -4.01,
+        -0.185
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Textiles"
+    },
+    {
+      "module": "bed_rug",
+      "position": [
+        -2.2,
+        -0.22,
+        0.015
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Textiles"
+    },
+    {
+      "module": "reused_bed",
+      "position": [
+        -2.52,
+        -0.24,
+        0.075
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0800000429153442,
+        1.0800000429153442,
+        1.0800000429153442
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "nightstand",
+      "position": [
+        -2.63,
+        1.28,
+        0.01
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "warm_lantern",
+      "position": [
+        -2.65,
+        1.43,
+        0.88
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "small_pot",
+      "position": [
+        -2.39,
+        1.48,
+        0.88
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.699999988079071,
+        0.699999988079071,
+        0.699999988079071
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "blue_book",
+      "position": [
+        -2.62,
+        1.1,
+        0.88
+      ],
+      "rotationZ": 0.3,
+      "scale": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "red_book",
+      "position": [
+        -2.62,
+        1.1,
+        0.994
+      ],
+      "rotationZ": 0.18,
+      "scale": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "green_book",
+      "position": [
+        -1.95,
+        -0.52,
+        0.91
+      ],
+      "rotationZ": -0.2,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "sailor_wardrobe",
+      "position": [
+        -2.72,
+        3.03,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "reused_food_cupboard",
+      "position": [
+        -1.28,
+        3.04,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.8500000238418579,
+        1.0,
+        1.159999966621399
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "warm_lantern",
+      "position": [
+        -3.16,
+        2.98,
+        2.75
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.949999988079071,
+        0.949999988079071,
+        0.949999988079071
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "wooden_barrel",
+      "position": [
+        -2.6,
+        3.0,
+        2.76
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.699999988079071,
+        0.699999988079071,
+        0.699999988079071
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "small_lockbox",
+      "position": [
+        -1.99,
+        2.99,
+        2.76
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.2999999523162842,
+        1.2999999523162842,
+        1.2999999523162842
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "ironbound_chest",
+      "position": [
+        -0.55,
+        2.2,
+        0.045
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.9200000166893005,
+        0.9200000166893005,
+        0.9200000166893005
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "hearth_rug",
+      "position": [
+        -0.55,
+        2.17,
+        0.01
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0800000429153442,
+        1.399999976158142,
+        1.0
+      ],
+      "collection": "Textiles"
+    },
+    {
+      "module": "reused_grain_sack",
+      "position": [
+        0.44,
+        2.36,
+        0.02
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "wooden_barrel",
+      "position": [
+        0.8,
+        2.81,
+        0.015
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.8999999761581421,
+        0.8999999761581421,
+        0.8999999761581421
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "reused_stove_firebox",
+      "position": [
+        2.91,
+        2.96,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0499999523162842,
+        1.0499999523162842,
+        1.0499999523162842
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "reused_cooking_pot",
+      "position": [
+        2.91,
+        2.95,
+        1.26
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0499999523162842,
+        1.0499999523162842,
+        1.0499999523162842
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "reused_firewood_rack",
+      "position": [
+        1.6,
+        2.96,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0499999523162842,
+        1.0499999523162842,
+        1.0499999523162842
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "reused_utensil_rack",
+      "position": [
+        2.18,
+        3.0,
+        0.08
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.8999999761581421,
+        0.8999999761581421,
+        0.8999999761581421
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "chimney_section",
+      "position": [
+        3.05,
+        3.47,
+        1.18
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "chimney_section",
+      "position": [
+        3.05,
+        3.47,
+        2.14
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "chimney_section",
+      "position": [
+        3.05,
+        3.47,
+        3.1
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "chimney_section",
+      "position": [
+        3.05,
+        3.47,
+        4.06
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "chimney_cap",
+      "position": [
+        3.05,
+        3.47,
+        4.85
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929
+      ],
+      "collection": "Architecture"
+    },
+    {
+      "module": "hearth_rug",
+      "position": [
+        2.53,
+        1.82,
+        0.012
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Textiles"
+    },
+    {
+      "module": "wall_shelf",
+      "position": [
+        2.78,
+        3.22,
+        2.56
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.149999976158142,
+        1.149999976158142,
+        1.149999976158142
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "warm_lantern",
+      "position": [
+        1.3,
+        2.95,
+        0.94
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.7699999809265137,
+        0.7699999809265137,
+        0.7699999809265137
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "cutting_board",
+      "position": [
+        1.78,
+        2.86,
+        0.94
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "ceramic_mug",
+      "position": [
+        1.82,
+        3.05,
+        0.99
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "preserve_jar",
+      "position": [
+        2.27,
+        3.19,
+        2.63
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.949999988079071,
+        0.949999988079071,
+        0.949999988079071
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "preserve_jar",
+      "position": [
+        2.57,
+        3.19,
+        2.63
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.949999988079071,
+        0.949999988079071,
+        0.949999988079071
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "preserve_jar",
+      "position": [
+        2.87,
+        3.19,
+        2.63
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.949999988079071,
+        0.949999988079071,
+        0.949999988079071
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "small_pot",
+      "position": [
+        3.2,
+        3.2,
+        2.63
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "cheese_bread",
+      "position": [
+        3.36,
+        2.69,
+        1.29
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.8500000238418579,
+        0.8500000238418579,
+        0.8500000238418579
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "wooden_barrel",
+      "position": [
+        3.69,
+        2.09,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.6700000166893005,
+        0.6700000166893005,
+        0.6700000166893005
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "table_rug",
+      "position": [
+        0.4,
+        -1.24,
+        0.012
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Textiles"
+    },
+    {
+      "module": "navigation_table",
+      "position": [
+        0.4,
+        -1.12,
+        0.055
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "blue_chair",
+      "position": [
+        0.27,
+        -2.37,
+        0.06
+      ],
+      "rotationZ": 3.141592653589793,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "sea_chart",
+      "position": [
+        0.43,
+        -1.18,
+        1.39
+      ],
+      "rotationZ": -0.13,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "brass_telescope",
+      "position": [
+        -0.34,
+        -0.79,
+        1.39
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0800000429153442,
+        1.0800000429153442,
+        1.0800000429153442
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "compass",
+      "position": [
+        0.02,
+        -1.52,
+        1.42
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.8500000238418579,
+        0.8500000238418579,
+        0.8500000238418579
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "inkwell_quill",
+      "position": [
+        0.94,
+        -1.51,
+        1.4
+      ],
+      "rotationZ": -0.6,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "small_lockbox",
+      "position": [
+        1.13,
+        -0.74,
+        1.4
+      ],
+      "rotationZ": 0.15,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "blue_book",
+      "position": [
+        0.35,
+        -0.72,
+        1.39
+      ],
+      "rotationZ": -0.08,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "blue_book",
+      "position": [
+        0.35,
+        -0.72,
+        1.5299999999999998
+      ],
+      "rotationZ": 0.12,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "warm_lantern",
+      "position": [
+        0.78,
+        -0.65,
+        1.4
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.8199999928474426,
+        0.8199999928474426,
+        0.8199999928474426
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "ceramic_fern",
+      "position": [
+        -1.05,
+        -2.78,
+        0.015
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.8500000238418579,
+        0.8500000238418579,
+        0.8500000238418579
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "rope_coil",
+      "position": [
+        -0.49,
+        -2.81,
+        0.015
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "wooden_barrel",
+      "position": [
+        -1.04,
+        -3.58,
+        -0.25
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "blue_book",
+      "position": [
+        -1.04,
+        -3.58,
+        0.5
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.8999999761581421,
+        0.8999999761581421,
+        0.8999999761581421
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "wall_shelf",
+      "position": [
+        -3.72,
+        1.05,
+        2.06
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Furniture"
+    },
+    {
+      "module": "island_picture",
+      "position": [
+        -3.79,
+        1.05,
+        2.11
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        0.8299999833106995,
+        0.8299999833106995,
+        0.8299999833106995
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "mini_sailboat",
+      "position": [
+        -3.64,
+        1.53,
+        2.12
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        0.6499999761581421,
+        0.6499999761581421,
+        0.6499999761581421
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "trailing_ivy",
+      "position": [
+        -3.59,
+        0.45,
+        2.12
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        0.699999988079071,
+        0.699999988079071,
+        0.699999988079071
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "hanging_rope",
+      "position": [
+        -0.02,
+        3.26,
+        1.76
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.8500000238418579,
+        0.8500000238418579,
+        0.8500000238418579
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "striped_fish",
+      "position": [
+        1.92,
+        3.2,
+        1.5
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.949999988079071,
+        0.949999988079071,
+        0.949999988079071
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "small_pot",
+      "position": [
+        1.21,
+        3.08,
+        1.2
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.75,
+        0.75,
+        0.75
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "warm_lantern",
+      "position": [
+        -3.44,
+        -3.7,
+        1.57
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "trailing_ivy",
+      "position": [
+        -3.95,
+        -3.39,
+        0.54
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.8500000238418579,
+        0.8500000238418579,
+        0.8500000238418579
+      ],
+      "collection": "Decor"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        4,
+        -2.5,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        4,
+        -0.5,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        4,
+        1.5,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        4,
+        3,
+        0
+      ],
+      "rotationZ": 1.5707963267948966,
+      "scale": [
+        0.5,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden"
+    },
+    {
+      "module": "wall_door",
+      "position": [
+        -2.55,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        -3.775,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.22499999403953552,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        -0.55,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        1.45,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden"
+    },
+    {
+      "module": "wall_panel",
+      "position": [
+        3.225,
+        -3.5,
+        0
+      ],
+      "rotationZ": 0,
+      "scale": [
+        0.7749999761581421,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden"
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        -1,
+        -2.5,
+        4.6025
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        -1,
+        -0.5,
+        4.6025
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        -1,
+        1.5,
+        4.6025
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        -1,
+        3,
+        4.6025
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        0.5,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        -3,
+        -2.5,
+        3.9275
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        -3,
+        -0.5,
+        3.9275
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        -3,
+        1.5,
+        3.9275
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        -3,
+        3,
+        3.9275
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        0.5,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": -0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        1,
+        -2.5,
+        4.6025
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        1,
+        -0.5,
+        4.6025
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        1,
+        1.5,
+        4.6025
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        1,
+        3,
+        4.6025
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        0.5,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        3,
+        -2.5,
+        3.9275
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        3,
+        -0.5,
+        3.9275
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        3,
+        1.5,
+        3.9275
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        1.0,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": 0.32549585523647806
+    },
+    {
+      "module": "roof_panel",
+      "position": [
+        3,
+        3,
+        3.9275
+      ],
+      "rotationZ": 0,
+      "scale": [
+        1.0549999475479126,
+        0.5,
+        1.0
+      ],
+      "collection": "Full_Enclosure_Hidden",
+      "rotationY": 0.32549585523647806
+    }
+  ]
+}

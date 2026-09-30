@@ -47,7 +47,7 @@ export class ExploreController {
     });
     element.addEventListener('dblclick',()=>{if(this.active)this.lock();});
   }
-  setNavigation(navigation:NavigationSurface){this.navigation=navigation;this.keys.clear();this.cancelLook();}
+  setNavigation(navigation:NavigationSurface){this.navigation=navigation;this.eyeHeight=navigation.eyeHeight??PLAYER_FOOT_OFFSET;this.swimming=false;this.underwater=false;this.keys.clear();this.cancelLook();}
   enter(requestLock=true,spawn?:SpawnPoint){this.active=true;this.camera.near=.08;this.camera.far=40;this.camera.fov=68;this.camera.updateProjectionMatrix();this.camera.position.set(.65,3.68+this.eyeHeight,1.87);this.camera.lookAt(-.65,4.8,-.4);if(spawn){this.camera.position.fromArray(spawn.position);this.camera.lookAt(...spawn.lookAt);}this.velocityY=0;this.renderOffsetY=0;this.headInitialized=false;this.syncLook();if(requestLock)this.lock();}
   exit(){this.active=false;this.releaseLock();this.keys.clear();this.camera.near=.12;this.camera.far=200;this.camera.fov=34;this.camera.updateProjectionMatrix();this.swimming=false;this.underwater=false;this.renderOffsetY=0;this.headInitialized=false;}
   suspend(){this.active=false;this.keys.clear();this.cancelLook();this.releaseLock();}
@@ -77,7 +77,7 @@ export class ExploreController {
     this.right.crossVectors(this.forward,this.up).normalize();this.move.set(0,0,0);
     if(this.keys.has('KeyW'))this.move.add(this.forward);if(this.keys.has('KeyS'))this.move.sub(this.forward);
     if(this.keys.has('KeyD'))this.move.add(this.right);if(this.keys.has('KeyA'))this.move.sub(this.right);
-    const speed=(this.keys.has('ShiftLeft')||this.keys.has('ShiftRight')?1.9:1.05)*delta;
+    const speed=(this.keys.has('ShiftLeft')||this.keys.has('ShiftRight')?2.8:1.6)*delta;
     if(this.move.lengthSq()>0)this.move.normalize().multiplyScalar(speed);
     this.tryMove(p.x+this.move.x,p.z);this.tryMove(p.x,p.z+this.move.z);
     const floor=this.navigation.groundHeight(p.x,p.z,p.y-this.eyeHeight)+this.eyeHeight,previousY=p.y;

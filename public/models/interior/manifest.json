@@ -1,0 +1,1227 @@
+{
+  "title": "Modular maritime cottage interior",
+  "assetCount": 58,
+  "assets": [
+    {
+      "id": "floor_tile",
+      "category": "architecture",
+      "file": "floor_tile.glb",
+      "blend": "modules/floor_tile.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.4970000088214874,
+          -0.49650001525878906,
+          -0.09000000357627869
+        ],
+        "max": [
+          0.4970000088214874,
+          0.49650001525878906,
+          0.003000000026077032
+        ]
+      },
+      "bytes": 51356,
+      "meshCount": 4
+    },
+    {
+      "id": "foundation_block",
+      "category": "architecture",
+      "file": "foundation_block.glb",
+      "blend": "modules/foundation_block.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.4950000047683716,
+          -0.24500000476837158,
+          -0.375
+        ],
+        "max": [
+          0.4950000047683716,
+          0.24500000476837158,
+          -0.004999995231628418
+        ]
+      },
+      "bytes": 3952,
+      "meshCount": 1
+    },
+    {
+      "id": "edge_beam",
+      "category": "architecture",
+      "file": "edge_beam.glb",
+      "blend": "modules/edge_beam.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.5,
+          -0.10899999737739563,
+          -0.1899999976158142
+        ],
+        "max": [
+          0.5,
+          0.10000000149011612,
+          0.009999997913837433
+        ]
+      },
+      "bytes": 6472,
+      "meshCount": 2
+    },
+    {
+      "id": "wall_panel",
+      "category": "architecture",
+      "file": "wall_panel.glb",
+      "blend": "modules/wall_panel.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.9965000152587891,
+          -0.09000000357627869,
+          0.004500001668930054
+        ],
+        "max": [
+          0.9965000152587891,
+          0.09000000357627869,
+          3.545499801635742
+        ]
+      },
+      "bytes": 166540,
+      "meshCount": 3
+    },
+    {
+      "id": "wall_window",
+      "category": "architecture",
+      "file": "wall_window.glb",
+      "blend": "modules/wall_window.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.9965000152587891,
+          -0.09000000357627869,
+          0.004500001668930054
+        ],
+        "max": [
+          0.9965000152587891,
+          0.09000000357627869,
+          3.545499801635742
+        ]
+      },
+      "bytes": 159840,
+      "meshCount": 3
+    },
+    {
+      "id": "wall_door",
+      "category": "architecture",
+      "file": "wall_door.glb",
+      "blend": "modules/wall_door.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.9965000152587891,
+          -0.09000000357627869,
+          0.004500001668930054
+        ],
+        "max": [
+          0.9965000152587891,
+          0.09000000357627869,
+          3.545499801635742
+        ]
+      },
+      "bytes": 134136,
+      "meshCount": 3
+    },
+    {
+      "id": "roof_panel",
+      "category": "architecture",
+      "file": "roof_panel.glb",
+      "blend": "modules/roof_panel.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.996999979019165,
+          -1.024999976158142,
+          -0.05000000074505806
+        ],
+        "max": [
+          0.996999979019165,
+          1.0199999809265137,
+          0.12250000238418579
+        ]
+      },
+      "bytes": 146924,
+      "meshCount": 3
+    },
+    {
+      "id": "wall_low",
+      "category": "architecture",
+      "file": "wall_low.glb",
+      "blend": "modules/wall_low.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.49650001525878906,
+          -0.09000000357627869,
+          0.004500001668930054
+        ],
+        "max": [
+          0.49650001525878906,
+          0.09000000357627869,
+          0.4455000162124634
+        ]
+      },
+      "bytes": 17660,
+      "meshCount": 2
+    },
+    {
+      "id": "timber_post",
+      "category": "architecture",
+      "file": "timber_post.glb",
+      "blend": "modules/timber_post.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.11999999731779099,
+          -0.1599999964237213,
+          0.0
+        ],
+        "max": [
+          0.11999999731779099,
+          0.14000000059604645,
+          3.559999942779541
+        ]
+      },
+      "bytes": 27032,
+      "meshCount": 3
+    },
+    {
+      "id": "timber_beam",
+      "category": "architecture",
+      "file": "timber_beam.glb",
+      "blend": "modules/timber_beam.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -1.0,
+          -0.12049999833106995,
+          -0.10999999940395355
+        ],
+        "max": [
+          1.0,
+          0.10999999940395355,
+          0.10999999940395355
+        ]
+      },
+      "bytes": 6488,
+      "meshCount": 2
+    },
+    {
+      "id": "diagonal_brace",
+      "category": "architecture",
+      "file": "diagonal_brace.glb",
+      "blend": "modules/diagonal_brace.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.0457790307700634,
+          -0.07500006258487701,
+          -0.07218999415636063
+        ],
+        "max": [
+          1.0457789897918701,
+          0.07500006258487701,
+          0.7221900224685669
+        ]
+      },
+      "bytes": 3948,
+      "meshCount": 1
+    },
+    {
+      "id": "roof_blue_trim",
+      "category": "architecture",
+      "file": "roof_blue_trim.glb",
+      "blend": "modules/roof_blue_trim.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.49799999594688416,
+          -0.11999999731779099,
+          -0.017500000074505806
+        ],
+        "max": [
+          0.49799999594688416,
+          0.30000001192092896,
+          0.11749999970197678
+        ]
+      },
+      "bytes": 27976,
+      "meshCount": 2
+    },
+    {
+      "id": "gable_left",
+      "category": "architecture",
+      "file": "gable_left.glb",
+      "blend": "modules/gable_left.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -3.9943151473999023,
+          0.0,
+          3.549999952316284
+        ],
+        "max": [
+          0.0,
+          0.18000000715255737,
+          4.898081302642822
+        ]
+      },
+      "bytes": 3288,
+      "meshCount": 1
+    },
+    {
+      "id": "entry_frame",
+      "category": "architecture",
+      "file": "entry_frame.glb",
+      "blend": "modules/entry_frame.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.8399999737739563,
+          -0.16500000655651093,
+          0.0
+        ],
+        "max": [
+          0.8399999737739563,
+          0.16500000655651093,
+          2.7149999141693115
+        ]
+      },
+      "bytes": 15276,
+      "meshCount": 3
+    },
+    {
+      "id": "blue_door",
+      "category": "architecture",
+      "file": "blue_door.glb",
+      "blend": "modules/blue_door.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.5659999847412109,
+          -0.16500000655651093,
+          0.0
+        ],
+        "max": [
+          0.5659999251365662,
+          0.05999999865889549,
+          2.380000114440918
+        ]
+      },
+      "bytes": 82124,
+      "meshCount": 6
+    },
+    {
+      "id": "entry_steps",
+      "category": "architecture",
+      "file": "entry_steps.glb",
+      "blend": "modules/entry_steps.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.7454999685287476,
+          -0.8550000190734863,
+          -0.4599999785423279
+        ],
+        "max": [
+          0.7454999685287476,
+          -0.06499999761581421,
+          0.0
+        ]
+      },
+      "bytes": 45944,
+      "meshCount": 2
+    },
+    {
+      "id": "chimney_section",
+      "category": "architecture",
+      "file": "chimney_section.glb",
+      "blend": "modules/chimney_section.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.35600000619888306,
+          -0.25999999046325684,
+          0.004999995231628418
+        ],
+        "max": [
+          0.35600000619888306,
+          0.25999999046325684,
+          0.9549999833106995
+        ]
+      },
+      "bytes": 21676,
+      "meshCount": 2
+    },
+    {
+      "id": "chimney_cap",
+      "category": "architecture",
+      "file": "chimney_cap.glb",
+      "blend": "modules/chimney_cap.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.45500001311302185,
+          -0.4300000071525574,
+          0.0
+        ],
+        "max": [
+          0.45500001311302185,
+          0.4300000071525574,
+          0.23999999463558197
+        ]
+      },
+      "bytes": 11856,
+      "meshCount": 2
+    },
+    {
+      "id": "ocean_window",
+      "category": "architecture",
+      "file": "ocean_window.glb",
+      "blend": "modules/ocean_window.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.8050000071525574,
+          -0.26500001549720764,
+          -0.17000000178813934
+        ],
+        "max": [
+          0.8050000071525574,
+          0.07000000029802322,
+          1.7300000190734863
+        ]
+      },
+      "bytes": 77064,
+      "meshCount": 10
+    },
+    {
+      "id": "navigation_table",
+      "category": "furniture",
+      "file": "navigation_table.glb",
+      "blend": "modules/navigation_table.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -1.1154999732971191,
+          -0.7824999690055847,
+          0.0
+        ],
+        "max": [
+          1.1154999732971191,
+          0.7099999785423279,
+          1.3450000286102295
+        ]
+      },
+      "bytes": 178504,
+      "meshCount": 7
+    },
+    {
+      "id": "blue_chair",
+      "category": "furniture",
+      "file": "blue_chair.glb",
+      "blend": "modules/blue_chair.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.3449999988079071,
+          -0.33000001311302185,
+          0.0
+        ],
+        "max": [
+          0.3449999988079071,
+          0.33500000834465027,
+          1.440000057220459
+        ]
+      },
+      "bytes": 42504,
+      "meshCount": 4
+    },
+    {
+      "id": "nightstand",
+      "category": "furniture",
+      "file": "nightstand.glb",
+      "blend": "modules/nightstand.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.35500001907348633,
+          -0.343500018119812,
+          0.0
+        ],
+        "max": [
+          0.35500001907348633,
+          0.33500000834465027,
+          0.8700000047683716
+        ]
+      },
+      "bytes": 34820,
+      "meshCount": 4
+    },
+    {
+      "id": "sailor_wardrobe",
+      "category": "furniture",
+      "file": "sailor_wardrobe.glb",
+      "blend": "modules/sailor_wardrobe.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.7900000214576721,
+          -0.47749999165534973,
+          0.0
+        ],
+        "max": [
+          0.7900000214576721,
+          0.41999998688697815,
+          2.740000009536743
+        ]
+      },
+      "bytes": 111772,
+      "meshCount": 12
+    },
+    {
+      "id": "ironbound_chest",
+      "category": "furniture",
+      "file": "ironbound_chest.glb",
+      "blend": "modules/ironbound_chest.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.6960000395774841,
+          -0.5040000081062317,
+          0.004999995231628418
+        ],
+        "max": [
+          0.6960000395774841,
+          0.47999998927116394,
+          1.0149999856948853
+        ]
+      },
+      "bytes": 88180,
+      "meshCount": 6
+    },
+    {
+      "id": "wall_shelf",
+      "category": "furniture",
+      "file": "wall_shelf.glb",
+      "blend": "modules/wall_shelf.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.800000011920929,
+          -0.20200000703334808,
+          -0.4488598108291626
+        ],
+        "max": [
+          0.800000011920929,
+          0.18000000715255737,
+          0.05000000074505806
+        ]
+      },
+      "bytes": 23380,
+      "meshCount": 3
+    },
+    {
+      "id": "bed_rug",
+      "category": "textile",
+      "file": "bed_rug.glb",
+      "blend": "modules/bed_rug.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -1.4500000476837158,
+          -1.3569999933242798,
+          0.000499999150633812
+        ],
+        "max": [
+          1.46750009059906,
+          1.3569999933242798,
+          0.05450000986456871
+        ]
+      },
+      "bytes": 255016,
+      "meshCount": 3
+    },
+    {
+      "id": "table_rug",
+      "category": "textile",
+      "file": "table_rug.glb",
+      "blend": "modules/table_rug.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -1.4500000476837158,
+          -1.3569999933242798,
+          0.000499999150633812
+        ],
+        "max": [
+          1.46750009059906,
+          1.3569999933242798,
+          0.04809999838471413
+        ]
+      },
+      "bytes": 227772,
+      "meshCount": 3
+    },
+    {
+      "id": "hearth_rug",
+      "category": "textile",
+      "file": "hearth_rug.glb",
+      "blend": "modules/hearth_rug.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.7749999761581421,
+          -0.4570000171661377,
+          0.000499999150633812
+        ],
+        "max": [
+          0.7924999594688416,
+          0.4570000171661377,
+          0.04809999838471413
+        ]
+      },
+      "bytes": 134020,
+      "meshCount": 3
+    },
+    {
+      "id": "entry_mat",
+      "category": "textile",
+      "file": "entry_mat.glb",
+      "blend": "modules/entry_mat.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.625,
+          -0.40700000524520874,
+          0.000499999150633812
+        ],
+        "max": [
+          0.6424999833106995,
+          0.40700000524520874,
+          0.04809999838471413
+        ]
+      },
+      "bytes": 113444,
+      "meshCount": 3
+    },
+    {
+      "id": "warm_lantern",
+      "category": "lighting",
+      "file": "warm_lantern.glb",
+      "blend": "modules/warm_lantern.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.17151471972465515,
+          -0.17151471972465515,
+          0.002499997615814209
+        ],
+        "max": [
+          0.17151471972465515,
+          0.17151471972465515,
+          0.6499999761581421
+        ]
+      },
+      "bytes": 36108,
+      "meshCount": 4
+    },
+    {
+      "id": "brass_telescope",
+      "category": "decor",
+      "file": "brass_telescope.glb",
+      "blend": "modules/brass_telescope.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.14499999582767487,
+          -0.6832610368728638,
+          0.0
+        ],
+        "max": [
+          0.14499999582767487,
+          0.4556176960468292,
+          0.52183997631073
+        ]
+      },
+      "bytes": 114604,
+      "meshCount": 4
+    },
+    {
+      "id": "compass",
+      "category": "decor",
+      "file": "compass.glb",
+      "blend": "modules/compass.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.1599999964237213,
+          -0.1599999964237213,
+          0.012000000104308128
+        ],
+        "max": [
+          0.1599999964237213,
+          0.1599999964237213,
+          0.08500000089406967
+        ]
+      },
+      "bytes": 29212,
+      "meshCount": 4
+    },
+    {
+      "id": "sea_chart",
+      "category": "decor",
+      "file": "sea_chart.glb",
+      "blend": "modules/sea_chart.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.5107039213180542,
+          -0.3799999952316284,
+          0.0
+        ],
+        "max": [
+          0.5107039213180542,
+          0.3799999952316284,
+          0.05070389807224274
+        ]
+      },
+      "bytes": 124308,
+      "meshCount": 6
+    },
+    {
+      "id": "blue_book",
+      "category": "decor",
+      "file": "blue_book.glb",
+      "blend": "modules/blue_book.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.1485000103712082,
+          -0.17499999701976776,
+          -0.003500000573694706
+        ],
+        "max": [
+          0.14000000059604645,
+          0.17499999701976776,
+          0.140500009059906
+        ]
+      },
+      "bytes": 18528,
+      "meshCount": 3
+    },
+    {
+      "id": "green_book",
+      "category": "decor",
+      "file": "green_book.glb",
+      "blend": "modules/green_book.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.1485000103712082,
+          -0.17499999701976776,
+          -0.003500000573694706
+        ],
+        "max": [
+          0.14000000059604645,
+          0.17499999701976776,
+          0.140500009059906
+        ]
+      },
+      "bytes": 18536,
+      "meshCount": 3
+    },
+    {
+      "id": "red_book",
+      "category": "decor",
+      "file": "red_book.glb",
+      "blend": "modules/red_book.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.1485000103712082,
+          -0.17499999701976776,
+          -0.003500000573694706
+        ],
+        "max": [
+          0.14000000059604645,
+          0.17499999701976776,
+          0.140500009059906
+        ]
+      },
+      "bytes": 18524,
+      "meshCount": 3
+    },
+    {
+      "id": "inkwell_quill",
+      "category": "decor",
+      "file": "inkwell_quill.glb",
+      "blend": "modules/inkwell_quill.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.07414589822292328,
+          -0.07228029519319534,
+          0.0
+        ],
+        "max": [
+          0.23815877735614777,
+          0.07228029519319534,
+          0.49000000953674316
+        ]
+      },
+      "bytes": 38496,
+      "meshCount": 4
+    },
+    {
+      "id": "small_lockbox",
+      "category": "decor",
+      "file": "small_lockbox.glb",
+      "blend": "modules/small_lockbox.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.16500000655651093,
+          -0.1574999988079071,
+          0.0
+        ],
+        "max": [
+          0.16500000655651093,
+          0.14499999582767487,
+          0.2849999964237213
+        ]
+      },
+      "bytes": 13072,
+      "meshCount": 3
+    },
+    {
+      "id": "ceramic_mug",
+      "category": "decor",
+      "file": "ceramic_mug.glb",
+      "blend": "modules/ceramic_mug.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.0860000029206276,
+          -0.0860000029206276,
+          0.0
+        ],
+        "max": [
+          0.1599999964237213,
+          0.0860000029206276,
+          0.17249999940395355
+        ]
+      },
+      "bytes": 25904,
+      "meshCount": 2
+    },
+    {
+      "id": "preserve_jar",
+      "category": "decor",
+      "file": "preserve_jar.glb",
+      "blend": "modules/preserve_jar.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.0949999988079071,
+          -0.0949999988079071,
+          0.0
+        ],
+        "max": [
+          0.0949999988079071,
+          0.0949999988079071,
+          0.26499998569488525
+        ]
+      },
+      "bytes": 15940,
+      "meshCount": 3
+    },
+    {
+      "id": "cutting_board",
+      "category": "decor",
+      "file": "cutting_board.glb",
+      "blend": "modules/cutting_board.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.20999999344348907,
+          -0.14000000059604645,
+          0.0
+        ],
+        "max": [
+          0.20999999344348907,
+          0.2750000059604645,
+          0.03999999910593033
+        ]
+      },
+      "bytes": 7388,
+      "meshCount": 2
+    },
+    {
+      "id": "cheese_bread",
+      "category": "decor",
+      "file": "cheese_bread.glb",
+      "blend": "modules/cheese_bread.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.20000000298023224,
+          -0.10000000149011612,
+          0.0
+        ],
+        "max": [
+          0.22100000083446503,
+          0.09000000357627869,
+          0.17000000178813934
+        ]
+      },
+      "bytes": 20232,
+      "meshCount": 3
+    },
+    {
+      "id": "rope_coil",
+      "category": "decor",
+      "file": "rope_coil.glb",
+      "blend": "modules/rope_coil.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.26329633593559265,
+          -0.26329633593559265,
+          0.004132152069360018
+        ],
+        "max": [
+          0.39426323771476746,
+          0.26329633593559265,
+          0.16338269412517548
+        ]
+      },
+      "bytes": 1117108,
+      "meshCount": 1
+    },
+    {
+      "id": "hanging_rope",
+      "category": "decor",
+      "file": "hanging_rope.glb",
+      "blend": "modules/hanging_rope.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.24710705876350403,
+          -0.0820000171661377,
+          -0.16428996622562408
+        ],
+        "max": [
+          0.24710705876350403,
+          0.026228565722703934,
+          0.6107644438743591
+        ]
+      },
+      "bytes": 379076,
+      "meshCount": 1
+    },
+    {
+      "id": "ceramic_fern",
+      "category": "decor",
+      "file": "ceramic_fern.glb",
+      "blend": "modules/ceramic_fern.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.41889241337776184,
+          -0.4096827208995819,
+          0.0
+        ],
+        "max": [
+          0.4399999976158142,
+          0.4096827208995819,
+          1.0049999952316284
+        ]
+      },
+      "bytes": 136572,
+      "meshCount": 5
+    },
+    {
+      "id": "trailing_ivy",
+      "category": "decor",
+      "file": "trailing_ivy.glb",
+      "blend": "modules/trailing_ivy.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.21449999511241913,
+          -0.3920000195503235,
+          -0.6349999904632568
+        ],
+        "max": [
+          0.20387719571590424,
+          0.16571098566055298,
+          0.6434999704360962
+        ]
+      },
+      "bytes": 109632,
+      "meshCount": 3
+    },
+    {
+      "id": "small_pot",
+      "category": "decor",
+      "file": "small_pot.glb",
+      "blend": "modules/small_pot.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.17489999532699585,
+          -0.1457499861717224,
+          0.0
+        ],
+        "max": [
+          0.14839999377727509,
+          0.13451097905635834,
+          0.5246999859809875
+        ]
+      },
+      "bytes": 23920,
+      "meshCount": 3
+    },
+    {
+      "id": "island_picture",
+      "category": "decor",
+      "file": "island_picture.glb",
+      "blend": "modules/island_picture.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.5724999904632568,
+          -0.10200001299381256,
+          -0.0625
+        ],
+        "max": [
+          0.5724999904632568,
+          0.027499999850988388,
+          0.8624999523162842
+        ]
+      },
+      "bytes": 51284,
+      "meshCount": 9
+    },
+    {
+      "id": "mini_sailboat",
+      "category": "decor",
+      "file": "mini_sailboat.glb",
+      "blend": "modules/mini_sailboat.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.23791369795799255,
+          -0.07999999821186066,
+          0.009999997913837433
+        ],
+        "max": [
+          0.22499999403953552,
+          0.07999999821186066,
+          0.6700000166893005
+        ]
+      },
+      "bytes": 14428,
+      "meshCount": 5
+    },
+    {
+      "id": "striped_fish",
+      "category": "decor",
+      "file": "striped_fish.glb",
+      "blend": "modules/striped_fish.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.11852259933948517,
+          -0.05299999937415123,
+          0.004999998956918716
+        ],
+        "max": [
+          0.11852259933948517,
+          0.03750000149011612,
+          0.5534999966621399
+        ]
+      },
+      "bytes": 25084,
+      "meshCount": 3
+    },
+    {
+      "id": "wooden_barrel",
+      "category": "decor",
+      "file": "wooden_barrel.glb",
+      "blend": "modules/wooden_barrel.blend",
+      "source": "original authored geometry",
+      "boundsBlender": {
+        "min": [
+          -0.3094649910926819,
+          -0.3094649910926819,
+          0.0
+        ],
+        "max": [
+          0.3094649910926819,
+          0.3094649910926819,
+          0.7409999966621399
+        ]
+      },
+      "bytes": 72352,
+      "meshCount": 4
+    },
+    {
+      "id": "reused_bed",
+      "category": "reused",
+      "file": "reused_bed.glb",
+      "blend": "modules/reused_bed.blend",
+      "source": "farm/modules/bed__bed_frame.glb",
+      "boundsBlender": {
+        "min": [
+          -0.7649999856948853,
+          -1.0950000286102295,
+          0.0
+        ],
+        "max": [
+          0.7649999856948853,
+          1.0950000286102295,
+          1.25
+        ]
+      },
+      "bytes": 83084,
+      "meshCount": 7
+    },
+    {
+      "id": "reused_food_cupboard",
+      "category": "reused",
+      "file": "reused_food_cupboard.glb",
+      "blend": "modules/reused_food_cupboard.blend",
+      "source": "farm/modules/storage_set__food_cupboard.glb",
+      "boundsBlender": {
+        "min": [
+          -0.6700000166893005,
+          -0.3974999785423279,
+          0.009999990463256836
+        ],
+        "max": [
+          0.6699999570846558,
+          0.39499998092651367,
+          2.1399998664855957
+        ]
+      },
+      "bytes": 51704,
+      "meshCount": 10
+    },
+    {
+      "id": "reused_grain_sack",
+      "category": "reused",
+      "file": "reused_grain_sack.glb",
+      "blend": "modules/reused_grain_sack.blend",
+      "source": "farm/modules/storage_set__grain_sack.glb",
+      "boundsBlender": {
+        "min": [
+          -0.23999999463558197,
+          -0.24000000953674316,
+          0.019999999552965164
+        ],
+        "max": [
+          0.23999999463558197,
+          0.24000000953674316,
+          0.5299999713897705
+        ]
+      },
+      "bytes": 8332,
+      "meshCount": 3
+    },
+    {
+      "id": "reused_stove_firebox",
+      "category": "reused",
+      "file": "reused_stove_firebox.glb",
+      "blend": "modules/reused_stove_firebox.blend",
+      "source": "farm/kitchen_stove.glb",
+      "boundsBlender": {
+        "min": [
+          -0.7200000286102295,
+          -0.5149999856948853,
+          0.0
+        ],
+        "max": [
+          0.7200000286102295,
+          0.5049999952316284,
+          2.0399999618530273
+        ]
+      },
+      "bytes": 51780,
+      "meshCount": 9
+    },
+    {
+      "id": "reused_cooking_pot",
+      "category": "reused",
+      "file": "reused_cooking_pot.glb",
+      "blend": "modules/reused_cooking_pot.blend",
+      "source": "farm/kitchen_stove.glb",
+      "boundsBlender": {
+        "min": [
+          -0.45499998331069946,
+          -0.3400000035762787,
+          0.0
+        ],
+        "max": [
+          0.45499998331069946,
+          0.3400000035762787,
+          0.559999942779541
+        ]
+      },
+      "bytes": 28964,
+      "meshCount": 2
+    },
+    {
+      "id": "reused_firewood_rack",
+      "category": "reused",
+      "file": "reused_firewood_rack.glb",
+      "blend": "modules/reused_firewood_rack.blend",
+      "source": "farm/kitchen_stove.glb",
+      "boundsBlender": {
+        "min": [
+          -0.5099999904632568,
+          -0.4099999964237213,
+          0.0
+        ],
+        "max": [
+          0.5099999904632568,
+          0.4099999964237213,
+          0.8899999856948853
+        ]
+      },
+      "bytes": 58000,
+      "meshCount": 4
+    },
+    {
+      "id": "reused_utensil_rack",
+      "category": "reused",
+      "file": "reused_utensil_rack.glb",
+      "blend": "modules/reused_utensil_rack.blend",
+      "source": "farm/kitchen_stove.glb",
+      "boundsBlender": {
+        "min": [
+          -0.6000000238418579,
+          0.23749998211860657,
+          0.0
+        ],
+        "max": [
+          0.6000000238418579,
+          0.3400000035762787,
+          2.490000009536743
+        ]
+      },
+      "bytes": 31428,
+      "meshCount": 4
+    }
+  ],
+  "assembly": "layout.json",
+  "reference": "User supplied ChatGPT image 2026-09-28 21:18:45",
+  "wholeRoomMerged": false
+}

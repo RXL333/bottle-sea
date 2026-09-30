@@ -1,0 +1,422 @@
+{
+  "status": "passed",
+  "modules": [
+    {
+      "id": "floor_tile",
+      "meshes": 4,
+      "source": "new",
+      "camera": "Review_floor_tile",
+      "status": "opened and verified"
+    },
+    {
+      "id": "foundation_block",
+      "meshes": 1,
+      "source": "new",
+      "camera": "Review_foundation_block",
+      "status": "opened and verified"
+    },
+    {
+      "id": "edge_beam",
+      "meshes": 2,
+      "source": "new",
+      "camera": "Review_edge_beam",
+      "status": "opened and verified"
+    },
+    {
+      "id": "wall_panel",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_wall_panel",
+      "status": "opened and verified"
+    },
+    {
+      "id": "wall_window",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_wall_window",
+      "status": "opened and verified"
+    },
+    {
+      "id": "wall_door",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_wall_door",
+      "status": "opened and verified"
+    },
+    {
+      "id": "roof_panel",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_roof_panel",
+      "status": "opened and verified"
+    },
+    {
+      "id": "wall_low",
+      "meshes": 2,
+      "source": "new",
+      "camera": "Review_wall_low",
+      "status": "opened and verified"
+    },
+    {
+      "id": "timber_post",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_timber_post",
+      "status": "opened and verified"
+    },
+    {
+      "id": "timber_beam",
+      "meshes": 2,
+      "source": "new",
+      "camera": "Review_timber_beam",
+      "status": "opened and verified"
+    },
+    {
+      "id": "diagonal_brace",
+      "meshes": 1,
+      "source": "new",
+      "camera": "Review_diagonal_brace",
+      "status": "opened and verified"
+    },
+    {
+      "id": "roof_blue_trim",
+      "meshes": 2,
+      "source": "new",
+      "camera": "Review_roof_blue_trim",
+      "status": "opened and verified"
+    },
+    {
+      "id": "gable_left",
+      "meshes": 1,
+      "source": "new",
+      "camera": "Review_gable_left",
+      "status": "opened and verified"
+    },
+    {
+      "id": "entry_frame",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_entry_frame",
+      "status": "opened and verified"
+    },
+    {
+      "id": "blue_door",
+      "meshes": 6,
+      "source": "new",
+      "camera": "Review_blue_door",
+      "status": "opened and verified"
+    },
+    {
+      "id": "entry_steps",
+      "meshes": 2,
+      "source": "new",
+      "camera": "Review_entry_steps",
+      "status": "opened and verified"
+    },
+    {
+      "id": "chimney_section",
+      "meshes": 2,
+      "source": "new",
+      "camera": "Review_chimney_section",
+      "status": "opened and verified"
+    },
+    {
+      "id": "chimney_cap",
+      "meshes": 2,
+      "source": "new",
+      "camera": "Review_chimney_cap",
+      "status": "opened and verified"
+    },
+    {
+      "id": "ocean_window",
+      "meshes": 10,
+      "source": "new",
+      "camera": "Review_ocean_window",
+      "status": "opened and verified"
+    },
+    {
+      "id": "navigation_table",
+      "meshes": 7,
+      "source": "new",
+      "camera": "Review_navigation_table",
+      "status": "opened and verified"
+    },
+    {
+      "id": "blue_chair",
+      "meshes": 4,
+      "source": "new",
+      "camera": "Review_blue_chair",
+      "status": "opened and verified"
+    },
+    {
+      "id": "nightstand",
+      "meshes": 4,
+      "source": "new",
+      "camera": "Review_nightstand",
+      "status": "opened and verified"
+    },
+    {
+      "id": "sailor_wardrobe",
+      "meshes": 12,
+      "source": "new",
+      "camera": "Review_sailor_wardrobe",
+      "status": "opened and verified"
+    },
+    {
+      "id": "ironbound_chest",
+      "meshes": 6,
+      "source": "new",
+      "camera": "Review_ironbound_chest",
+      "status": "opened and verified"
+    },
+    {
+      "id": "wall_shelf",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_wall_shelf",
+      "status": "opened and verified"
+    },
+    {
+      "id": "bed_rug",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_bed_rug",
+      "status": "opened and verified"
+    },
+    {
+      "id": "table_rug",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_table_rug",
+      "status": "opened and verified"
+    },
+    {
+      "id": "hearth_rug",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_hearth_rug",
+      "status": "opened and verified"
+    },
+    {
+      "id": "entry_mat",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_entry_mat",
+      "status": "opened and verified"
+    },
+    {
+      "id": "warm_lantern",
+      "meshes": 4,
+      "source": "new",
+      "camera": "Review_warm_lantern",
+      "status": "opened and verified"
+    },
+    {
+      "id": "brass_telescope",
+      "meshes": 4,
+      "source": "new",
+      "camera": "Review_brass_telescope",
+      "status": "opened and verified"
+    },
+    {
+      "id": "compass",
+      "meshes": 4,
+      "source": "new",
+      "camera": "Review_compass",
+      "status": "opened and verified"
+    },
+    {
+      "id": "sea_chart",
+      "meshes": 6,
+      "source": "new",
+      "camera": "Review_sea_chart",
+      "status": "opened and verified"
+    },
+    {
+      "id": "blue_book",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_blue_book",
+      "status": "opened and verified"
+    },
+    {
+      "id": "green_book",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_green_book",
+      "status": "opened and verified"
+    },
+    {
+      "id": "red_book",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_red_book",
+      "status": "opened and verified"
+    },
+    {
+      "id": "inkwell_quill",
+      "meshes": 4,
+      "source": "new",
+      "camera": "Review_inkwell_quill",
+      "status": "opened and verified"
+    },
+    {
+      "id": "small_lockbox",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_small_lockbox",
+      "status": "opened and verified"
+    },
+    {
+      "id": "ceramic_mug",
+      "meshes": 2,
+      "source": "new",
+      "camera": "Review_ceramic_mug",
+      "status": "opened and verified"
+    },
+    {
+      "id": "preserve_jar",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_preserve_jar",
+      "status": "opened and verified"
+    },
+    {
+      "id": "cutting_board",
+      "meshes": 2,
+      "source": "new",
+      "camera": "Review_cutting_board",
+      "status": "opened and verified"
+    },
+    {
+      "id": "cheese_bread",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_cheese_bread",
+      "status": "opened and verified"
+    },
+    {
+      "id": "rope_coil",
+      "meshes": 1,
+      "source": "new",
+      "camera": "Review_rope_coil",
+      "status": "opened and verified"
+    },
+    {
+      "id": "hanging_rope",
+      "meshes": 1,
+      "source": "new",
+      "camera": "Review_hanging_rope",
+      "status": "opened and verified"
+    },
+    {
+      "id": "ceramic_fern",
+      "meshes": 5,
+      "source": "new",
+      "camera": "Review_ceramic_fern",
+      "status": "opened and verified"
+    },
+    {
+      "id": "trailing_ivy",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_trailing_ivy",
+      "status": "opened and verified"
+    },
+    {
+      "id": "small_pot",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_small_pot",
+      "status": "opened and verified"
+    },
+    {
+      "id": "island_picture",
+      "meshes": 9,
+      "source": "new",
+      "camera": "Review_island_picture",
+      "status": "opened and verified"
+    },
+    {
+      "id": "mini_sailboat",
+      "meshes": 5,
+      "source": "new",
+      "camera": "Review_mini_sailboat",
+      "status": "opened and verified"
+    },
+    {
+      "id": "striped_fish",
+      "meshes": 3,
+      "source": "new",
+      "camera": "Review_striped_fish",
+      "status": "opened and verified"
+    },
+    {
+      "id": "wooden_barrel",
+      "meshes": 4,
+      "source": "new",
+      "camera": "Review_wooden_barrel",
+      "status": "opened and verified"
+    },
+    {
+      "id": "reused_bed",
+      "meshes": 7,
+      "source": "farm/modules/bed__bed_frame.glb",
+      "camera": "Review_reused_bed",
+      "status": "opened and verified"
+    },
+    {
+      "id": "reused_food_cupboard",
+      "meshes": 10,
+      "source": "farm/modules/storage_set__food_cupboard.glb",
+      "camera": "Review_reused_food_cupboard",
+      "status": "opened and verified"
+    },
+    {
+      "id": "reused_grain_sack",
+      "meshes": 3,
+      "source": "farm/modules/storage_set__grain_sack.glb",
+      "camera": "Review_reused_grain_sack",
+      "status": "opened and verified"
+    },
+    {
+      "id": "reused_stove_firebox",
+      "meshes": 9,
+      "source": "farm/kitchen_stove.glb",
+      "camera": "Review_reused_stove_firebox",
+      "status": "opened and verified"
+    },
+    {
+      "id": "reused_cooking_pot",
+      "meshes": 2,
+      "source": "farm/kitchen_stove.glb",
+      "camera": "Review_reused_cooking_pot",
+      "status": "opened and verified"
+    },
+    {
+      "id": "reused_firewood_rack",
+      "meshes": 4,
+      "source": "farm/kitchen_stove.glb",
+      "camera": "Review_reused_firewood_rack",
+      "status": "opened and verified"
+    },
+    {
+      "id": "reused_utensil_rack",
+      "meshes": 4,
+      "source": "farm/kitchen_stove.glb",
+      "camera": "Review_reused_utensil_rack",
+      "status": "opened and verified"
+    }
+  ],
+  "assemblyInstances": 280,
+  "separateMeshObjects": 813,
+  "collections": [
+    "Architecture",
+    "Furniture",
+    "Decor",
+    "Textiles",
+    "Lighting",
+    "Presentation",
+    "Full_Enclosure_Hidden"
+  ]
+}

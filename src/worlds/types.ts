@@ -4,7 +4,7 @@ import type { PlayerTravelBoat } from './travel/PlayerTravelBoat';
 import type { Group, Vector3 } from 'three';
 import type { Quality } from '../core/Renderer';
 import type { WorldState } from '../state/WorldStateRegistry';
-export type WorldId = 'HOME' | 'TRAVEL' | 'FARM';
+export type WorldId = 'HOME' | 'TRAVEL' | 'FARM' | 'COTTAGE';
 export interface SpawnPoint { id: string; position: [number,number,number]; lookAt: [number,number,number] }
 export interface WorldLoadContext { gameTime: number }
 export interface WorldEnterContext extends WorldLoadContext { state: WorldState; spawn: SpawnPoint }

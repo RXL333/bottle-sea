@@ -27,7 +27,7 @@ export class HomeWorld implements GameWorld {
   private readonly models:HomeModels;private pending?:Promise<void>;private disposed=false;
   readonly interaction=new InteractionSystem();
   readonly navigation=homeNavigation(()=>[...this.world.ship.collisionBoxes,...this.boat.collisionBoxes],()=>this.models.colliders);
-  constructor(loader?:ModelLoader){this.models=new HomeModels(loader);this.root.name='HomeWorld';this.departureSea.visible=false;this.root.add(this.departureSea);this.root.add(this.room,this.bottle,this.world,this.micro,this.boat,this.models);this.boat.anchor(.65,2.35,-Math.PI/2);this.boat.departureDistance=.8;this.interaction.setTargets([...discoveryTargets,{id:'home_boat',name:'登船',action:'TRAVEL',x:.65,y:4.12,z:1.82,range:.72}]);}
+  constructor(loader?:ModelLoader){this.models=new HomeModels(loader);this.root.name='HomeWorld';this.departureSea.visible=false;this.root.add(this.departureSea);this.root.add(this.room,this.bottle,this.world,this.micro,this.boat,this.models);this.boat.anchor(.65,2.35,-Math.PI/2);this.boat.departureDistance=.8;this.interaction.setTargets([...discoveryTargets.map(t=>t.id==='lighthouse'?{...t,x:t.x+.65}:t),{id:'cottage_door',name:'进入小屋',action:'ENTER_COTTAGE',x:-1.564,y:4.44,z:.80,range:.70},{id:'home_boat',name:'登船',action:'TRAVEL',x:.65,y:4.12,z:1.82,range:.72}]);}
   load(){return this.pending??=this.loadModels();}
   private async loadModels(){await this.models.load();if(this.disposed)return;this.models.build(this.world);this.boat.setModel(this.models.instance('launch'));this.pulse=new DiscoveryPulse(this.world);}
   enter({state}:WorldEnterContext){this.interaction.restore(state.discoveries);}
@@ -43,6 +43,6 @@ export class HomeWorld implements GameWorld {
   getFocusPosition(){return this.world.ship.position;}
   leave({gameTime}:WorldLeaveContext){return {lastSimulatedGameTime:gameTime,discoveries:[...this.interaction.discovered]};}
   dispose(){this.disposed=true;this.models.cancel();disposeWorld(this.root);}
-  getSpawnPoint(id='home_dock_arrival'):SpawnPoint{return {id,position:[.65,4.12,1.87],lookAt:[-.65,4.8,-.4]};}
+  getSpawnPoint(id='home_dock_arrival'):SpawnPoint{if(id==='home_cottage_exit')return {id,position:[-1.564,4.36,1.18],lookAt:[-.4,4.35,1.4]};return {id,position:[.65,4.12,1.87],lookAt:[-.65,4.8,-.4]};}
   applyQuality(quality:Quality){const settings=QUALITY[quality];this.departureSea.applyQuality(quality);this.world.ocean.create(settings.waterStep);this.world.fish.setCount(settings.fish);this.world.wake.setDensity(settings.waterStep);this.micro.setDensity(settings.waterStep);}
 }

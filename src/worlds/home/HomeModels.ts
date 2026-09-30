@@ -38,13 +38,15 @@ export class HomeModels extends Group {
     island.getObjectByName('LegacyIslandProps')!.visible=false;island.crowns.forEach(g=>g.visible=false);
     for(const child of island.house.children)child.visible=false;
     const house=this.place('house',0,0,0,.4,0,island.house);
-    house.traverse(o=>{if(o.userData.part_id==='front_door')o.rotation.y=-Math.PI*.55;if(o instanceof Mesh&&o.material instanceof MeshStandardMaterial&&o.material.name==='Main_glass'){o.material=o.material.clone();o.material.emissive.set('#ffc26c');this.windows.push(o.material);}});
+    house.traverse(o=>{if(o.userData.part_id==='front_door')o.rotation.y=0;if(o instanceof Mesh&&o.material instanceof MeshStandardMaterial&&o.material.name==='Main_glass'){o.material=o.material.clone();o.material.emissive.set('#ffc26c');this.windows.push(o.material);}});
     house.traverse(o=>{if(['palm_left','palm_right'].includes(o.userData.part_id))o.visible=false;});
     for(const [x,z] of [[-2.7,-.5],[-1.4,-1.35]]){this.place('palm',x,3.44,z,.28);this.slab(x-.05,x+.09,3.44,4.40,z-.05,z+.05);}
     this.solid(this.place('bed',-1.94,3.97,-.40,.23));
     this.solid(this.place('stove',-1.09,3.97,-.59,.14));
     this.solid(this.place('storage',-1.02,3.97,.02,.13,Math.PI/2));
-    // Foundation, porch, and wall slabs; the door opening remains traversable.
+    // Closed cottage is reserved for a future separate interior scene.
+    this.slab(-2.212,-.788,3.97,5.03,-.832,.452);
+    // Foundation and porch surfaces.
     this.slab(-2.26,-.74,3.83,3.97,-.89,.49);
     this.slab(-2.26,-.74,3.97,4.006,.40,.84);
     for(const [x0,x1,z0,z1] of [[-1.78,-1.62,-1.58,1.58],[1.62,1.78,-1.58,1.58],[-1.7,1.7,-1.58,-1.42],[-1.7,-.66,1.42,1.58],[.34,1.7,1.42,1.58]])this.slab(-1.5+x0*.4,-1.5+x1*.4,3.97,4.98,-.2+z0*.4,-.2+z1*.4);
@@ -52,13 +54,14 @@ export class HomeModels extends Group {
     this.slab(-2.18,-.82,4.96,5.03,-.80,.40);
     for(const x of [-2.18,-.82])this.slab(x-.03,x+.03,3.97,4.73,.738,.798);
     for(const child of island.lighthouse.children)if(child!==island.lighthouse.light&&child!==island.lighthouse.beam)child.visible=false;
+    island.lighthouse.position.x+=.65;
     this.place('lighthouse',0,0,0,.32,0,island.lighthouse);
     island.lighthouse.light.position.y=1.85;island.lighthouse.beam.position.y=1.85;
-    this.slab(-.28,.98,3.83,4.40,-.91,.35);this.slab(.13,.57,4.40,6.08,-.50,-.06);
+    this.slab(.37,1.63,3.83,4.40,-.91,.35);this.slab(.78,1.22,4.40,6.08,-.50,-.06);
     const dock=this.place('dock',.65,3.68,1.24,.30);dock.scale.z=.50;
     // The berth needs a level end; the authored stairs are a separate module.
     dock.traverse(o=>{if(o.userData.part_id==='stairs')o.visible=false;});
-    for(const deck of [dock,this.place('fishing',-2.35,3.68,.65,.25)])deck.traverse(o=>{
+    for(const deck of [dock,this.place('fishing',-3.15,3.68,.65,.25)])deck.traverse(o=>{
       const pile=String(o.userData.part_id??'').startsWith('pile_');
       if(pile)o.traverse(child=>{if(child instanceof Mesh){child.geometry=child.geometry.clone();const p=child.geometry.attributes.position;for(let i=0;i<p.count;i++)if(p.getY(i)<0)p.setY(i,p.getY(i)*6);p.needsUpdate=true;child.geometry.computeBoundingBox();child.geometry.computeBoundingSphere();}});
       if(o.userData.part_id==='platform'||pile)this.solid(o);
