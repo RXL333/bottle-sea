@@ -7,17 +7,19 @@ import { getCropRegistry } from '../farm/CropRegistry';
 export const GRAIN_TANK_CAPACITY=60;
 export const BARN_CAPACITY=24;
 const TANK_SLOTS=2;
-export function normalizeGrainTank(value:unknown,items:ItemRegistry=ITEMS){
-  const state=normalizeInventory(value,items,TANK_SLOTS),allowed=new Set(getCropRegistry(items).list().filter(c=>c.machineHarvestable).map(c=>c.harvestItemId));let room=GRAIN_TANK_CAPACITY;
+export function normalizeGrainTank(value:unknown,items:ItemRegistry=ITEMS,capacity=GRAIN_TANK_CAPACITY){
+  const state=normalizeInventory(value,items,TANK_SLOTS),allowed=new Set(getCropRegistry(items).list().filter(c=>c.machineHarvestable).map(c=>c.harvestItemId));let room=capacity;
   state.slots=state.slots.map(s=>{if(!s||!allowed.has(s.itemId)||!room)return null;const quantity=Math.min(s.quantity,room);room-=quantity;return {...s,quantity};});return state;
 }
 /** Bulk capacity around the shared slot inventory. No second item count. */
 export class GrainTank {
   private inventory:Inventory;
-  constructor(items:ItemRegistry=ITEMS,saved?:unknown,onChange:()=>void=()=>{},beforeNotify:()=>void=()=>{}){this.inventory=new Inventory(items,TANK_SLOTS,normalizeGrainTank(saved,items),onChange,{quantityCapacity:GRAIN_TANK_CAPACITY,beforeNotify});}
+  constructor(items:ItemRegistry=ITEMS,saved?:unknown,onChange:()=>void=()=>{},beforeNotify:()=>void=()=>{},capacity=GRAIN_TANK_CAPACITY){this.inventory=new Inventory(items,TANK_SLOTS,normalizeGrainTank(saved,items,capacity),onChange,{quantityCapacity:capacity,beforeNotify});}
+  get capacity(){return this.inventory.quantityCapacity;}
+  expandCapacity(capacity:number){this.inventory.expandQuantityCapacity(capacity);}
   get contents():ItemStack[]{return this.inventory.snapshot().slots.filter((s):s is ItemStack=>!!s);}
   get used(){return this.contents.reduce((total,s)=>total+s.quantity,0);}
-  get remaining(){return GRAIN_TANK_CAPACITY-this.used;}
+  get remaining(){return this.capacity-this.used;}
   snapshot(){return this.inventory.snapshot();}
   canExchange(consumed:readonly ItemStack[],produced:readonly ItemStack[]):InventoryResult {
     if(consumed.length)return {ok:false,reason:'invalid-quantity'};

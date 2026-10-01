@@ -13,7 +13,7 @@ function mergedMesh(name:string,batch:Batch){
 }
 /** Merge primitive siblings in each semantic part, keeping wheel/hitch/head pivots
  * and the entire independently positioned vehicle or animal hierarchy intact. */
-function compactInstance(model:Group){
+export function compactInstance(model:Group){
   const parents:Object3D[]=[];model.traverse(o=>{if(o.children.some(c=>c instanceof Mesh))parents.push(o);});
   for(const parent of parents){
     const batches=new Map<Material,Mesh[]>();

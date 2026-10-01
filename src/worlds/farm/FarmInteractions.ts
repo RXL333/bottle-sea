@@ -10,6 +10,8 @@ import { farmHeight } from './FarmTerrain';
 import type { DriveableVehicle } from '../../systems/vehicles/Vehicle';
 import type { HitchSystem } from '../../systems/vehicles/HitchSystem';
 import type { TrailerVehicle } from '../../systems/vehicles/TrailerVehicle';
+import { LivestockInteractions } from './LivestockInteractions';
+import { merchantTarget } from '../trade/MerchantShip';
 
 /** Re-resolve the actual foot cell at every prompt and E press, including boundaries. */
 export class FarmInteractions extends InteractionSystem {
@@ -18,15 +20,16 @@ export class FarmInteractions extends InteractionSystem {
   private vehicles:readonly DriveableVehicle[]=[];
   private hitches?:HitchSystem;
   private trailer?:TrailerVehicle;
+  private livestock?:LivestockInteractions;
   private boat:InteractionTarget={id:'farm_boat',name:'登船',action:'TRAVEL',...FARM_BOAT.interaction};
   constructor(){super([]);this.setTargets([this.boat]);}
-  bind(game:GameplayServices){this.game=game;this.manual=new ManualFarmingSystem(game);}
+  bind(game:GameplayServices){this.game=game;this.manual=new ManualFarmingSystem(game);this.livestock=new LivestockInteractions(game);}
   setVehicles(vehicles:readonly DriveableVehicle[]){this.vehicles=vehicles;}
   setHitches(hitches:HitchSystem){this.hitches=hitches;}
   setTrailer(trailer:TrailerVehicle){this.trailer=trailer;}
   get activeCell(){return this.nearest?.action==='FARM_WORK'?this.current:null;}
   override update(position:InteractionPosition):void {
-    const game=this.game,manual=this.manual,targets:InteractionTarget[]=[this.boat];this.current=null;
+    const game=this.game,manual=this.manual,targets:InteractionTarget[]=[this.boat,merchantTarget(true)];this.current=null;
     const driven=this.vehicles.find(v=>v.occupied);
     if(driven){
       const seat=driven.seatPosition(),hitches=this.hitches;
@@ -47,6 +50,7 @@ export class FarmInteractions extends InteractionSystem {
       this.setTargets(targets);super.update(position);return;
     }
     const hitches=this.hitches;
+    if(this.livestock)targets.push(...this.livestock.targets());
     if(hitches)for(const tool of hitches.tools){const front=tool.frontPosition(),id=tool.id;targets.push({id:`hitch:${id}`,name:tool.definition.name,action:'VEHICLE_HITCH',x:front.x,y:front.y,z:front.z,range:1.35,prompt:hitches.inspect(id)?.prompt,unavailable:()=>hitches.inspect(id)?.reason,onInteract:c=>hitches.interact(id,c.position)});}
     for(const vehicle of this.vehicles){const entry=vehicle.seatPosition();targets.push({id:vehicle.id,name:vehicle.name,action:'ENTER_VEHICLE',x:entry.x,y:entry.y,z:entry.z,range:1.65,prompt:`驾驶${vehicle.name} · 上车`});}
     const trailer=this.trailer;

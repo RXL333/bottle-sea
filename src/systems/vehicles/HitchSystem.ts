@@ -93,6 +93,7 @@ export class HitchSystem implements VehicleAttachmentDriver {
     return {status:'success',changed:true,message:`已选择${crop.name}种子 · 背包剩余 ${work.count(crop.id)} 份${work.count(crop.id)?'':' · 种子不足，播种机已停止'}`};
   }
   private get workingTool(){return this.seeder??this.tools.find(t=>t.definition.work&&this.isAttached(t.id));}
+  get presentationWork(){const tool=this.workingTool;return {kind:tool?.definition.work?.kind==='till'?'till' as const:tool?.definition.work?.kind==='seed'?'seed' as const:undefined,enabled:tool?.workState==='LOWERED',operations:tool?.definition.work?.kind==='seed'?this.seededThisRun:this.tilledThisRun};}
   get workHint(){
     const tool=this.workingTool;if(!tool)return 'J 挂接犁地机 / 播种机后可抬起 / 落下';
     const b=tool.workFootprint!,width=(b.maxX-b.minX).toFixed(2);

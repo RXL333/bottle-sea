@@ -17,8 +17,10 @@ type Rect=VehicleHull;
 export class FarmVehicleNavigation implements VehicleNavigation {
   private ray=new Raycaster();private direction=new Vector3();
   private cameraMeshes:Object3D[]=[];
-  constructor(private navigation:NavigationSurface,private dynamic:()=>readonly DynamicObstacle[],models:Object3D,tractor:Object3D,private exitObstacles:()=>readonly DynamicObstacle[]=dynamic,private dimensions:DrivingHull=TRACTOR_HULL){
-    models.traverse(o=>{if(!(o instanceof Mesh))return;for(let p:Object3D|null=o;p;p=p.parent)if(p===tractor)return;this.cameraMeshes.push(o);});
+  constructor(private navigation:NavigationSurface,private dynamic:()=>readonly DynamicObstacle[],private models:Object3D,private tractor:Object3D,private exitObstacles:()=>readonly DynamicObstacle[]=dynamic,private dimensions:DrivingHull=TRACTOR_HULL){this.refreshCameraObstacles();}
+  refreshCameraObstacles(){
+    this.cameraMeshes=[];
+    this.models.traverse(o=>{if(!(o instanceof Mesh))return;for(let p:Object3D|null=o;p;p=p.parent)if(p===this.tractor)return;this.cameraMeshes.push(o);});
   }
   hull(p:MotionPose):Rect{const d=this.dimensions;return {x:p.x+Math.cos(p.yaw)*(d.centerX??0)+Math.sin(p.yaw)*d.centerZ,z:p.z-Math.sin(p.yaw)*(d.centerX??0)+Math.cos(p.yaw)*d.centerZ,...d,yaw:p.yaw};}
   ground(p:MotionPose):number|undefined {

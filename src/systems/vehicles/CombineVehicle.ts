@@ -3,7 +3,7 @@ import type { Group,Object3D } from 'three';
 import { WheeledVehicle } from './WheeledVehicle';
 import type { VehicleNavigation } from './Vehicle';
 import { COMBINE_DEFINITION,COMBINE_HEADER } from '../../gameplay/vehicles/VehicleDefinition';
-import { GrainTank,GRAIN_TANK_CAPACITY } from '../../gameplay/vehicles/GrainTank';
+import { GrainTank } from '../../gameplay/vehicles/GrainTank';
 import { HarvestingSystem } from '../../gameplay/farm/HarvestingSystem';
 import type { HarvestReport } from '../../gameplay/farm/HarvestingSystem';
 import type { GameplayServices } from '../../gameplay/GameplayFoundation';
@@ -18,25 +18,26 @@ export class CombineVehicle extends WheeledVehicle {
   private game?:GameplayServices;private work?:HarvestingSystem;private report?:HarvestReport;private harvested=0;
   private transport?:{hint:()=>string;unload:()=>InteractionOutcome};
   setTransport(driver:{hint:()=>string;unload:()=>InteractionOutcome}){this.transport=driver;}
-  constructor(root:Group,navigation:VehicleNavigation){
-    super(root,navigation,COMBINE_DEFINITION);const parts=new Map<string,Object3D>();root.traverse(o=>{if(typeof o.userData.part_id==='string')parts.set(o.userData.part_id,o);});
+  constructor(root:Group,navigation:VehicleNavigation,id=COMBINE_DEFINITION.id){
+    super(root,navigation,{...COMBINE_DEFINITION,id});const parts=new Map<string,Object3D>();root.traverse(o=>{if(typeof o.userData.part_id==='string')parts.set(o.userData.part_id,o);});
     const header=parts.get('header'),reel=parts.get('header_reel'),auger=parts.get('unloading_auger');if(!header||!reel||!auger)throw new Error('Combine model is missing header / reel / auger');
     this.header=header;this.reel=reel;this.auger=auger;root.updateMatrixWorld(true);header.attach(reel);header.rotation.x=-.35;
   }
   bindGameplay(game:GameplayServices){
     this.game=game;const saved=game.vehicles.get(this.id);this.headerState=saved?.headerState??'RAISED';this.workEnabled=saved?.workEnabled===true&&this.headerState==='LOWERED';
-    this.grainTank=new GrainTank(game.items,saved?.grainTank,()=>{this.record();game.requestSave(true);},()=>this.record());if(!this.grainTank.remaining)this.workEnabled=false;
+    this.grainTank=new GrainTank(game.items,saved?.grainTank,()=>{this.record();game.requestSave(true);},()=>this.record(),game.economy.grainCapacity);if(!this.grainTank.remaining)this.workEnabled=false;
     this.work=new HarvestingSystem(game.farm,this.grainTank);this.report=undefined;this.harvested=0;this.header.rotation.x=this.headerState==='RAISED'?-.35:0;super.bind(game.vehicles);
   }
   override snapshot(){return {...super.snapshot(),headerState:this.headerState,workEnabled:this.workEnabled,grainTank:this.grainTank.snapshot()};}
   override occupy(value:boolean){super.occupy(value);if(!value){this.workEnabled=false;this.record();}}
   override get hitchHint(){return this.transport?.hint()??'U 谷仓门前停车卸货 · 土豆保留手工收获';}
   get machineControls(){return 'W / S 前进后退　A / D 转向　Space 刹车　J 割台　L 收割开关　U 卸货　E 下车';}
+  get presentationWork(){return {kind:'harvest' as const,enabled:this.headerState==='LOWERED'&&this.workEnabled,operations:this.harvested};}
   override get workHint(){
     const status=this.report?.blocked?'粮仓空间不足 · 已停止':this.workEnabled?Math.abs(this.speed)<.02?'已开启 · 停稳待作业':this.report?.changedCells?'收割中':this.report?.unsupportedCells?'土豆需手工收获':this.report?.protectedCells?'未成熟作物已保护':'寻找成熟小麦 / 玉米':'作业关闭';
     return `割台 ${this.headerState==='RAISED'?'抬起':'落下'} · J 抬落 · L 开关 · ${status} · 本次收割 ${this.harvested} 格 · 宽 ${(COMBINE_HEADER.maxX-COMBINE_HEADER.minX).toFixed(2)}m`;
   }
-  get cargoHint(){const contents=this.grainTank.contents.map(s=>`${this.game?.items.get(s.itemId)?.name??s.itemId} × ${s.quantity}`).join('、');return `粮仓 ${this.grainTank.used} / ${GRAIN_TANK_CAPACITY} · ${contents||'空仓'} · ${this.atBarn?'已到谷仓卸货区':'前往谷仓门前卸货区'}`;}
+  get cargoHint(){const contents=this.grainTank.contents.map(s=>`${this.game?.items.get(s.itemId)?.name??s.itemId} × ${s.quantity}`).join('、');return `粮仓 ${this.grainTank.used} / ${this.grainTank.capacity} · ${contents||'空仓'} · ${this.atBarn?'已到谷仓卸货区':'前往谷仓门前卸货区'}`;}
   private get atBarn(){return containsRect(FARM_GRAIN_UNLOAD,this.pose.x,this.pose.z);}
   toggleHeader():InteractionOutcome {
     if(!this.occupied)return {status:'unavailable',message:'请先上车再操作割台。'};
@@ -62,6 +63,6 @@ export class CombineVehicle extends WheeledVehicle {
     this.report=this.work.sweep(from,to,COMBINE_HEADER,stopped=>{if(stopped)this.workEnabled=false;this.record();});this.harvested+=this.report.changedCells;
     if(this.report.blocked){this.workEnabled=false;this.record();this.game?.requestSave(true);}
   }
-  updateVisual(delta:number){const target=this.headerState==='RAISED'?-.35:0;this.header.rotation.x+=(target-this.header.rotation.x)*(1-Math.exp(-Math.max(0,delta)*12));if(this.workEnabled)this.reel.rotation.x=(this.reel.rotation.x+delta*8)%(Math.PI*2);}
+  updateVisual(delta:number){if(this.game&&this.grainTank.capacity<this.game.economy.grainCapacity)this.grainTank.expandCapacity(this.game.economy.grainCapacity);const target=this.headerState==='RAISED'?-.35:0;this.header.rotation.x+=(target-this.header.rotation.x)*(1-Math.exp(-Math.max(0,delta)*12));if(this.workEnabled)this.reel.rotation.x=(this.reel.rotation.x+delta*8)%(Math.PI*2);}
   dischargePosition(){this.root.updateMatrixWorld(true);return this.auger.localToWorld(new Vector3(2.61-.78,2.27-2.12,-1.18+1.13));}
 }

@@ -37,10 +37,21 @@ export class Inventory {
   private slots: (ItemStack | null)[];
   private selection:number|null;
   revision=0;
+  private slotCapacity:number;
 
-  constructor(readonly items: ItemRegistry, readonly capacity = PLAYER_INVENTORY_CAPACITY,
+  constructor(readonly items: ItemRegistry, capacity = PLAYER_INVENTORY_CAPACITY,
     saved?: unknown, private onChange: () => void = () => {},private options:InventoryOptions={}) {
-    const state=normalizeInventory(saved,items,capacity,this.quantityCapacity);this.slots=state.slots;this.selection=state.selectedSlot??null;
+    this.slotCapacity=capacity;const state=normalizeInventory(saved,items,capacity,this.quantityCapacity);this.slots=state.slots;this.selection=state.selectedSlot??null;
+  }
+  get capacity(){return this.slotCapacity;}
+  /** Capacity upgrades only grow existing storage; no stack is renormalized or discarded. */
+  expandCapacity(capacity:number){
+    if(!Number.isSafeInteger(capacity)||capacity<this.capacity||capacity>MAX_INVENTORY_CAPACITY)throw new Error('Invalid inventory expansion');
+    if(capacity===this.capacity)return;this.slots.push(...Array<null>(capacity-this.capacity).fill(null));this.slotCapacity=capacity;this.changed();
+  }
+  expandQuantityCapacity(capacity:number){
+    if(!Number.isSafeInteger(capacity)||capacity<this.quantityCapacity)throw new Error('Invalid quantity expansion');
+    if(capacity===this.quantityCapacity)return;this.options.quantityCapacity=capacity;this.changed();
   }
   get quantityCapacity(){return this.options.quantityCapacity??Infinity;}
   get usedQuantity(){return this.slots.reduce((n,s)=>n+(s?.quantity??0),0);}
@@ -48,6 +59,10 @@ export class Inventory {
 
   snapshot(): InventorySnapshot {
     return { capacity: this.capacity, slots: this.slots.map(stack => stack ? { ...stack } : null),selectedSlot:this.selection };
+  }
+  /** Restore a transaction's own prior snapshot without publishing a half-rollback. */
+  rollback(snapshot:InventorySnapshot){
+    const state=normalizeInventory(snapshot,this.items,snapshot.capacity,this.quantityCapacity);this.slotCapacity=state.capacity;this.slots=state.slots;this.selection=state.selectedSlot??null;this.revision++;
   }
 
   restore(value: unknown): void {

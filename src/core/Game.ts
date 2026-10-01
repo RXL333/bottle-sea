@@ -10,6 +10,8 @@ import { OverviewController } from '../controls/OverviewController';
 import { ExploreController } from '../controls/ExploreController';
 import { VehicleController } from '../controls/VehicleController';
 import { VehicleHUD } from '../ui/VehicleHUD';
+import { FarmHUD } from '../ui/FarmHUD';
+import { TradePanel } from '../ui/TradePanel';
 import { DayNightSystem } from '../systems/DayNightSystem';
 import { WeatherSystem } from '../systems/WeatherSystem';
 import { SoundSystem } from '../systems/SoundSystem';
@@ -49,6 +51,8 @@ import '../styles/interaction.css';
 import '../styles/production.css';
 import '../styles/inventory.css';
 import '../styles/vehicle.css';
+import '../styles/farm-feedback.css';
+import '../styles/trade.css';
 
 export class Game {
   readonly renderer=new Renderer();readonly scene=new Scene();readonly camera=new PerspectiveCamera(34,innerWidth/innerHeight,.12,200);
@@ -60,6 +64,8 @@ export class Game {
   readonly sleepTransition=new SleepTransition();
   readonly gameplay:GameplayFoundation;
   readonly vehicleController:VehicleController;private vehicleHUD=new VehicleHUD();
+  private farmHUD=new FarmHUD();
+  private tradePanel:TradePanel;
   private interactionActions=new InteractionActions();
   private save:SaveSystem;private states=new WorldStateRegistry();private lastSuccessfulWorld:PlayableWorldId='HOME';
   private panel:DestinationPanel;private travelCamera=new TravelCamera(this.camera);private cover=document.createElement('div');private caption=document.createElement('div');
@@ -80,6 +86,7 @@ export class Game {
     this.dayNight=new DayNightSystem(this.scene);this.overview=new OverviewController(this.camera,this.renderer.domElement);this.focus=new SceneFocusSystem(this.camera,this.overview.target);
     this.explorer=new ExploreController(this.camera,this.renderer.domElement);this.hud=new HUD(root);this.panel=new DestinationPanel(root);this.homePanel=new HomePanel(root);this.sleepOverlay=new SleepOverlay(root);
     this.vehicleController=new VehicleController(this.camera,this.renderer.domElement,this.explorer);this.hud.element.append(this.vehicleHUD.element);
+    this.hud.element.append(this.farmHUD.element);
     this.vehicleController.onInteract=()=>{void this.interact();};
     this.vehicleController.onHitch=()=>{void this.interact('vehicle_hitch');};
     this.vehicleController.onWork=()=>{void this.interact('vehicle_work');};
@@ -90,6 +97,7 @@ export class Game {
     this.vehicleController.onPark=()=>this.persist(true);
     this.cookingPanel=new CookingPanel(root);
     this.inventoryPanel=new InventoryPanel(root);
+    this.tradePanel=new TradePanel(root);
     this.cover.className='travel-cover';this.caption.className='travel-caption';this.caption.hidden=true;root.append(this.cover);this.hud.element.append(this.caption);
     // Access to localStorage itself can throw in restricted embeds.
     this.save=new SaveSystem({getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)});
@@ -132,6 +140,7 @@ export class Game {
         this.openInventory(true,false,container);return {status:'success'};
       })
       .register('HOME_STOVE',()=>{this.openCooking('stove');return {status:'success'};})
+      .register('TRADE',()=>({status:this.openTrade()?'success':'unavailable',message:this.gameplay.fishing.active?'请先收起鱼竿再交易。':undefined}))
       .register('FISH',()=>{
         const idle=!this.gameplay.fishing.active,result=this.gameplay.fishing.interact();
         if(idle&&this.gameplay.fishing.state==='CASTING'){this.hud.closeDiscovery();this.camera.lookAt(FISHING_WATER.x,3.38,FISHING_WATER.z);this.explorer.syncLook();this.playerFeedback.reset();}
@@ -155,7 +164,7 @@ export class Game {
   private async initialize(saved:SaveData){
     this.cover.style.opacity='1';this.caption.hidden=false;this.caption.textContent='正在展开航海图……';
     const previewWorld=import.meta.env.DEV?new URLSearchParams(location.search).get('world'):null;
-    const id=previewWorld==='cottage'?'COTTAGE':previewWorld==='farm'?'FARM':previewWorld==='travel'?'TRAVEL':saved.lastSuccessfulWorld==='HOME'&&saved.player.currentSpawnId==='cottage_entry'?'COTTAGE':saved.lastSuccessfulWorld;
+    const id=previewWorld==='home'?'HOME':previewWorld==='cottage'?'COTTAGE':previewWorld==='farm'?'FARM':previewWorld==='travel'?'TRAVEL':saved.lastSuccessfulWorld==='HOME'&&saved.player.currentSpawnId==='cottage_entry'?'COTTAGE':saved.lastSuccessfulWorld;
     try {await this.worldManager.switchTo(id,this.clock.simulationTime,id==='HOME'&&saved.player.currentSpawnId==='home_cottage_exit'?'home_cottage_exit':undefined);this.configureEnvironment();
       if(id==='COTTAGE'){this.player.currentWorldId='HOME';this.lastSuccessfulWorld='HOME';this.player.currentSpawnId='cottage_entry';this.resumeExplore();}else if(id==='HOME'&&saved.player.currentSpawnId==='home_cottage_exit'){this.resumeExplore();}else if(id==='FARM'){this.player.currentWorldId='FARM';this.lastSuccessfulWorld='FARM';this.resumeExplore();}else if(id==='TRAVEL'){this.overview.suspend();this.camera.position.set(0,4.8,-3);this.camera.lookAt(0,3.6,1);}
       if(import.meta.env.DEV)configurePreview(this);
@@ -173,7 +182,12 @@ export class Game {
   }
   private resumeExplore(){this.overview.suspend();this.focus.cancel();this.explorer.enter(false,this.spawn);this.camera.far=this.worldManager.currentWorldId==='HOME'?40:150;this.camera.updateProjectionMatrix();this.transition.state='EXPLORE';this.playerFeedback.reset();this.hud.setExplore(true);this.hud.setTransition(false);this.renderer.domElement.focus();}
   private resumeFurnitureExplore(){this.explorer.resumeFromPanel();this.hud.setTransition(false);}
-  private get gameplayPanelOpen(){return this.homePanel.open||this.cookingPanel.open||this.inventoryPanel.open;}
+  private get gameplayPanelOpen(){return this.homePanel.open||this.cookingPanel.open||this.inventoryPanel.open||this.tradePanel.open;}
+  private openTrade(){
+    if(!this.ready||!this.explorer.active||this.vehicleController.active||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen||this.gameplay.fishing.active)return false;
+    this.explorer.suspendForPanel();this.hud.closeDiscovery();this.hud.setInteractionPrompt();
+    this.tradePanel.show(this.gameplay,()=>this.worldManager.currentWorld?.tradeAccess??{farm:false},()=>{this.persist(true);this.resumeFurnitureExplore();});return true;
+  }
   private openInventory(storage=false,barn=false,container?:WorldStorageContainer){
     if(!this.ready||!this.explorer.active||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen)return;
     if(storage&&this.worldManager.currentWorldId!==((barn||container)?'FARM':'COTTAGE'))return;
@@ -298,7 +312,7 @@ export class Game {
     }
     this.weather.update(this.clock.paused?0:delta,time);const storm=this.weather.intensity;
     this.seaFog.density=this.worldManager.currentWorldId==='FARM'?.008+storm*.004:.025;
-    const context:WorldUpdateContext={delta,time,gameTime:this.clock.simulationTime,storm,dayTime:this.clock.normalizedDayTime,night:1-daylightAt(this.clock.normalizedDayTime),flash:this.weather.lightning.flash,player:this.vehicleController.position??(this.explorer.active?this.camera.position:undefined)};
+    const context:WorldUpdateContext={delta,time,gameTime:this.clock.simulationTime,storm,dayTime:this.clock.normalizedDayTime,night:1-daylightAt(this.clock.normalizedDayTime),flash:this.weather.lightning.flash,player:this.vehicleController.position??(this.explorer.active?this.camera.position:undefined),listener:this.camera.position,presentationPaused:document.visibilityState==='hidden'||this.travel.active||this.gameplayPanelOpen||this.doorTransition.active||this.sleepTransition.active};
     this.worldManager.currentWorld?.prepare?.(context);this.travel.update(delta);
     const home=this.worldManager.currentWorldId==='HOME';let water=this.worldManager.currentWorld?.navigation?.waterLevel(this.camera.position.x,this.camera.position.z,time,storm)??3.3;
     this.explorer.blockLook=this.gameplay.fishing.state==='FIGHTING';
@@ -314,7 +328,7 @@ export class Game {
       else if(document.visibilityState!=='hidden')this.gameplay.fishing.update(delta);
     }
     if(this.cookingPanel.open&&document.visibilityState!=='hidden')this.gameplay.cooking.update(delta);
-    this.cookingPanel.update();this.inventoryPanel.update();this.hud.updateFishing(this.gameplay.fishing);this.hotbarView.update();this.hotbarView.element.hidden=!this.explorer.active;this.vehicleHUD.update(this.vehicleController);
+    this.tradePanel.update(this.gameplay);this.cookingPanel.update();this.inventoryPanel.update();this.hud.updateFishing(this.gameplay.fishing);this.hotbarView.update();this.hotbarView.element.hidden=!this.explorer.active;this.vehicleHUD.update(this.vehicleController);
     water=this.worldManager.currentWorld?.navigation?.waterLevel(this.camera.position.x,this.camera.position.z,time,storm)??3.3;
     const underwater=this.explorer.active&&this.explorer.underwater;this.scene.fog=underwater?this.underwaterFog:(home&&!this.travel.active)||this.worldManager.currentWorldId==='COTTAGE'?null:this.seaFog;
     this.waterEntry.update(delta,this.camera.position,this.explorer.active,this.explorer.swimming,this.explorer.sprinting,water);
@@ -323,12 +337,17 @@ export class Game {
     if(this.scene.fog===this.seaFog)this.seaFog.color.copy(this.scene.background as Color);this.cover.style.background=this.doorTransition.active||this.sleepTransition.active?'#171b20':(this.scene.background as Color).getStyle();
     context.player=this.vehicleController.position??(this.explorer.active?this.camera.position:undefined);
     this.worldManager.update(context);if(this.doorTransition.active){this.doorTransition.update(delta);this.cover.style.opacity=String(this.doorTransition.opacity);}if(this.travel.active)this.animateTravel(delta,time,storm);
+    this.sound.updateFarm(this.worldManager.currentWorld?.farmSound);
+    this.farmHUD.update(this.gameplay,this.worldManager.currentWorld?.farmFocus,this.worldManager.currentWorldId==='FARM'&&this.explorer.active&&!this.gameplayPanelOpen&&!this.travel.active,this.worldManager.currentWorld?.livestockFocus);
     if(this.sleepTransition.active){this.sleepTransition.update(delta);if(this.sleepTransition.active)this.sleepOverlay.render(this.sleepTransition.progress);}
     this.sound.update(time,storm,this.worldManager.currentWorldId==='COTTAGE'?'INDOOR':underwater?'UNDERWATER':this.explorer.active||this.vehicleController.active||this.travel.active?'ISLAND':'OVERVIEW',this.weather.lightning.flash);
     const interaction=this.worldManager.currentWorld?.interaction;if(this.explorer.active||this.vehicleController.active)interaction?.update(this.vehicleController.position??this.camera.position);
     this.hudTimer+=delta;if(this.hudTimer>.25){this.hudTimer=0;this.hud.updateClock(this.clock,this.weather.storm);this.hud.updateHomeStats(this.gameplay.progress,false);this.hud.updateProductionStats(this.gameplay,this.explorer.active||this.gameplayPanelOpen);this.hud.updateDepth(underwater,water-this.camera.position.y);
       if(import.meta.env.DEV){Object.assign(this.renderer.domElement.dataset,{world:this.worldManager.currentWorldId,travel:this.travel.state,door:this.doorTransition.state,sleep:this.sleepTransition.state,energy:String(this.gameplay.progress.energy),cameraMode:this.transition.state,waterEntries:String(this.waterEntry.entries),waterLeaves:String(this.waterEntry.leaves),fov:this.camera.fov.toFixed(2),gameTime:String(this.clock.simulationTime),storm:String(this.weather.storm),quality:this.renderer.quality,discoveries:this.player.discoveries.join(','),completedTrips:String(this.completedTrips),interactionCount:String(this.interactionCount),audio:JSON.stringify(this.sound.diagnostics),vehiclePhase:this.vehicleController.active?this.vehicleController.phase:'ON_FOOT',fleet:JSON.stringify(this.gameplay.vehicles.snapshot()),farmStats:JSON.stringify(this.gameplay.farm.definitions.map(f=>({id:f.id,counts:this.gameplay.farm.getField(f.id)!.stateCounts})))});}
-      if(this.explorer.active||this.vehicleController.active){const world=this.worldManager.currentWorld!,prompt=interaction?.getPrompt(this.interactionContext(world),this.interactionActions);this.hud.setInteractable(prompt?.available??false);this.hud.setInteractionPrompt(this.gameplay.fishing.state==='FIGHTING'?undefined:prompt);this.hud.setHint(this.vehicleController.active?'W/S 前进后退 · A/D 转向 · Space 刹车 · 停稳后 E 下车':world.id==='FARM'?'E 耕地 / 播种 / 收割 · 靠近车辆 E 上车 · B 拿起种子 · 1～8 换种':world.id==='COTTAGE'?'WASD 移动 · E 使用家具 / 出屋 · B 背包 · 1～8 快捷栏 · Q 使用':this.gameplay.fishing.active?'E 提钩 · 左键控制张力 · R 切换操作 · Esc 放弃':'WASD 移动 · E 交互 · B 背包 · 1～8 快捷栏 · Q 使用');}
+      if(import.meta.env.DEV)this.renderer.domElement.dataset.farmEffects=JSON.stringify(this.worldManager.currentWorld?.farmPresentationDiagnostics??{});
+      if(import.meta.env.DEV)this.renderer.domElement.dataset.livestock=JSON.stringify(this.gameplay.livestock.snapshot());
+      if(import.meta.env.DEV)this.renderer.domElement.dataset.economy=JSON.stringify(this.gameplay.economy.snapshot());
+      if(this.explorer.active||this.vehicleController.active){const world=this.worldManager.currentWorld!,prompt=interaction?.getPrompt(this.interactionContext(world),this.interactionActions);this.hud.setInteractable(prompt?.available??false);this.hud.setInteractionPrompt(this.gameplay.fishing.state==='FIGHTING'?undefined:prompt);this.hud.setHint(this.vehicleController.active?'W/S 前进后退 · A/D 转向 · Space 刹车 · 停稳后 E 下车':world.id==='FARM'?(world.livestockFocus?'饲槽 E 补充饲料 / 小麦 / 玉米 · 动物 E 收蛋 / 挤奶 / 剪毛 · B 背包':'E 耕地 / 播种 / 收割 · 靠近车辆 E 上车 · B 拿起种子 · 1～8 换种'):world.id==='COTTAGE'?'WASD 移动 · E 使用家具 / 出屋 · B 背包 · 1～8 快捷栏 · Q 使用':this.gameplay.fishing.active?'E 提钩 · 左键控制张力 · R 切换操作 · Esc 放弃':'WASD 移动 · E 交互 · B 背包 · 1～8 快捷栏 · Q 使用');}
       else this.hud.setInteractionPrompt();
     }
     const bob=this.explorer.active?this.playerFeedback.offsetY+this.explorer.renderOffsetY:0;this.camera.position.y+=bob;this.fishingPresentation.update(time,storm,delta);this.renderer.render(this.scene,this.camera);this.camera.position.y-=bob;this.performance.update(performance.now()-cpuStart);

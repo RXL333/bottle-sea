@@ -3,11 +3,14 @@ import type { AudioId } from './audio/AudioAssets';
 import { mixAudio } from './audio/AudioMixer';
 import type { AudioMix,AudioMode } from './audio/AudioMixer';
 import type { GroundSurface } from './PlayerFeedback';
+import { FarmAudio } from './audio/FarmAudio';
+import type { FarmSoundFrame } from '../worlds/farm/FarmPresentation';
 
 type Layer={source:AudioBufferSourceNode;filter:BiquadFilterNode;gain:GainNode};
 export class SoundSystem {
   private transientNodes=0;
-  get diagnostics(){return {enabled:this.enabled,state:this.context?.state??'uninitialized',layers:this.layers.length,nodes:this.layers.length*3+(this.master?1:0)+(this.lowpass?1:0)+this.transientNodes};}
+  get diagnostics(){return {enabled:this.enabled,state:this.context?.state??'uninitialized',layers:this.layers.length,nodes:this.layers.length*3+(this.master?1:0)+(this.lowpass?1:0)+this.transientNodes+(this.farm?.diagnostics.nodes??0),farm:this.farm?.diagnostics??{voices:0,working:0,nodes:0,cues:0}};}
+  private farm?:FarmAudio;
   enabled=false;private context:AudioContext|undefined;private master:GainNode|undefined;private lowpass:BiquadFilterNode|undefined;
   private assets=new AudioAssets();private noise:AudioBuffer|undefined;private layers:Layer[]=[];
   private mix:AudioMix={ocean:0,wind:0,stormWind:0,rain:0,underwater:0,cutoff:6500};
@@ -37,6 +40,10 @@ export class SoundSystem {
     if(time>this.nextBird){this.nextBird=time+25;if(storm<.3&&mode!=='UNDERWATER')this.play('seagull');}
   }
   footstep(surface:GroundSurface){this.play(`${surface}-step`);}
+  updateFarm(frame?:FarmSoundFrame){
+    if(this.enabled&&frame&&!this.farm&&this.context&&this.lowpass&&this.noise)this.farm=new FarmAudio(this.context,this.lowpass,this.noise);
+    this.farm?.update(frame,this.enabled);
+  }
   play(id:AudioId){
     if(!this.context||!this.enabled||!this.lowpass)return;const ctx=this.context,now=ctx.currentTime,gain=ctx.createGain(),filter=ctx.createBiquadFilter();
     const buffer=this.assets.get(id);let source:AudioBufferSourceNode|OscillatorNode;
@@ -51,5 +58,5 @@ export class SoundSystem {
     source.connect(filter);filter.connect(gain);gain.connect(this.lowpass);source.start();source.stop(now+duration+.02);
     this.transientNodes+=3;source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();this.transientNodes-=3;};
   }
-  dispose(){for(const layer of this.layers){layer.source.stop();layer.source.disconnect();layer.filter.disconnect();layer.gain.disconnect();}void this.context?.close();}
+  dispose(){this.farm?.dispose();for(const layer of this.layers){layer.source.stop();layer.source.disconnect();layer.filter.disconnect();layer.gain.disconnect();}void this.context?.close();}
 }

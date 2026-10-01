@@ -17,9 +17,11 @@ import type { ModelLoader } from '../farm/FarmAssets';
 import { FISHING_SPOT,FISHING_WATER } from '../../gameplay/FishingCatalog';
 import type { GameplayServices } from '../../gameplay/GameplayFoundation';
 import type { InteractionTarget } from '../../systems/InteractionSystem';
+import { MerchantShip,merchantTarget } from '../trade/MerchantShip';
 export class HomeWorld implements GameWorld {
   readonly id='HOME' as const;
   readonly boat=new PlayerTravelBoat();
+  private merchant=new MerchantShip(false);
   readonly root=new Group();
   private readonly world=new World();
   private readonly departureSea=new TravelOcean();
@@ -31,11 +33,11 @@ export class HomeWorld implements GameWorld {
   readonly interaction=new InteractionSystem();
   private gameplay?:GameplayServices;
   private readonly fishingTarget:InteractionTarget={id:'home_fishing',name:'钓鱼台',action:'FISH',...FISHING_SPOT,unavailable:({gameplay,position})=>position.y<4?'请站到钓鱼台上再抛竿':gameplay.fishing.blockReason()};
-  readonly navigation=homeNavigation(()=>[...this.world.ship.collisionBoxes,...this.boat.collisionBoxes],()=>this.models.colliders);
-  constructor(loader?:ModelLoader){this.models=new HomeModels(loader);this.root.name='HomeWorld';this.departureSea.visible=false;this.root.add(this.departureSea);this.root.add(this.room,this.bottle,this.world,this.micro,this.boat,this.models);this.boat.anchor(.65,2.35,-Math.PI/2);this.boat.departureDistance=.8;this.interaction.setTargets([...discoveryTargets.map(t=>t.id==='lighthouse'?{...t,x:t.x+.65}:t),{id:'cottage_door',name:'进入小屋',action:'ENTER_COTTAGE',x:-1.564,y:4.44,z:.80,range:.70},{id:'home_boat',name:'登船',action:'TRAVEL',x:.65,y:4.12,z:1.82,range:.72},this.fishingTarget]);}
+  readonly navigation=homeNavigation(()=>[...this.world.ship.collisionBoxes,...this.boat.collisionBoxes,this.merchant.collision],()=>this.models.colliders);
+  constructor(loader?:ModelLoader){this.models=new HomeModels(loader);this.root.name='HomeWorld';this.departureSea.visible=false;this.root.add(this.departureSea);this.root.add(this.room,this.bottle,this.world,this.micro,this.boat,this.models,this.merchant);this.boat.anchor(.65,2.35,-Math.PI/2);this.boat.departureDistance=.8;this.interaction.setTargets([...discoveryTargets.map(t=>t.id==='lighthouse'?{...t,x:t.x+.65}:t),{id:'cottage_door',name:'进入小屋',action:'ENTER_COTTAGE',x:-1.564,y:4.44,z:.80,range:.70},{id:'home_boat',name:'登船',action:'TRAVEL',x:.65,y:4.12,z:1.82,range:.72},this.fishingTarget]);}
   load(){return this.pending??=this.loadModels();}
   private async loadModels(){await this.models.load();if(this.disposed)return;this.models.build(this.world);this.boat.setModel(this.models.instance('launch'));this.pulse=new DiscoveryPulse(this.world);}
-  enter({state,gameplay}:WorldEnterContext){this.gameplay=gameplay;this.interaction.restore(state.discoveries);}
+  enter({state,gameplay}:WorldEnterContext){this.gameplay=gameplay;this.root.add(this.merchant);this.interaction.setTargets([...discoveryTargets.map(t=>t.id==='lighthouse'?{...t,x:t.x+.65}:t),{id:'cottage_door',name:'进入小屋',action:'ENTER_COTTAGE',x:-1.564,y:4.44,z:.80,range:.70},{id:'home_boat',name:'登船',action:'TRAVEL',x:.65,y:4.12,z:1.82,range:.72},this.fishingTarget,merchantTarget(false)]);this.interaction.restore(state.discoveries);}
   prepare(context:WorldUpdateContext){this.world.prepareShip(context.time,context.storm);this.boat.update(context.time,context.storm);}
   update(c:WorldUpdateContext){
     this.fishingTarget.prompt=this.gameplay?.fishing.prompt;

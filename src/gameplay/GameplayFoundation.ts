@@ -1,6 +1,5 @@
 import type { GameClock } from '../core/GameClock';
 import { Inventory } from './Inventory';
-import { BARN_CAPACITY } from './vehicles/GrainTank';
 import type { InventorySnapshot } from './Inventory';
 import { ITEMS } from './ItemRegistry';
 import type { ItemRegistry } from './ItemRegistry';
@@ -20,8 +19,14 @@ import { FarmSystem } from './farm/FarmSystem';
 import type { FarmSnapshot } from './farm/FarmState';
 import { VehicleProgress } from './vehicles/VehicleState';
 import type { VehicleSnapshot } from './vehicles/VehicleState';
+import { LivestockSystem } from './livestock/LivestockSystem';
+import type { LivestockSnapshot } from './livestock/LivestockState';
+import { EconomySystem } from './economy/EconomySystem';
+import { normalizeEconomy } from './economy/EconomyState';
+import type { EconomySnapshot } from './economy/EconomyState';
+import { BARN_CAPACITIES,GRAIN_CAPACITIES } from './economy/TradeCatalog';
 
-export interface GameplaySnapshot { inventory: InventorySnapshot; barn:InventorySnapshot;progress: PlayerProgressState; home: HomeSnapshot; fishing:FishingSnapshot;hotbar:HotbarSnapshot;farm:FarmSnapshot;vehicles:VehicleSnapshot }
+export interface GameplaySnapshot { inventory: InventorySnapshot; barn:InventorySnapshot;progress: PlayerProgressState; home: HomeSnapshot; fishing:FishingSnapshot;hotbar:HotbarSnapshot;farm:FarmSnapshot;vehicles:VehicleSnapshot;livestock:LivestockSnapshot;economy:EconomySnapshot }
 export interface GameplayServices {
   readonly items: ItemRegistry;
   readonly inventory: Inventory;
@@ -35,6 +40,8 @@ export interface GameplayServices {
   readonly crops:CropSystem;
   readonly farm:FarmSystem;
   readonly vehicles:VehicleProgress;
+  readonly livestock:LivestockSystem;
+  readonly economy:EconomySystem;
   requestSave(immediate?:boolean): void;
 }
 
@@ -51,11 +58,14 @@ export class GameplayFoundation implements GameplayServices {
   readonly crops:CropSystem;
   readonly farm:FarmSystem;
   readonly vehicles:VehicleProgress;
+  readonly livestock:LivestockSystem;
+  readonly economy:EconomySystem;
 
   constructor(clock: GameClock, saved?: Partial<GameplaySnapshot>,
     readonly items: ItemRegistry = ITEMS, private onChange: (immediate?:boolean) => void = () => {}) {
+    const economy=normalizeEconomy(saved?.economy);
     this.inventory = new Inventory(items, undefined, saved?.inventory, () => this.requestSave());
-    this.barn=new Inventory(items,BARN_CAPACITY,saved?.barn,()=>this.requestSave(true));
+    this.barn=new Inventory(items,BARN_CAPACITIES[economy.upgrades.barn],saved?.barn,()=>this.requestSave(true));
     this.progress = new PlayerProgress(saved?.progress, () => this.requestSave());
     this.time = new GameplayTime(clock, () => this.requestSave());
     this.home = new HomeSystem(items, this.progress, this.time, saved?.home, () => this.requestSave());
@@ -65,9 +75,11 @@ export class GameplayFoundation implements GameplayServices {
     this.crops=new CropSystem(clock,getCropRegistry(items));
     // Farm commits land and Inventory before this callback; flush both together.
     this.farm=new FarmSystem(this.crops,this.inventory,saved?.farm,()=>this.requestSave(true));
-    this.vehicles=new VehicleProgress(saved?.vehicles);
+    this.vehicles=new VehicleProgress(saved?.vehicles,GRAIN_CAPACITIES[economy.upgrades.grain]);
+    this.livestock=new LivestockSystem(clock,this.inventory,saved?.livestock,()=>this.requestSave(true));
+    this.economy=new EconomySystem(this.inventory,this.barn,this.vehicles,economy,()=>this.requestSave(true));
   }
 
   requestSave(immediate=false): void { if(immediate)this.onChange(true);else this.onChange(); }
-  snapshot(): GameplaySnapshot { return { inventory: this.inventory.snapshot(),barn:this.barn.snapshot(), progress: this.progress.snapshot(), home: this.home.snapshot(),fishing:this.fishing.snapshot(),hotbar:this.hotbar.snapshot(),farm:this.farm.snapshot(),vehicles:this.vehicles.snapshot() }; }
+  snapshot(): GameplaySnapshot { return { inventory: this.inventory.snapshot(),barn:this.barn.snapshot(), progress: this.progress.snapshot(), home: this.home.snapshot(),fishing:this.fishing.snapshot(),hotbar:this.hotbar.snapshot(),farm:this.farm.snapshot(),vehicles:this.vehicles.snapshot(),livestock:this.livestock.snapshot(),economy:this.economy.snapshot() }; }
 }

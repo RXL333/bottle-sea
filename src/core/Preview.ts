@@ -2,11 +2,26 @@ import type { Game } from './Game';
 import { DAY_DURATION } from './GameClock';
 import type { FarmWorld } from '../worlds/farm/FarmWorld';
 import { getImplement } from '../gameplay/vehicles/ImplementRegistry';
+import { LIVESTOCK_PENS } from '../gameplay/livestock/LivestockDefinition';
+import { HOME_TRADE_POINT,FARM_TRADE_POINT } from '../worlds/trade/MerchantShip';
+import { PURCHASED_COMBINE_ID } from '../gameplay/vehicles/VehicleIds';
 // Development-only reproducible visual checkpoints; no extra controls in the game HUD.
 export function configurePreview(game:Game){
   const params=new URLSearchParams(location.search),hour=Number(params.get('hour'));
   if(params.has('hour')&&Number.isFinite(hour)&&hour>=0&&hour<24)game.clock.simulationTime=DAY_DURATION*(7+hour/24);
   if(params.get('weather')==='storm'){game.weather.storm=true;game.weather.intensity=1;game.hud.setActive('storm',true);}
+  if(params.get('view')==='home-trade'||params.get('view')==='farm-trade'){
+    const point=game.worldManager.currentWorldId==='FARM'?FARM_TRADE_POINT:HOME_TRADE_POINT;game.overview.suspend();game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.set(point.x,point.y,point.z);game.camera.lookAt(point.x-2,point.y-.4,point.z);game.explorer.syncLook();
+    if(params.get('fixture')==='1'&&game.gameplay.economy.nextRequest===1&&!game.gameplay.inventory.count('crop.corn')){game.gameplay.inventory.add('crop.corn',200);game.gameplay.inventory.add('fish.tuna',10);game.gameplay.inventory.add('food.grilled_fish',3);game.gameplay.inventory.add('livestock.milk',4);}
+    const controls=document.createElement('details');controls.style.cssText='position:fixed;top:140px;left:18px;z-index:20;background:#142621e6;color:#ffe4a3;padding:10px';const title=document.createElement('summary');title.textContent='开发验证 · 商船';controls.append(title);
+    const button=(label:string,action:()=>void)=>{const b=document.createElement('button');b.textContent=label;b.addEventListener('click',()=>{action();controls.open=false;game.renderer.domElement.focus();});controls.append(b);};
+    button('查看增购收割机',()=>{const vehicle=game.worldManager.currentWorld?.vehicles?.find(v=>v.id===PURCHASED_COMBINE_ID);if(!vehicle)return;game.camera.position.copy(vehicle.entryPosition());game.camera.position.y=vehicle.root.position.y+.44;game.camera.lookAt(vehicle.seatPosition());game.explorer.syncLook();});
+    if(params.get('fixture')==='1'){
+      button('填满交易测试背包',()=>{const bag=game.gameplay.inventory;for(let n=0;n<bag.capacity;n++){const s=bag.getSlot(n);if(s)bag.add(s.itemId,game.gameplay.items.get(s.itemId)!.maxStack-s.quantity);}bag.add('wood',bag.emptySlots*99);});
+      button('腾出交易测试槽位',()=>{const bag=game.gameplay.inventory;for(let n=bag.capacity-1;n>=0;n--){const s=bag.getSlot(n);if(s?.itemId==='wood'){bag.removeFromSlot(n,s.quantity);break;}}});
+    }
+    document.body.append(controls);
+  }
   if(game.worldManager.currentWorldId==='HOME'&&params.get('view')==='home-fishing'){
     game.overview.suspend();game.explorer.enter(false,game.worldManager.currentWorld!.getSpawnPoint('home_fishing'));game.hud.setExplore(true);
   }
@@ -24,6 +39,37 @@ export function configurePreview(game:Game){
   }
   if(game.worldManager.currentWorldId==='FARM'){
     const world=game.worldManager.currentWorld as FarmWorld;
+    if(params.get('view')?.startsWith('farm-livestock')){
+      if(params.get('fixture')==='1'&&!game.gameplay.inventory.count('crop.wheat'))game.gameplay.inventory.add('crop.wheat',30);
+      const atFeed=(kind:string)=>{const p=LIVESTOCK_PENS.find(p=>p.id===kind)!;const side=kind==='chicken'?1:-1;game.camera.position.set(p.feeder.x,4.44,p.feeder.z+side*(side===1?.85:.65));game.camera.lookAt(p.feeder.x,4.1,p.feeder.z-side*3);game.explorer.syncLook();};
+      const atAnimal=(id:string)=>{const animal=game.gameplay.livestock.getAnimal(id);if(!animal)return;game.camera.position.set(animal.x+.85,4.44,animal.z);game.camera.lookAt(animal.x,4.3,animal.z);game.explorer.syncLook();};
+      if(params.get('view')==='farm-livestock-feed')atFeed('chicken');
+      if(params.get('view')==='farm-livestock-collect')atAnimal(params.get('animal')??'chicken-0');
+      const controls=document.createElement('details');controls.style.cssText='position:fixed;top:140px;left:18px;z-index:20;background:#142621e6;color:#ffe4a3;padding:10px;border:1px solid #d9bf79';const summary=document.createElement('summary');summary.textContent='开发验证 · 牧场时间';controls.append(summary);
+      const button=(label:string,action:()=>void)=>{const el=document.createElement('button');el.textContent=label;el.style.margin='6px';el.addEventListener('click',()=>{action();controls.open=false;game.renderer.domElement.focus();});controls.append(el);};
+      button('推进 1 天',()=>game.gameplay.time.advanceMinutes(1440));button('推进 2 天',()=>game.gameplay.time.advanceMinutes(2880));button('夜晚 23 点',()=>game.gameplay.time.advanceToNextDay(23));button('清晨 8 点',()=>game.gameplay.time.advanceToNextDay(8));button('暂停 / 恢复时间',()=>{game.clock.paused=!game.clock.paused;});
+      for(const p of LIVESTOCK_PENS){button(`查看${p.name}饲槽`,()=>atFeed(p.id));button(`靠近${p.name}动物 1`,()=>atAnimal(`${p.id}-0`));}
+      if(params.get('fixture')==='1'){
+        button('填满测试背包',()=>{const bag=game.gameplay.inventory;for(let n=0;n<bag.capacity;n++){const stack=bag.getSlot(n);if(stack)bag.add(stack.itemId,game.gameplay.items.get(stack.itemId)!.maxStack-stack.quantity);}bag.add('wood',bag.emptySlots*game.gameplay.items.get('wood')!.maxStack);});
+        button('腾出一个测试槽位',()=>{const bag=game.gameplay.inventory;for(let n=bag.capacity-1;n>=0;n--){const stack=bag.getSlot(n);if(stack?.itemId==='wood'){bag.removeFromSlot(n,stack.quantity);break;}}});
+      }
+      document.body.append(controls);
+    }
+    if(params.get('view')==='farm-presentation'&&params.get('fixture')==='1'){
+      const now=game.clock.simulationTime,dense=params.get('dense')==='1',crops=game.gameplay.crops.registry.list();
+      // Explicit disposable visual fixture: normal APIs retain inventory and growth rules.
+      for(const [fieldIndex,field] of game.gameplay.farm.definitions.entries())for(let row=0;row<field.grid.rows;row++)for(let column=0;column<field.grid.columns;column++){
+        if(!dense&&(fieldIndex!==1||row<14))continue;
+        const ref={fieldId:field.id,row,column};if(game.gameplay.farm.getCell(ref)?.landState!=='UNTILLED')continue;
+        if(row===17&&column===0)continue;
+        game.gameplay.farm.till([ref]);if(row===17&&column===1)continue;
+        const crop=crops[dense?fieldIndex:Math.min(2,Math.max(0,row-14))],stage=row===17&&column===2?3:column%4;
+        game.clock.simulationTime=now-crop.stages[stage].startsAtGameMinute*DAY_DURATION/1440;
+        game.gameplay.inventory.add(crop.seedItemId,1);game.gameplay.farm.seed([ref],crop.id);game.clock.simulationTime=now;
+        if(row===17&&column===2)game.gameplay.farm.harvest([ref]);
+      }
+      game.clock.simulationTime=now;game.clock.paused=true;game.gameplay.requestSave(true);
+    }
     const transportView=params.get('view')?.startsWith('farm-transport');
     if(transportView&&world.combine&&world.trailer){
       const trailer=world.trailer,tractor=world.vehicles[0],combine=world.combine,barn=params.get('view')==='farm-transport-barn';
@@ -104,6 +150,8 @@ export function configurePreview(game:Game){
       document.body.append(controls);
     }
     const views:Record<string,{position:[number,number,number];target:[number,number,number]}>={
+      'farm-presentation':params.get('dense')==='1'?{position:[36,32,4],target:[0,4.3,-20]}:{position:[8,12,-3],target:[0,4.3,-12.5]},
+      'farm-hand':{position:[-5.5,4.464,-10.5],target:[-5.5,4.25,-13]},
       'farm-overview':{position:[48,65,43],target:[0,4.1,-26]},
       'farm-yard':{position:[-21,4.464,-1],target:[-25,5.2,4]},
       'farm-cottage':{position:[5.12,4.72,2.15],target:[5.12,4.75,4.5]},
@@ -114,7 +162,7 @@ export function configurePreview(game:Game){
       'farm-fishing':{position:[-8,4.44,9.2],target:[-8,4.5,10.5]},
     };
     const view=params.get('view')??'',checkpoint=views[view];
-    if(checkpoint){game.camera.position.fromArray(checkpoint.position);game.camera.lookAt(...checkpoint.target);game.explorer.syncLook();if(view==='farm-overview'){game.explorer.suspend();game.camera.fov=48;game.camera.far=230;game.camera.updateProjectionMatrix();}}
+    if(checkpoint){game.camera.position.fromArray(checkpoint.position);game.camera.lookAt(...checkpoint.target);game.explorer.syncLook();if(view==='farm-overview'||view==='farm-presentation'){game.explorer.suspend();game.camera.fov=48;game.camera.far=230;game.camera.updateProjectionMatrix();}}
   }
   if(['underwater','under-island','dock','water-entry','chest','lighthouse','ruins'].includes(params.get('view')??'')){
     game.overview.enabled=false;game.explorer.enter(false);game.hud.setExplore(true);

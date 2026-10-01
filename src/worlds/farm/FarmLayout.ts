@@ -2,6 +2,7 @@ import { FARM_ASSET_BOUNDS,FARM_DOCK,FARM_GROUND,FARM_SEED_SUPPLY,FARM_SIGNS,FAR
 import type { FarmAssetId } from './FarmAssets';
 import type { FarmRect } from './FarmMap';
 import { farmGroundHeight } from './FarmTopography';
+import { LIVESTOCK_ANIMALS,LIVESTOCK_PENS } from '../../gameplay/livestock/LivestockDefinition';
 
 export interface FarmPlacement {id:string;asset:FarmAssetId;x:number;z:number;scale:number;y?:number;yaw?:number;solid?:boolean;animated?:boolean;independent?:boolean;zoneId?:string}
 export interface FarmObstacle {minX:number;maxX:number;minZ:number;maxZ:number;minY:number;maxY:number}
@@ -25,9 +26,7 @@ export const FARM_PLACEMENTS:FarmPlacement[]=[
   {id:'dock-end',asset:'dock_kit',x:FARM_DOCK.x,z:14.5,scale:.72,zoneId:'dock'},
   ...[12.52,10.54].map((z,i)=>({id:`dock-deck-${i}`,asset:'dock_platform' as const,x:FARM_DOCK.x,z,scale:.72,zoneId:'dock'})),
   ...[10,12.5].flatMap((z,i)=>[-4.89,-3.11].map((x,j)=>({id:`dock-post-${i}-${j}`,asset:'dock_pile' as const,x,z,scale:.72,zoneId:'dock'}))),
-  ...[{x:25,z:-44,yaw:.3},{x:27,z:-45.6,yaw:-.8}].map((p,i)=>({id:`cow-${i}`,asset:'cow' as const,...p,scale:.33,solid:true,independent:true,zoneId:'cow-reserve'})),
-  ...[{x:24.5,z:-51},{x:27,z:-52.5},{x:26,z:-54}].map((p,i)=>({id:`sheep-${i}`,asset:'sheep' as const,...p,scale:.33,yaw:i*.9,solid:true,independent:true,zoneId:'sheep-reserve'})),
-  ...[{x:17,z:-44},{x:18,z:-45},{x:19.3,z:-43.5}].map((p,i)=>({id:`chicken-${i}`,asset:'chicken' as const,...p,scale:.16,yaw:i*1.4,solid:true,independent:true,zoneId:'chicken-reserve'})),
+  ...LIVESTOCK_ANIMALS.map(a=>({id:a.id,asset:a.kind,x:a.x,z:a.z,yaw:a.yaw,scale:a.kind==='chicken'?.16:.33,independent:true,zoneId:`${a.kind}-reserve`})),
   ...[[-33,2],[-32.5,-10],[-33,-24],[-32,-40],[-32,-55],[-28,-61],[-20,-62],[-10,-63],[0,-63],[10,-63],[25,-62],
     [33,-5],[33,-17],[33,-30],[33,-44],[32,-54],[-12,7.8],[11.5,7.6],[31,8],[-31,7]].map(([x,z],i)=>({id:`tree-${i}`,asset:'orchard_tree' as const,x,z,scale:.72+(i%3)*.1})),
   ...[[24,4.5],[24.65,4.5],[24.35,4.5]].map(([x,z],i)=>({id:`hay-${i}`,asset:'hay_bale' as const,x,z,y:FARM_GROUND+(i===2?.6655*.55:0),scale:.55,solid:true,zoneId:'barn'})),
@@ -49,6 +48,10 @@ fenceEdge('livestock-south',14,-42,30.3,-42,{center:18,width:5});
 // Short separator leaves both reserved shed footprints accessible from the entrance.
 fenceEdge('chicken-cow-divider',22,-42,22,-46.7);
 fenceEdge('pasture-sheep-divider',22,-49,22,-61.5,{center:-55,width:3});
+fenceEdge('chicken-back',14,-47.5,22,-47.5);
+fenceEdge('cow-entry',22,-47.8,30.3,-47.8,{center:26,width:2});
+fenceEdge('sheep-entry',22,-48.2,30.3,-48.2,{center:26,width:2});
+fenceEdge('sheep-back',22,-56.2,30.3,-56.2);
 
 for(const p of FARM_PLACEMENTS)if(p.y===undefined)p.y=p.zoneId==='dock'||p.asset==='fishing_deck'?FARM_GROUND:farmGroundHeight(p.x,p.z);
 
@@ -63,6 +66,11 @@ function assetBox(p:FarmPlacement){const b=FARM_ASSET_BOUNDS.get(p.asset)!;retur
 // Vehicles and implements have moving colliders owned by FarmWorld.
 export const FARM_OBSTACLES:FarmObstacle[]=FARM_PLACEMENTS.filter(p=>p.solid&&!['yard-tractor','combine','plow','seeder','trailer'].includes(p.id)).map(assetBox);
 FARM_OBSTACLES.push({...rectBounds(FARM_SEED_SUPPLY),minY:FARM_GROUND,maxY:FARM_GROUND+FARM_SEED_SUPPLY.height});
+for(const pen of LIVESTOCK_PENS){
+  const {feeder,shelter}=pen;
+  FARM_OBSTACLES.push({minX:feeder.x-.6,maxX:feeder.x+.6,minZ:feeder.z-.22,maxZ:feeder.z+.22,minY:farmGroundHeight(feeder.x,feeder.z),maxY:farmGroundHeight(feeder.x,feeder.z)+.3});
+  for(const x of [shelter.x-.6,shelter.x+.6])for(const z of [shelter.z-.35,shelter.z+.35])FARM_OBSTACLES.push({minX:x-.05,maxX:x+.05,minZ:z-.05,maxZ:z+.05,minY:FARM_GROUND,maxY:FARM_GROUND+.9});
+}
 const cottage=FARM_PLACEMENTS.find(p=>p.id==='cottage')!;
 for(const [min,max] of [
   [[-1.72,.36,-1.76],[-1.62,2.64,1.76]],[[1.62,.36,-1.76],[1.72,2.64,1.76]],

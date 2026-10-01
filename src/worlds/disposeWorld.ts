@@ -14,6 +14,7 @@ export function disposeWorld(root:Object3D) {
   root.traverse(object=>{
     if(object instanceof Mesh||object instanceof Line||object instanceof Points){
       release(object.geometry);for(const mat of Array.isArray(object.material)?object.material:[object.material])releaseMaterial(mat);
+      if(object instanceof Mesh){if(object.customDepthMaterial)releaseMaterial(object.customDepthMaterial);if(object.customDistanceMaterial)releaseMaterial(object.customDistanceMaterial);}
       if(object instanceof InstancedMesh)release(object);
     }
     if('shadow' in object){const shadow=object.shadow as {dispose?:()=>void}|undefined;shadow?.dispose?.();}

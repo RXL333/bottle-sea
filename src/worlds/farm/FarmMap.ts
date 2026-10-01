@@ -59,9 +59,9 @@ export const FARM_ZONES:readonly FarmZone[]=[
   ...FARM_FIELDS.map(f=>({id:f.id,name:f.name,kind:'field' as const,reserved:false,x:f.x,z:f.z,width:f.width,depth:f.depth})),
   {id:'expansion-west',name:'西侧扩展农田',kind:'expansion',reserved:true,x:-22,z:-50,width:14,depth:16},
   {id:'expansion-central',name:'中央扩展农田',kind:'expansion',reserved:true,x:0,z:-50,width:12,depth:16},
-  {id:'chicken-reserve',name:'鸡舍预留区',kind:'livestock',reserved:true,x:18,z:-44.5,width:8,depth:6},
-  {id:'cow-reserve',name:'牛棚预留区',kind:'livestock',reserved:true,x:26,z:-44.5,width:8,depth:6},
-  {id:'sheep-reserve',name:'羊圈预留区',kind:'livestock',reserved:true,x:26,z:-52,width:8,depth:8},
+  {id:'chicken-reserve',name:'鸡舍',kind:'livestock',reserved:false,x:18,z:-44.5,width:8,depth:6},
+  {id:'cow-reserve',name:'牛棚',kind:'livestock',reserved:false,x:26,z:-44.5,width:8,depth:6},
+  {id:'sheep-reserve',name:'羊圈',kind:'livestock',reserved:false,x:26,z:-52,width:8,depth:8},
   {id:'pasture-reserve',name:'牧场预留区',kind:'pasture',reserved:true,x:18,z:-55.5,width:8,depth:14},
 ];
 export interface FarmSign {readonly id:string;readonly x:number;readonly z:number;readonly yaw:number;readonly title:string;readonly detail:string}
@@ -75,10 +75,10 @@ export const FARM_SIGNS:readonly FarmSign[]=[
   {id:'cottage-sign',x:2.2,z:4.5,yaw:-Math.PI/2,title:'农场小屋',detail:'生活区'},
   ...FARM_FIELDS.map(f=>({id:`${f.id}-sign`,x:f.id==='field-west'?-15.1:f.x-7,z:f.z,yaw:f.id==='field-west'?Math.PI/2:-Math.PI/2,title:f.name,detail:'田头请保持畅通'})),
   {id:'expansion-sign',x:7,z:-44,yaw:-Math.PI/2,title:'农田预留区',detail:'待扩建'},
-  {id:'livestock-sign',x:15,z:-42.3,yaw:0,title:'养殖预留区',detail:'鸡舍 · 牛棚 · 羊圈'},
-  {id:'chicken-sign',x:13.8,z:-44.5,yaw:-Math.PI/2,title:'鸡舍预留区',detail:'待扩建'},
-  {id:'cow-sign',x:30.8,z:-44.5,yaw:-Math.PI/2,title:'牛棚预留区',detail:'待扩建'},
-  {id:'sheep-sign',x:30.8,z:-52,yaw:-Math.PI/2,title:'羊圈预留区',detail:'待扩建'},
+  {id:'livestock-sign',x:15,z:-42.3,yaw:0,title:'牧场',detail:'补粮 · 收蛋 · 挤奶 · 剪毛'},
+  {id:'chicken-sign',x:13.8,z:-44.5,yaw:-Math.PI/2,title:'鸡舍',detail:'小麦 / 玉米 · 每日收蛋'},
+  {id:'cow-sign',x:30.8,z:-44.5,yaw:-Math.PI/2,title:'牛棚',detail:'小麦 / 玉米 · 每日挤奶'},
+  {id:'sheep-sign',x:30.8,z:-52,yaw:-Math.PI/2,title:'羊圈',detail:'小麦 / 玉米 · 两日剪毛'},
   {id:'pasture-sign',x:13.8,z:-58,yaw:-Math.PI/2,title:'牧场预留区',detail:'待扩建'},
 ];
 export function farmZone(id:string):FarmZone{

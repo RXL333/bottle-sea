@@ -48,9 +48,13 @@ export const ITEM_DEFINITIONS:readonly ItemDefinition[]=[
   {id:'seed.wheat',name:'小麦种子',category:'seed',description:'可播种在已耕土地上的小麦种子，每个单元消耗一份。',icon:'wheat-seed',maxStack:99,cropId:'wheat'},
   {id:'seed.corn',name:'玉米种子',category:'seed',description:'可播种在已耕土地上的玉米种子，每个单元消耗一份。',icon:'corn-seed',maxStack:99,cropId:'corn'},
   {id:'seed.potato',name:'土豆种薯',category:'seed',description:'留作播种的土豆种薯，每个已耕单元消耗一份。',icon:'potato-seed',maxStack:99,cropId:'potato'},
-  {id:'crop.wheat',name:'小麦',category:'crop',description:'收获的金黄麦穗，可用于后续加工和交易。',icon:'wheat',maxStack:99,cropId:'wheat'},
-  {id:'crop.corn',name:'玉米',category:'crop',description:'收获的饱满玉米，可用于后续料理和交易。',icon:'corn',maxStack:99,cropId:'corn'},
+  {id:'crop.wheat',name:'小麦',category:'crop',description:'收获的金黄麦穗，可放入牧场饲槽喂养动物，也可留作加工。',icon:'wheat',maxStack:99,cropId:'wheat'},
+  {id:'crop.corn',name:'玉米',category:'crop',description:'收获的饱满玉米，可放入牧场饲槽喂养动物，也可留作料理。',icon:'corn',maxStack:99,cropId:'corn'},
   {id:'crop.potato',name:'土豆',category:'crop',description:'从土中收获的土豆，可用于后续料理和交易。',icon:'potato',maxStack:99,cropId:'potato'},
+  {id:'livestock.egg',name:'鸡蛋',category:'food',description:'喂养母鸡后收集的新鲜鸡蛋，可储存用于烹饪。',icon:'egg',maxStack:20},
+  {id:'livestock.milk',name:'牛奶',category:'food',description:'喂养奶牛后取得的鲜牛奶，可储存用于料理。',icon:'milk',maxStack:20},
+  {id:'livestock.wool',name:'羊毛',category:'material',description:'喂养绵羊后剪下的柔软羊毛，可储存用于加工。',icon:'wool',maxStack:20},
+  {id:'feed.basic',name:'牧场饲料',category:'material',description:'商船出售的通用饲料，可在鸡舍、牛棚和羊圈的饲槽补充。每份支持一次产出。',icon:'feed',maxStack:99},
 ];
 export function createItemRegistry(){const registry=new ItemRegistry();for(const item of ITEM_DEFINITIONS)registry.register(item);return registry;}
 export const ITEMS=createItemRegistry();
