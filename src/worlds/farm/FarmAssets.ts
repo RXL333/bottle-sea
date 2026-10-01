@@ -9,7 +9,13 @@ export const FARM_MODEL_FILES={
   fence_segment:'modules/fence_kit__fence_straight.glb',fence_gate:'modules/fence_kit__fence_gate.glb',
   dock_kit:'dock_kit.glb',dock_platform:'modules/dock_kit__dock_platform.glb',dock_pile:'modules/dock_kit__dock_pile_1.glb',
   fishing_deck:'fishing_deck.glb',bed:'bed.glb',chicken:'chicken.glb',cow:'cow.glb',sheep:'sheep.glb',
-  orchard_tree:'orchard_tree.glb',hay_bale:'hay_bale.glb',
+  orchard_tree:'orchard_tree.glb',hay_bale:'hay_bale.glb',wheat_cluster:'wheat_cluster.glb',
+  crop_wheat_seed:'crops/crop_wheat_seed.glb',crop_wheat_sprout:'crops/crop_wheat_sprout.glb',
+  crop_wheat_growing:'crops/crop_wheat_growing.glb',crop_wheat_mature:'crops/crop_wheat_mature.glb',
+  crop_corn_seed:'crops/crop_corn_seed.glb',crop_corn_sprout:'crops/crop_corn_sprout.glb',
+  crop_corn_growing:'crops/crop_corn_growing.glb',crop_corn_mature:'crops/crop_corn_mature.glb',
+  crop_potato_seed:'crops/crop_potato_seed.glb',crop_potato_sprout:'crops/crop_potato_sprout.glb',
+  crop_potato_growing:'crops/crop_potato_growing.glb',crop_potato_mature:'crops/crop_potato_mature.glb',
 } as const;
 export type FarmAssetId=keyof typeof FARM_MODEL_FILES;
 export type ModelLoader=(url:string)=>Promise<Group>;

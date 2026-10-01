@@ -1,0 +1,43 @@
+{
+  "number": 47,
+  "id": "crop_corn_mature",
+  "label": "玉米 · 成熟",
+  "file": "crop_corn_mature.glb",
+  "blend": "crop_corn_mature.blend",
+  "dimensions": {
+    "width": 0.7919,
+    "height": 0.98,
+    "depth": 0.7061
+  },
+  "boundsBlender": {
+    "min": [
+      -0.3959744870662689,
+      -0.3580624759197235,
+      0.02499997615814209
+    ],
+    "max": [
+      0.3959744870662689,
+      0.3480624854564667,
+      1.0049999952316284
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 936,
+  "meshCount": 6,
+  "bytes": 53492,
+  "notes": [
+    "One 1m farm cell; ground pivot; native flat-shaded solids",
+    "No terrain, collision, alpha cards, external textures or gameplay state"
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "cropId": "corn",
+  "stageId": "mature",
+  "resourceId": "crop.corn.mature"
+}

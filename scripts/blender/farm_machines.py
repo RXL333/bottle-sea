@@ -2,6 +2,10 @@ from farm_common import *
 
 def tractor():
     a=Asset(2,'tractor','拖拉机')
+    a.part('Body');a.parts['body']=a.parts['Body']
+    a.part('Seat',(0,.47,1.38))
+    a.part('Hitch_Back',(0,1.70,.45))
+    a.part('Hitch_Front',(0,-1.45,.69))
     a.box((0,0,.7),(1.04,2.35,.27),'dark')
     a.box((0,-.67,1.20),(.98,1.22,.65),'red')
     a.box((0,-.65,1.55),(1.04,1.24,.10),'red2')
@@ -39,11 +43,12 @@ def tractor():
         wheel(a,side*.78,-.94,.47,.47,.31,'cream',f'wheel_front_{side}')
         wheel(a,side*.86,.82,.70,.70,.40,'cream',f'wheel_rear_{side}')
     a.beam((-.44,1.68,.45),(.44,1.68,.45),.08,color='steel')
-    a.notes=['Four wheel pivots retained for future driving animation.']
+    a.notes=['Four wheel pivots, Body, Seat, Hitch_Back and Hitch_Front anchors retained for driving and attachment.']
     return a.finish()
 
 def seeder():
     a=Asset(3,'seeder','播种机')
+    a.part('Hitch_Front',(0,-1.56,.55))
     a.box((0,0,.83),(2.72,.8,.17),'green_dark')
     a.box((0,0,1.31),(2.53,.72,.62),'green')
     a.box((0,-.38,1.42),(2.54,.055,.16),'yellow')
@@ -118,6 +123,7 @@ def combine():
 
 def trailer():
     a=Asset(5,'farm_trailer','农用拖车')
+    a.part('Hitch_Front',(0,-2.38,.40))
     a.box((0,0,.53),(1.44,2.50,.16),'green_dark')
     for i in range(10):a.box((0,(i-4.5)*.25,.67),(1.53,.242,.11),'wood2' if i%3 else 'wood')
     for side in [-1,1]:
@@ -138,6 +144,7 @@ def trailer():
 
 def plow():
     a=Asset(6,'plow','犁 / 耕地机')
+    a.part('Hitch_Front',(0,-.66,.60))
     a.box((0,0,.78),(2.6,.16,.17),'red')
     a.box((0,.51,.76),(2.6,.13,.14),'red_dark')
     for x in [-1.10,-.38,.38,1.10]:

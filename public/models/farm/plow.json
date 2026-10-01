@@ -26,12 +26,15 @@
   "units": "meters",
   "pivot": "ground",
   "parts": {
-    "depth_wheel": "plow__depth_wheel"
+    "depth_wheel": "plow__depth_wheel",
+    "Hitch_Front": "plow__Hitch_Front"
   },
   "triangles": 1072,
   "meshCount": 11,
-  "bytes": 65408,
-  "notes": [],
+  "bytes": 65536,
+  "notes": [
+    "Hitch_Front coupling anchor retained for implement attachment."
+  ],
   "animation": "semantic pivot nodes only; no animation clips",
   "license": "Original authored geometry; no third-party model dependencies",
   "preview": "previews/plow.png",

@@ -1,0 +1,43 @@
+{
+  "number": 42,
+  "id": "crop_wheat_growing",
+  "label": "小麦 · 生长",
+  "file": "crop_wheat_growing.glb",
+  "blend": "crop_wheat_growing.blend",
+  "dimensions": {
+    "width": 0.6472,
+    "height": 0.4318,
+    "depth": 0.5957
+  },
+  "boundsBlender": {
+    "min": [
+      -0.32296493649482727,
+      -0.3068980276584625,
+      0.025000005960464478
+    ],
+    "max": [
+      0.3242235481739044,
+      0.28883492946624756,
+      0.45680001378059387
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 528,
+  "meshCount": 3,
+  "bytes": 28848,
+  "notes": [
+    "One 1m farm cell; ground pivot; native flat-shaded solids",
+    "No terrain, collision, alpha cards, external textures or gameplay state"
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "cropId": "wheat",
+  "stageId": "growing",
+  "resourceId": "crop.wheat.growing"
+}

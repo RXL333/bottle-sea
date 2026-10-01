@@ -80,16 +80,21 @@
       "units": "meters",
       "pivot": "ground",
       "parts": {
-        "wheel_front_-1": "tractor__wheel_front_-1",
+        "Body": "tractor__Body",
+        "Hitch_Back": "tractor__Hitch_Back",
+        "Hitch_Front": "tractor__Hitch_Front",
+        "Seat": "tractor__Seat",
         "wheel_front_1": "tractor__wheel_front_1",
-        "wheel_rear_-1": "tractor__wheel_rear_-1",
-        "wheel_rear_1": "tractor__wheel_rear_1"
+        "wheel_front_-1": "tractor__wheel_front_-1",
+        "wheel_rear_1": "tractor__wheel_rear_1",
+        "wheel_rear_-1": "tractor__wheel_rear_-1"
       },
       "triangles": 3308,
       "meshCount": 29,
-      "bytes": 179848,
+      "bytes": 180328,
       "notes": [
-        "Four wheel pivots retained for future driving animation."
+        "Independent Body, Seat and Hitch_Back anchors; four wheel pivots retained for driving.",
+        "Hitch_Front coupling anchor retained for implement attachment."
       ],
       "animation": "semantic pivot nodes only; no animation clips",
       "license": "Original authored geometry; no third-party model dependencies",
@@ -124,19 +129,22 @@
       "units": "meters",
       "pivot": "ground",
       "parts": {
+        "Hitch_Front": "seeder__Hitch_Front",
         "row_unit_1": "seeder__row_unit_1",
         "row_unit_2": "seeder__row_unit_2",
         "row_unit_3": "seeder__row_unit_3",
         "row_unit_4": "seeder__row_unit_4",
         "row_unit_5": "seeder__row_unit_5",
         "row_unit_6": "seeder__row_unit_6",
-        "transport_wheel_-1": "seeder__transport_wheel_-1",
-        "transport_wheel_1": "seeder__transport_wheel_1"
+        "transport_wheel_1": "seeder__transport_wheel_1",
+        "transport_wheel_-1": "seeder__transport_wheel_-1"
       },
       "triangles": 2568,
       "meshCount": 41,
-      "bytes": 146100,
-      "notes": [],
+      "bytes": 146244,
+      "notes": [
+        "Hitch_Front coupling anchor retained for implement attachment."
+      ],
       "animation": "semantic pivot nodes only; no animation clips",
       "license": "Original authored geometry; no third-party model dependencies",
       "preview": "previews/seeder.png",
@@ -215,15 +223,18 @@
       "units": "meters",
       "pivot": "ground",
       "parts": {
-        "wheel_-1_-0": "farm_trailer__wheel_-1_-0",
-        "wheel_-1_0": "farm_trailer__wheel_-1_0",
+        "Hitch_Front": "farm_trailer__Hitch_Front",
+        "wheel_1_0": "farm_trailer__wheel_1_0",
         "wheel_1_-0": "farm_trailer__wheel_1_-0",
-        "wheel_1_0": "farm_trailer__wheel_1_0"
+        "wheel_-1_0": "farm_trailer__wheel_-1_0",
+        "wheel_-1_-0": "farm_trailer__wheel_-1_-0"
       },
       "triangles": 3356,
       "meshCount": 28,
-      "bytes": 180340,
-      "notes": [],
+      "bytes": 180484,
+      "notes": [
+        "Hitch_Front coupling anchor retained for implement attachment."
+      ],
       "animation": "semantic pivot nodes only; no animation clips",
       "license": "Original authored geometry; no third-party model dependencies",
       "preview": "previews/farm_trailer.png",
@@ -257,12 +268,15 @@
       "units": "meters",
       "pivot": "ground",
       "parts": {
-        "depth_wheel": "plow__depth_wheel"
+        "depth_wheel": "plow__depth_wheel",
+        "Hitch_Front": "plow__Hitch_Front"
       },
       "triangles": 1072,
       "meshCount": 11,
-      "bytes": 65408,
-      "notes": [],
+      "bytes": 65536,
+      "notes": [
+        "Hitch_Front coupling anchor retained for implement attachment."
+      ],
       "animation": "semantic pivot nodes only; no animation clips",
       "license": "Original authored geometry; no third-party model dependencies",
       "preview": "previews/plow.png",

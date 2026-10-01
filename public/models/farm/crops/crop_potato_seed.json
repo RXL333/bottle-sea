@@ -1,0 +1,43 @@
+{
+  "number": 48,
+  "id": "crop_potato_seed",
+  "label": "土豆 · 刚播种",
+  "file": "crop_potato_seed.glb",
+  "blend": "crop_potato_seed.blend",
+  "dimensions": {
+    "width": 0.62,
+    "height": 0.057,
+    "depth": 0.41
+  },
+  "boundsBlender": {
+    "min": [
+      -0.3100000023841858,
+      -0.19499999284744263,
+      0.019999997690320015
+    ],
+    "max": [
+      0.3100000023841858,
+      0.2150000035762787,
+      0.07699999958276749
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 108,
+  "meshCount": 3,
+  "bytes": 8308,
+  "notes": [
+    "One 1m farm cell; ground pivot; native flat-shaded solids",
+    "No terrain, collision, alpha cards, external textures or gameplay state"
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "cropId": "potato",
+  "stageId": "seed",
+  "resourceId": "crop.potato.seed"
+}

@@ -1,0 +1,43 @@
+{
+  "number": 50,
+  "id": "crop_potato_growing",
+  "label": "土豆 · 生长",
+  "file": "crop_potato_growing.glb",
+  "blend": "crop_potato_growing.blend",
+  "dimensions": {
+    "width": 0.7604,
+    "height": 0.2504,
+    "depth": 0.7572
+  },
+  "boundsBlender": {
+    "min": [
+      -0.4164782166481018,
+      -0.34911784529685974,
+      0.02499999850988388
+    ],
+    "max": [
+      0.34395521879196167,
+      0.40803542733192444,
+      0.27538001537323
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 1656,
+  "meshCount": 3,
+  "bytes": 81860,
+  "notes": [
+    "One 1m farm cell; ground pivot; native flat-shaded solids",
+    "No terrain, collision, alpha cards, external textures or gameplay state"
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "cropId": "potato",
+  "stageId": "growing",
+  "resourceId": "crop.potato.growing"
+}

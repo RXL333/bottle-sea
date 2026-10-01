@@ -26,16 +26,21 @@
   "units": "meters",
   "pivot": "ground",
   "parts": {
-    "wheel_front_-1": "tractor__wheel_front_-1",
+    "Body": "tractor__Body",
+    "Hitch_Back": "tractor__Hitch_Back",
+    "Hitch_Front": "tractor__Hitch_Front",
+    "Seat": "tractor__Seat",
     "wheel_front_1": "tractor__wheel_front_1",
-    "wheel_rear_-1": "tractor__wheel_rear_-1",
-    "wheel_rear_1": "tractor__wheel_rear_1"
+    "wheel_front_-1": "tractor__wheel_front_-1",
+    "wheel_rear_1": "tractor__wheel_rear_1",
+    "wheel_rear_-1": "tractor__wheel_rear_-1"
   },
   "triangles": 3308,
   "meshCount": 29,
-  "bytes": 179848,
+  "bytes": 180328,
   "notes": [
-    "Four wheel pivots retained for future driving animation."
+    "Independent Body, Seat and Hitch_Back anchors; four wheel pivots retained for driving.",
+    "Hitch_Front coupling anchor retained for implement attachment."
   ],
   "animation": "semantic pivot nodes only; no animation clips",
   "license": "Original authored geometry; no third-party model dependencies",

@@ -1,0 +1,43 @@
+{
+  "number": 45,
+  "id": "crop_corn_sprout",
+  "label": "玉米 · 幼苗",
+  "file": "crop_corn_sprout.glb",
+  "blend": "crop_corn_sprout.blend",
+  "dimensions": {
+    "width": 0.609,
+    "height": 0.1515,
+    "depth": 0.5533
+  },
+  "boundsBlender": {
+    "min": [
+      -0.3045123517513275,
+      -0.2816614806652069,
+      0.02500000223517418
+    ],
+    "max": [
+      0.3045123517513275,
+      0.2716614902019501,
+      0.17650000751018524
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 216,
+  "meshCount": 2,
+  "bytes": 12532,
+  "notes": [
+    "One 1m farm cell; ground pivot; native flat-shaded solids",
+    "No terrain, collision, alpha cards, external textures or gameplay state"
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "cropId": "corn",
+  "stageId": "sprout",
+  "resourceId": "crop.corn.sprout"
+}

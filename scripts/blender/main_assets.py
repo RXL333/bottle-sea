@@ -79,11 +79,15 @@ def cottage():
         a.beam((0,-1.96,4.25),(side*2.05,-1.96,2.76),.17,color='wood2')
         a.beam((0,-1.63,4.03),(side*1.5,-1.63,2.88),.11,color='wood')
     a.box((0,-1.64,3.35),(.12,.12,.92),'wood')
-    door=a.part('front_door',(-.61,-1.61,.34))
-    a.box((-.2,-1.61,1.32),(.79,.105,1.96),'wood','front_door')
-    for x in [-.47,-.2,.07]:a.box((x,-1.675,1.2),(.025,.025,1.54),'wood_dark',door)
-    a.box((-.2,-1.68,1.83),(.45,.025,.58),'glass',door)
-    a.cyl((.08,-1.7,1.19),(.08,-1.77,1.19),.045,'gold',8,part=door)
+    # Opening: [-.66,.34]. Closed panel overlaps both jambs by .02.
+    door_left,door_width,door_center=-.68,1.04,-.16
+    door=a.part('front_door',(door_left-.015,-1.61,.34))
+    a.box((door_center,-1.61,1.32),(door_width,.105,1.96),'wood',door)
+    for x in [door_center-door_width*.27/.79,door_center,door_center+door_width*.27/.79]:
+        a.box((x,-1.675,1.2),(.025,.025,1.54),'wood_dark',door)
+    a.box((door_center,-1.68,1.83),(door_width*.45/.79,.025,.58),'glass',door)
+    handle_x=door_center+door_width*.28/.79
+    a.cyl((handle_x,-1.7,1.19),(handle_x,-1.77,1.19),.045,'gold',8,part=door)
     window(a,1,-1.62,1.77,.6,.72)
     for side in [-1,1]:
         for yy in [-.25,.78]:

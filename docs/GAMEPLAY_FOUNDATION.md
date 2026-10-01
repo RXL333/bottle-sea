@@ -6,6 +6,10 @@
 
 当前进一步接入 [正式背包](INVENTORY_SYSTEM.md)：统一物品元数据、网格 UI、槽位操作、双栏仓库和 `GameplayServices.hotbar`。ItemRegistry 为全部物品数据唯一来源，玩家 Stack 只保存引用与数量，快捷栏不持有库存。以下底座阶段描述保留为历史记录。
 
+现已接入 [Farm / Crop 数据基础](FARM_CROP_DATA.md)：`GameplayServices.farm/crops`、三块独立网格田、全局日历派生成长、统一背包播种/收获 API 及兼容的 v2 farm 存档字段。本轮仅提供底层接口，手工农业交互与作物表现留待下一阶段。
+
+后续 [手工农业](MANUAL_FARMING.md) 已完成脚下单元 E 耕地/播种/收割、快捷栏选种、阶段表现和存档领取标记；继续复用相同公共背包、日历和存档，不增加农业独立计时或库存。
+
 ## 范围与决定
 
 本阶段只建立后续 Home / Fishing / Cooking / Farm 共用接口，不启用睡觉、储物家具、钓鱼、生产、农机、养殖或经济玩法，不新增背包 UI、装备、Buff 或任务系统。
@@ -82,3 +86,9 @@ const target: InteractionTarget = {
 - 集成测试验证公共状态经过 HOME / COTTAGE / HOME / TRAVEL / FARM / HOME 及加载失败恢复仍为同一实例；多次有效变更节流到一次保存，恢复后背包、玩家进度、时间一致。
 - 本地浏览器实测：E 登船，家园→农场→家园往返完成；目的地面板关闭后可重新打开；E 进屋、出屋后恢复主岛；E 发现宝箱后手记为 1 / 4，再次发现仍为 1 / 4。控制台未出现 warn/error。
 - 浏览器使用已有隔离预览入口，未覆盖用户普通游戏存档。新增物品与玩家进度的完整持久化由上述集成测试验证；没有新增玩法 UI 或重做性能验收。
+
+## 联合收割机存储扩展（2026-10-01）
+
+公共 GameplaySnapshot 增加 `barn` 库存（24 格，旧存档默认空仓），联合收割机粮仓存入其 VehiclePose。`FarmSystem.harvest` 可接收目标库存接口，手工默认仍进入背包；两个容器之间继续通过统一 Inventory 原子转移。既有网格面板可显示小屋箱子或谷仓仓库，全部存入使用当前容器。详见 [COMBINE_HARVESTING.md](COMBINE_HARVESTING.md)。
+
+拖车扩展 `ImplementPose.cargo`，货仓仍为统一 Slot / Stack；Inventory 的可选总量限制和部分转移 API 供有限容量容器复用，默认背包 / Home 操作语义保持兼容。多车辆所有权快照在保存通知前一并发布，原网格面板也可管理停稳拖车。详见 [TRAILER_TRANSPORT.md](TRAILER_TRANSPORT.md)。

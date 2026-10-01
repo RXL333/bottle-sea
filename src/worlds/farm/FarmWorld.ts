@@ -2,7 +2,8 @@ import { Group } from 'three';
 import type { Quality } from '../../core/Renderer';
 import { PLAYER_FOOT_OFFSET,PLAYER_HEAD_OFFSET,PLAYER_RADIUS } from '../../world/Collision';
 import { waveHeight } from '../../world/ocean/WaveMath';
-import type { GameWorld,SpawnPoint,WorldLeaveContext,WorldUpdateContext } from '../types';
+import type { GameWorld,SpawnPoint,WorldEnterContext,WorldLeaveContext,WorldUpdateContext } from '../types';
+import type { GameplayServices } from '../../gameplay/GameplayFoundation';
 import type { NavigationSurface } from '../NavigationSurface';
 import { disposeWorld } from '../disposeWorld';
 import { FarmOcean } from './FarmOcean';
@@ -10,30 +11,73 @@ import { PlayerTravelBoat } from '../travel/PlayerTravelBoat';
 import { FarmTerrain,farmHeight } from './FarmTerrain';
 import { FARM_OBSTACLES } from './FarmBuildings';
 import { FARM_SURFACES } from './FarmLayout';
-import { FarmAssets } from './FarmAssets';
-import type { ModelLoader } from './FarmAssets';
+import { FARM_MODEL_FILES,FarmAssets } from './FarmAssets';
+import type { FarmAssetId,ModelLoader } from './FarmAssets';
 import { FarmModels } from './FarmModels';
 import { FARM_ARRIVAL,FARM_BOAT,FARM_MAP,FARM_NAVIGATION_BOUNDS } from './FarmMap';
 import { FarmWayfinding } from './FarmWayfinding';
-import { InteractionSystem } from '../../systems/InteractionSystem';
+import { FarmInteractions } from './FarmInteractions';
+import { FarmCropPresentation } from './FarmCropPresentation';
+import { TractorVehicle } from '../../systems/vehicles/TractorVehicle';
+import { CombineVehicle } from '../../systems/vehicles/CombineVehicle';
+import type { WheeledVehicle } from '../../systems/vehicles/WheeledVehicle';
+import { COMBINE_DEFINITION } from '../../gameplay/vehicles/VehicleDefinition';
+import { FarmVehicleNavigation } from './FarmVehicleNavigation';
+import { ImplementVehicle } from '../../systems/vehicles/ImplementVehicle';
+import { HitchSystem } from '../../systems/vehicles/HitchSystem';
+import { IMPLEMENTS } from '../../gameplay/vehicles/ImplementRegistry';
+import { FARM_ASSET_BOUNDS } from './FarmMap';
+import { PlowingSystem } from '../../gameplay/farm/PlowingSystem';
+import { SeedingSystem } from '../../gameplay/farm/SeedingSystem';
+import { TrailerVehicle } from '../../systems/vehicles/TrailerVehicle';
+import { FarmTransportSystem } from './FarmTransportSystem';
 export class FarmWorld implements GameWorld {
   readonly id='FARM' as const;readonly root=new Group();readonly boat=new PlayerTravelBoat();
   readonly map=FARM_MAP;
-  private ocean=new FarmOcean();readonly interaction=new InteractionSystem([]);
+  private ocean=new FarmOcean();readonly interaction=new FarmInteractions();
+  private gameplay?:GameplayServices;private crops:FarmCropPresentation;
+  private restoringVehicles=false;
+  readonly vehicles:WheeledVehicle[]=[];private terrain=new FarmTerrain();combine?:CombineVehicle;
+  readonly implements:ImplementVehicle[]=[];hitches?:HitchSystem;
+  trailer?:TrailerVehicle;transport?:FarmTransportSystem;
+  get storageContainers(){return this.trailer?[{id:'trailer_cargo',name:'农用拖车',inventory:this.trailer.cargo,partialTransfers:true}]:[];}
   private assets:FarmAssets;private models:FarmModels;private disposed=false;private loading:Promise<void>|undefined;
   readonly navigation:NavigationSurface={
     groundHeight:(x,z)=>farmHeight(x,z),
     hitsObstacle:(x,z,y)=>FARM_OBSTACLES.some(b=>y+PLAYER_HEAD_OFFSET>b.minY&&y-PLAYER_FOOT_OFFSET<b.maxY&&Math.hypot(Math.max(b.minX-x,0,x-b.maxX),Math.max(b.minZ-z,0,z-b.maxZ))<PLAYER_RADIUS),
     resolveVertical:(x,z,from,to)=>this.resolveVertical(x,z,from,to),isInside:(x,_y,z)=>x>=FARM_NAVIGATION_BOUNDS.minX&&x<=FARM_NAVIGATION_BOUNDS.maxX&&z>=FARM_NAVIGATION_BOUNDS.minZ&&z<=FARM_NAVIGATION_BOUNDS.maxZ,
     constrain:p=>{const b=FARM_NAVIGATION_BOUNDS;p.x=Math.max(b.minX,Math.min(b.maxX,p.x));p.z=Math.max(b.minZ,Math.min(b.maxZ,p.z));p.y=Math.max(.94,p.y);},
-    waterLevel:waveHeight,dynamicObstacles:()=>this.boat.collisionBoxes,
+    waterLevel:waveHeight,dynamicObstacles:()=>[...this.boat.collisionBoxes,...this.vehicles.map(v=>v.collision),...this.implements.map(i=>i.collision)],
   };
-  constructor(loader?:ModelLoader){this.assets=new FarmAssets(loader);this.models=new FarmModels(this.assets);this.root.name='FarmWorld';this.root.userData.mapVersion=this.map.version;this.boat.anchor(FARM_BOAT.x,FARM_BOAT.z);this.root.add(this.ocean,new FarmTerrain(),new FarmWayfinding(),this.models,this.assets.sources,this.boat);this.interaction.setTargets([{id:'farm_boat',name:'登船',action:'TRAVEL',...FARM_BOAT.interaction}]);}
+  constructor(loader?:ModelLoader){this.assets=new FarmAssets(loader);this.models=new FarmModels(this.assets);this.crops=new FarmCropPresentation(id=>Object.hasOwn(FARM_MODEL_FILES,id)?this.assets.instance(id as FarmAssetId):undefined);this.root.name='FarmWorld';this.root.userData.mapVersion=this.map.version;this.boat.anchor(FARM_BOAT.x,FARM_BOAT.z);this.root.add(this.ocean,this.terrain,new FarmWayfinding(),this.models,this.assets.sources,this.boat,this.crops);}
   load(){return this.loading??=this.loadModels();}
-  private async loadModels(){await this.assets.load();if(this.disposed)return;this.models.build();this.boat.setModel(this.assets.instance('transport_boat'));this.root.userData.modelsReady=true;}
-  enter(){}
+  private async loadModels(){await this.assets.load();if(this.disposed)return;this.models.build();this.boat.setModel(this.assets.instance('transport_boat'));
+    const model=this.models.placements.get('yard-tractor')!;
+    const navigation=new FarmVehicleNavigation(this.navigation,()=>[...this.boat.collisionBoxes,...this.vehicleObstacles('farm.tractor'),...this.implements.filter(i=>!this.hitches?.isAttached(i.id)).map(i=>i.collision)],this.models,model,()=>[...this.boat.collisionBoxes,...this.vehicleObstacles('farm.tractor'),...this.implements.map(i=>i.collision)]);
+    const tractor=new TractorVehicle(model,navigation);this.vehicles.push(tractor);
+    const combineModel=this.models.placements.get('combine')!;
+    const combineNavigation=new FarmVehicleNavigation(this.navigation,()=>[...this.boat.collisionBoxes,...this.vehicleObstacles(COMBINE_DEFINITION.id),...this.implements.map(i=>i.collision)],this.models,combineModel,undefined,COMBINE_DEFINITION.hull);
+    this.combine=new CombineVehicle(combineModel,combineNavigation);this.vehicles.push(this.combine);
+    for(const definition of IMPLEMENTS){const args=[definition,this.models.placements.get(definition.placementId)!,FARM_ASSET_BOUNDS.get(definition.asset)!,navigation] as const;const tool=definition.id==='farm.trailer'?new TrailerVehicle(...args):new ImplementVehicle(...args);this.implements.push(tool);if(tool instanceof TrailerVehicle)this.trailer=tool;}
+    this.hitches=new HitchSystem(tractor,this.implements,navigation,()=>this.gameplay?.requestSave(true));this.root.add(this.hitches.presentation);
+    this.interaction.setVehicles(this.vehicles);this.interaction.setHitches(this.hitches);this.root.userData.modelsReady=true;
+  }
+  private vehicleObstacles(exclude:string){return this.restoringVehicles?[]:this.vehicles.filter(v=>v.id!==exclude).map(v=>v.collision);}
+  enter({gameplay}:WorldEnterContext){
+    this.gameplay=gameplay;this.hitches?.setWork(new PlowingSystem(gameplay.farm),new SeedingSystem(gameplay.farm,gameplay.inventory));
+    this.trailer?.bindCargo(gameplay,()=>this.hitches?.record(),()=>this.hitches?.isAttached('farm.trailer')?this.vehicles[0].speed:0);
+    // Restore the whole fleet before using its dynamic colliders. An old default
+    // parking position must not reject another vehicle's valid saved position.
+    this.restoringVehicles=true;
+    try{this.hitches?.bind(gameplay.vehicles);for(const vehicle of this.vehicles)if(vehicle instanceof CombineVehicle)vehicle.bindGameplay(gameplay);else vehicle.bind(gameplay.vehicles);}finally{this.restoringVehicles=false;}
+    this.hitches?.restore();this.interaction.bind(gameplay);this.crops.refresh(gameplay,true);
+    if(this.combine&&this.trailer&&this.hitches){this.transport=new FarmTransportSystem(gameplay,this.combine,this.trailer,this.vehicles[0],()=>this.hitches!.isAttached('farm.trailer'));this.combine.setTransport({hint:()=>this.transport!.combineHint,unload:()=>this.transport!.unloadCombine()});this.hitches.setTransport({hint:()=>this.transport!.trailerHint,unload:()=>this.transport!.unloadTrailer()});this.interaction.setTrailer(this.trailer);}
+  }
   prepare(c:WorldUpdateContext){this.boat.update(c.time,c.storm);}
-  update(c:WorldUpdateContext){this.ocean.update(c.time,c.storm);this.boat.update(c.time,c.storm);this.models.update(c.time);}
+  update(c:WorldUpdateContext){
+    this.ocean.update(c.time,c.storm);this.boat.update(c.time,c.storm);this.models.update(c.time);for(const tool of this.implements)tool.updateVisual(c.delta);this.combine?.updateVisual(c.delta);
+    if(this.gameplay){this.crops.refresh(this.gameplay);if(c.player)this.interaction.update(c.player);this.crops.focus(this.gameplay,c.player?this.interaction.activeCell:null);}
+  }
   leave({gameTime}:WorldLeaveContext){return {lastSimulatedGameTime:gameTime,discoveries:[]};}
   dispose(){this.disposed=true;this.assets.cancel();disposeWorld(this.root);}
   getSpawnPoint(id=FARM_ARRIVAL.id):SpawnPoint{return {id,position:[...FARM_ARRIVAL.position],lookAt:[...FARM_ARRIVAL.lookAt]};}

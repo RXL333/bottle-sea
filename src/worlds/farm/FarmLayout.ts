@@ -1,4 +1,4 @@
-import { FARM_ASSET_BOUNDS,FARM_DOCK,FARM_GROUND,FARM_SIGNS,FARM_VEHICLE_SCALE,farmZone,rectBounds } from './FarmMap';
+import { FARM_ASSET_BOUNDS,FARM_DOCK,FARM_GROUND,FARM_SEED_SUPPLY,FARM_SIGNS,FARM_VEHICLE_SCALE,farmZone,rectBounds } from './FarmMap';
 import type { FarmAssetId } from './FarmAssets';
 import type { FarmRect } from './FarmMap';
 import { farmGroundHeight } from './FarmTopography';
@@ -13,8 +13,8 @@ export const FARM_PLACEMENTS:FarmPlacement[]=[
   {id:'cottage',asset:'farmhouse',...COTTAGE,zoneId:'cottage'},
   {id:'bed',asset:'bed',x:COTTAGE.x+.44,z:COTTAGE.z+.64,y:COTTAGE.floor,scale:.33,yaw:Math.PI,solid:true,zoneId:'cottage'},
   {id:'shed',asset:'tool_shed',x:shedZone.x,z:shedZone.z,scale:1,yaw:Math.PI,zoneId:'shed'},
-  // Mechanical props keep their own transform and identity for a future Vehicle System.
-  {id:'combine',asset:'combine_harvester',x:-25,z:2.6,y:FARM_GROUND+.18,scale:FARM_VEHICLE_SCALE,yaw:Math.PI,solid:true,independent:true,zoneId:'shed'},
+  // Machines retain individual transforms for driving and implement attachment.
+  {id:'combine',asset:'combine_harvester',x:-25,z:0,scale:FARM_VEHICLE_SCALE,yaw:Math.PI,solid:true,independent:true,zoneId:'shed'},
   {id:'yard-tractor',asset:'tractor',x:-20.5,z:2,scale:FARM_VEHICLE_SCALE,yaw:Math.PI,solid:true,independent:true,zoneId:'machinery-yard'},
   {id:'trailer',asset:'farm_trailer',x:-17.5,z:2.3,scale:FARM_VEHICLE_SCALE,yaw:Math.PI,solid:true,independent:true,zoneId:'machinery-yard'},
   {id:'seeder',asset:'seeder',x:-14.5,z:2,scale:FARM_VEHICLE_SCALE,yaw:Math.PI,solid:true,independent:true,zoneId:'machinery-yard'},
@@ -60,7 +60,9 @@ export function placedBox(p:Pick<FarmPlacement,'x'|'z'|'scale'|'y'|'yaw'>,min:re
   return {minX:Math.min(...xs),maxX:Math.max(...xs),minZ:Math.min(...zs),maxZ:Math.max(...zs),minY:(p.y??FARM_GROUND)+min[1]*p.scale,maxY:(p.y??FARM_GROUND)+max[1]*p.scale};
 }
 function assetBox(p:FarmPlacement){const b=FARM_ASSET_BOUNDS.get(p.asset)!;return placedBox(p,[b.min[0],b.min[2],-b.max[1]],[b.max[0],b.max[2],-b.min[1]]);}
-export const FARM_OBSTACLES:FarmObstacle[]=FARM_PLACEMENTS.filter(p=>p.solid).map(assetBox);
+// Vehicles and implements have moving colliders owned by FarmWorld.
+export const FARM_OBSTACLES:FarmObstacle[]=FARM_PLACEMENTS.filter(p=>p.solid&&!['yard-tractor','combine','plow','seeder','trailer'].includes(p.id)).map(assetBox);
+FARM_OBSTACLES.push({...rectBounds(FARM_SEED_SUPPLY),minY:FARM_GROUND,maxY:FARM_GROUND+FARM_SEED_SUPPLY.height});
 const cottage=FARM_PLACEMENTS.find(p=>p.id==='cottage')!;
 for(const [min,max] of [
   [[-1.72,.36,-1.76],[-1.62,2.64,1.76]],[[1.62,.36,-1.76],[1.72,2.64,1.76]],

@@ -13,6 +13,10 @@ import type { GameplaySnapshot } from '../gameplay/GameplayFoundation';
 import { normalizeHome } from '../gameplay/HomeSystem';
 import { normalizeFishing } from '../gameplay/FishingSystem';
 import { normalizeHotbar } from '../gameplay/Hotbar';
+import { getCropRegistry } from '../gameplay/farm/CropRegistry';
+import { normalizeFarm } from '../gameplay/farm/FarmState';
+import { normalizeVehicles } from '../gameplay/vehicles/VehicleState';
+import { BARN_CAPACITY } from '../gameplay/vehicles/GrainTank';
 export const SAVE_KEY='bottle-sea.save.v2';
 export const LEGACY_SAVE_KEY='bottle-sea.save.v1';
 export interface SaveData extends GameplaySnapshot {
@@ -22,7 +26,8 @@ export interface SaveData extends GameplaySnapshot {
 }
 export interface SaveStorage { getItem(key: string): string | null; setItem(key: string, value: string): void }
 export function defaultSave(items:ItemRegistry=ITEMS): SaveData {
-  return {version:2,gameTime:new GameClock().snapshot(),player:defaultPlayerState(),worlds:new WorldStateRegistry().snapshot(),lastSuccessfulWorld:'HOME',global:{storm:false,intensity:0,quality:'MEDIUM'},inventory:new Inventory(items).snapshot(),progress:defaultPlayerProgressState(),home:normalizeHome(undefined,items),fishing:normalizeFishing(undefined,items),hotbar:normalizeHotbar(undefined,items)};
+  const gameTime=new GameClock().snapshot();
+  return {version:2,gameTime,player:defaultPlayerState(),worlds:new WorldStateRegistry().snapshot(),lastSuccessfulWorld:'HOME',global:{storm:false,intensity:0,quality:'MEDIUM'},inventory:new Inventory(items).snapshot(),barn:new Inventory(items,BARN_CAPACITY).snapshot(),progress:defaultPlayerProgressState(),home:normalizeHome(undefined,items),fishing:normalizeFishing(undefined,items),hotbar:normalizeHotbar(undefined,items),farm:normalizeFarm(undefined,getCropRegistry(items),gameTime.simulationTime),vehicles:normalizeVehicles(undefined)};
 }
 const record=(value: unknown): Record<string,unknown> => value!==null && typeof value==='object' && !Array.isArray(value) ? value as Record<string,unknown> : {};
 // Version routing is intentionally small; unknown future schemas are not guessed.
@@ -34,6 +39,10 @@ export function migrateSave(value: unknown,items:ItemRegistry=ITEMS): SaveData {
   result.home=normalizeHome(raw.version===2?raw.home:undefined,items);
   result.fishing=normalizeFishing(raw.version===2?raw.fishing:undefined,items);
   result.hotbar=normalizeHotbar(raw.version===2?raw.hotbar:undefined,items);
+  // Restore the calendar first; serialized agricultural stages are only caches.
+  result.farm=normalizeFarm(raw.version===2?raw.farm:undefined,getCropRegistry(items),result.gameTime.simulationTime);
+  result.vehicles=normalizeVehicles(raw.version===2?raw.vehicles:undefined);
+  result.barn=normalizeInventory(raw.version===2?raw.barn:undefined,items,BARN_CAPACITY);
   const player=record(raw.player),worlds=new WorldStateRegistry();worlds.restore(record(raw.worlds));result.worlds=worlds.snapshot();
   const last=raw.lastSuccessfulWorld??player.currentWorldId;
   result.lastSuccessfulWorld=last==='FARM'?'FARM':'HOME';

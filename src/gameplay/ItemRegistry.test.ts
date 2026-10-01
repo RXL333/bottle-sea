@@ -15,7 +15,7 @@ it('registers stable immutable definitions without sharing returned lists', () =
   list.pop();
   expect(registry.list()).toHaveLength(1);
   expect(() => registry.register({ ...item,name:'duplicate' })).toThrow('already registered');
-  expect(createItemRegistry().list().map(item => item.id)).toEqual(['wood', 'stone',...FISH.map(f=>f.id),...FOODS.map(f=>f.id)]);
+  expect(createItemRegistry().list().map(item => item.id)).toEqual(['wood', 'stone',...FISH.map(f=>f.id),...FOODS.map(f=>f.id),'seed.wheat','seed.corn','seed.potato','crop.wheat','crop.corn','crop.potato']);
 });
 
 it.each([

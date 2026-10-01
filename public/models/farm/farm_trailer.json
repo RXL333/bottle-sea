@@ -26,15 +26,18 @@
   "units": "meters",
   "pivot": "ground",
   "parts": {
-    "wheel_-1_-0": "farm_trailer__wheel_-1_-0",
-    "wheel_-1_0": "farm_trailer__wheel_-1_0",
+    "Hitch_Front": "farm_trailer__Hitch_Front",
+    "wheel_1_0": "farm_trailer__wheel_1_0",
     "wheel_1_-0": "farm_trailer__wheel_1_-0",
-    "wheel_1_0": "farm_trailer__wheel_1_0"
+    "wheel_-1_0": "farm_trailer__wheel_-1_0",
+    "wheel_-1_-0": "farm_trailer__wheel_-1_-0"
   },
   "triangles": 3356,
   "meshCount": 28,
-  "bytes": 180340,
-  "notes": [],
+  "bytes": 180484,
+  "notes": [
+    "Hitch_Front coupling anchor retained for implement attachment."
+  ],
   "animation": "semantic pivot nodes only; no animation clips",
   "license": "Original authored geometry; no third-party model dependencies",
   "preview": "previews/farm_trailer.png",

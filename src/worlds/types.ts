@@ -5,6 +5,9 @@ import type { Group, Vector3 } from 'three';
 import type { Quality } from '../core/Renderer';
 import type { WorldState } from '../state/WorldStateRegistry';
 import type { GameplayServices } from '../gameplay/GameplayFoundation';
+import type { DriveableVehicle } from '../systems/vehicles/Vehicle';
+import type { Inventory } from '../gameplay/Inventory';
+export interface WorldStorageContainer {id:string;name:string;inventory:Inventory;partialTransfers?:boolean}
 export type WorldId = 'HOME' | 'TRAVEL' | 'FARM' | 'COTTAGE';
 export interface SpawnPoint { id: string; position: [number,number,number]; lookAt: [number,number,number] }
 export interface WorldLoadContext { gameTime: number }
@@ -17,6 +20,8 @@ export interface GameWorld {
   readonly navigation?: NavigationSurface;
   readonly interaction?: InteractionSystem;
   readonly boat?: PlayerTravelBoat;
+  readonly vehicles?:readonly DriveableVehicle[];
+  readonly storageContainers?:readonly WorldStorageContainer[];
   prepare?(context: WorldUpdateContext):void;
   triggerDiscovery?(id:string):void;
   getFocusPosition?():Vector3;

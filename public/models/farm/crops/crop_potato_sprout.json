@@ -1,0 +1,43 @@
+{
+  "number": 49,
+  "id": "crop_potato_sprout",
+  "label": "土豆 · 幼苗",
+  "file": "crop_potato_sprout.glb",
+  "blend": "crop_potato_sprout.blend",
+  "dimensions": {
+    "width": 0.4882,
+    "height": 0.0965,
+    "depth": 0.4603
+  },
+  "boundsBlender": {
+    "min": [
+      -0.25356200337409973,
+      -0.19844181835651398,
+      0.02499999850988388
+    ],
+    "max": [
+      0.2346491813659668,
+      0.2618367671966553,
+      0.12150000035762787
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 324,
+  "meshCount": 2,
+  "bytes": 17664,
+  "notes": [
+    "One 1m farm cell; ground pivot; native flat-shaded solids",
+    "No terrain, collision, alpha cards, external textures or gameplay state"
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "cropId": "potato",
+  "stageId": "sprout",
+  "resourceId": "crop.potato.sprout"
+}

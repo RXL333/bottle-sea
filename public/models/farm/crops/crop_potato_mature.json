@@ -1,0 +1,43 @@
+{
+  "number": 51,
+  "id": "crop_potato_mature",
+  "label": "土豆 · 成熟",
+  "file": "crop_potato_mature.glb",
+  "blend": "crop_potato_mature.blend",
+  "dimensions": {
+    "width": 0.8299,
+    "height": 0.3173,
+    "depth": 0.8367
+  },
+  "boundsBlender": {
+    "min": [
+      -0.4558657109737396,
+      -0.38896444439888,
+      0.025000005960464478
+    ],
+    "max": [
+      0.37407803535461426,
+      0.44769373536109924,
+      0.3422600030899048
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 1860,
+  "meshCount": 6,
+  "bytes": 94788,
+  "notes": [
+    "One 1m farm cell; ground pivot; native flat-shaded solids",
+    "No terrain, collision, alpha cards, external textures or gameplay state"
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "cropId": "potato",
+  "stageId": "mature",
+  "resourceId": "crop.potato.mature"
+}

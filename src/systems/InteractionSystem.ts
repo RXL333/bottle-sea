@@ -88,10 +88,10 @@ export class InteractionSystem {
   }
 
   /** The only execution path for E: recheck distance, availability and async ownership. */
-  async interact(context: InteractionContext, actions?: InteractionActions): Promise<InteractionResult> {
+  async interact(context: InteractionContext, actions?: InteractionActions, targetId?:string): Promise<InteractionResult> {
     if (this.busy) return { status: 'busy' };
     this.update(context.position);
-    const target = this.nearest;
+    const target = targetId?this.targets.find(t=>t.id===targetId&&Number.isFinite(t.range??.85)&&(t.range??.85)>0&&Math.hypot(context.position.x-t.x,context.position.y-t.y,context.position.z-t.z)<(t.range??.85)):this.nearest;
     if (!target) return { status: 'no-target', message: '靠近可交互物件后，按 E 交互。' };
     this.running = true;
     try {

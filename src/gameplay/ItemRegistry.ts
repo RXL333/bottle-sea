@@ -20,6 +20,7 @@ export class ItemRegistry {
       ||!item.description.trim()||!item.icon.trim()||!Number.isSafeInteger(item.maxStack)||item.maxStack<1||item.maxStack>MAX_STACK_SIZE
       ||(item.energyRestore!==undefined&&(!Number.isFinite(item.energyRestore)||item.energyRestore<0))
       ||(item.sellPrice!==undefined&&(!Number.isSafeInteger(item.sellPrice)||item.sellPrice<0))
+      ||(item.cropId!==undefined&&!/^[a-z][a-z0-9_.-]*$/.test(item.cropId))
       ||(item.fishing&&(!Number.isFinite(item.fishing.weight)||item.fishing.weight<=0||!item.fishing.color.trim())))throw new Error(`Invalid item definition: ${item.id}`);
     if(this.definitions.has(item.id))throw new Error(`Item already registered: ${item.id}`);
     this.definitions.set(item.id,Object.freeze({...item,...(item.fishing?{fishing:Object.freeze({...item.fishing})}:{})}));return this;
@@ -44,6 +45,12 @@ export const ITEM_DEFINITIONS:readonly ItemDefinition[]=[
   {id:'food.seafood_soup',name:'海鲜汤',category:'food',description:'两条鲜鱼煮成的暖汤，能恢复更多体力。',icon:'seafood-soup',maxStack:10,energyRestore:45},
   {id:'food.pan_sea_bass',name:'香煎鲈鱼',category:'food',description:'用海鲈鱼煎制的料理，外酥里嫩。',icon:'pan-sea-bass',maxStack:10,energyRestore:35},
   {id:'food.smoked_fish',name:'烟熏鱼',category:'food',description:'木材慢熏的鱼肉，带着淡淡烟香。',icon:'smoked-fish',maxStack:10,energyRestore:30},
+  {id:'seed.wheat',name:'小麦种子',category:'seed',description:'可播种在已耕土地上的小麦种子，每个单元消耗一份。',icon:'wheat-seed',maxStack:99,cropId:'wheat'},
+  {id:'seed.corn',name:'玉米种子',category:'seed',description:'可播种在已耕土地上的玉米种子，每个单元消耗一份。',icon:'corn-seed',maxStack:99,cropId:'corn'},
+  {id:'seed.potato',name:'土豆种薯',category:'seed',description:'留作播种的土豆种薯，每个已耕单元消耗一份。',icon:'potato-seed',maxStack:99,cropId:'potato'},
+  {id:'crop.wheat',name:'小麦',category:'crop',description:'收获的金黄麦穗，可用于后续加工和交易。',icon:'wheat',maxStack:99,cropId:'wheat'},
+  {id:'crop.corn',name:'玉米',category:'crop',description:'收获的饱满玉米，可用于后续料理和交易。',icon:'corn',maxStack:99,cropId:'corn'},
+  {id:'crop.potato',name:'土豆',category:'crop',description:'从土中收获的土豆，可用于后续料理和交易。',icon:'potato',maxStack:99,cropId:'potato'},
 ];
 export function createItemRegistry(){const registry=new ItemRegistry();for(const item of ITEM_DEFINITIONS)registry.register(item);return registry;}
 export const ITEMS=createItemRegistry();

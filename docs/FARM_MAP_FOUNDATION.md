@@ -4,6 +4,10 @@
 
 所有尺寸均为项目世界单位，不直接等同于现实米。HomeWorld / TravelWorld / WorldManager 的生命周期、旅行流程、玩法状态和存档格式保持原接口。
 
+后续 [Farm / Crop 数据基础](FARM_CROP_DATA.md) 已抽出共享 `gameplay/farm/FarmDefinition`，FarmMap 从同一来源生成三块田的范围与网格，原有布局与尺寸保持一致。农业运行状态由全局 GameplayFoundation 保存，地图仍不负责种植逻辑或成长计时。下文记录地图阶段交付。
+
+[手工农业](MANUAL_FARMING.md) 现已使用三块主田网格，并在中心主路西侧加入一次性初始种子箱与路标；农机、畜牧及扩田预留仍保持原阶段范围。
+
 ## 分区
 
 | 区域 | 中心 X / Z | 尺寸 | 当前内容 |
@@ -79,3 +83,9 @@ Game 仅针对 FARM 扩大阴影覆盖、调整远景雾密度，并让局部雨
 - `/?world=farm&view=farm-pasture&hour=12`：牧场入口。
 
 布局平面图见 [FARM_MAP_LAYOUT.svg](FARM_MAP_LAYOUT.svg)，与本轮空间定义对应。
+
+## 联合收割机阶段（2026-10-01）
+
+联合收割机现可驾驶、收割成熟小麦 / 玉米并向谷仓卸货，原静态碰撞改为随车动态碰撞；停放于农机棚门前地面，谷仓门前增加虚线卸货区。操作、容量、存档及本阶段验证见 [COMBINE_HARVESTING.md](COMBINE_HARVESTING.md)。其余预留区域与多世界旅行架构不变。
+
+拖车现在复用后挂点运输货物，收割机卸粮口对准停稳车厢装粮，车厢停入同一谷仓卸货区后卸入仓库。地图无需新增区域，操作与容量规则见 [TRAILER_TRANSPORT.md](TRAILER_TRANSPORT.md)。

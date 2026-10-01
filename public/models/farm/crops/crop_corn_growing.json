@@ -1,0 +1,43 @@
+{
+  "number": 46,
+  "id": "crop_corn_growing",
+  "label": "玉米 · 生长",
+  "file": "crop_corn_growing.glb",
+  "blend": "crop_corn_growing.blend",
+  "dimensions": {
+    "width": 0.7232,
+    "height": 0.6011,
+    "depth": 0.6038
+  },
+  "boundsBlender": {
+    "min": [
+      -0.3616149127483368,
+      -0.3069142997264862,
+      0.02499997615814209
+    ],
+    "max": [
+      0.3616149127483368,
+      0.29691430926322937,
+      0.6261000037193298
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 344,
+  "meshCount": 3,
+  "bytes": 19372,
+  "notes": [
+    "One 1m farm cell; ground pivot; native flat-shaded solids",
+    "No terrain, collision, alpha cards, external textures or gameplay state"
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "cropId": "corn",
+  "stageId": "growing",
+  "resourceId": "crop.corn.growing"
+}

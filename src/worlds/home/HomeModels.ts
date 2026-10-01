@@ -1,4 +1,4 @@
-import { Box3,Group,Mesh,MeshStandardMaterial,Object3D } from 'three';
+import { Box3,Group,Matrix4,Mesh,MeshStandardMaterial,Object3D } from 'three';
 import type { BoxObstacle } from '../../world/Collision';
 import type { World } from '../../world/World';
 import { seededRandom } from '../../utils/voxel';
@@ -32,13 +32,28 @@ export class HomeModels extends Group {
   instance(id:string){const source=this.templates.get(id);if(!source)throw new Error(`Missing home model ${id}`);return source.clone(true);}
   private solid(object:Object3D){object.updateWorldMatrix(true,true);const b=new Box3().setFromObject(object);this.colliders.push({minX:b.min.x,maxX:b.max.x,minY:b.min.y,maxY:b.max.y,minZ:b.min.z,maxZ:b.max.z});}
   private slab(minX:number,maxX:number,minY:number,maxY:number,minZ:number,maxZ:number){this.colliders.push({minX,maxX,minY,maxY,minZ,maxZ});}
+  private closeCottageDoor(door:Object3D){
+    door.rotation.y=0;door.updateWorldMatrix(true,true);
+    const inverse=new Matrix4().copy(door.matrixWorld).invert(),panel=new Box3();
+    door.traverse(o=>{
+      if(!(o instanceof Mesh)||!(o.material instanceof MeshStandardMaterial)||o.material.name!=='Main_wood')return;
+      o.geometry.computeBoundingBox();
+      if(o.geometry.boundingBox)panel.union(o.geometry.boundingBox.clone().applyMatrix4(new Matrix4().multiplyMatrices(inverse,o.matrixWorld)));
+    });
+    if(panel.isEmpty())return;
+    // The authored opening spans [-.66,.34]. Overlap each jamb by .02 so the
+    // closed door also seals the old, narrower GLB without showing its interior.
+    const left=-.68,right=.36,width=panel.max.x-panel.min.x;
+    if(width<=0)return;
+    door.scale.x=(right-left)/width;door.position.x=left-panel.min.x*door.scale.x;door.updateMatrix();
+  }
   private place(id:string,x:number,y:number,z:number,scale:number,yaw=0,parent:Group=this){const model=this.instance(id);model.name=`Home_${id}`;model.position.set(x,y,z);model.scale.setScalar(scale);model.rotation.y=yaw;model.traverse(o=>{o.castShadow=true;o.receiveShadow=true;});parent.add(model);return model;}
   build(world:World){
     const island=world.island;
     island.getObjectByName('LegacyIslandProps')!.visible=false;island.crowns.forEach(g=>g.visible=false);
     for(const child of island.house.children)child.visible=false;
     const house=this.place('house',0,0,0,.4,0,island.house);
-    house.traverse(o=>{if(o.userData.part_id==='front_door')o.rotation.y=0;if(o instanceof Mesh&&o.material instanceof MeshStandardMaterial&&o.material.name==='Main_glass'){o.material=o.material.clone();o.material.emissive.set('#ffc26c');this.windows.push(o.material);}});
+    house.traverse(o=>{if(o.userData.part_id==='front_door')this.closeCottageDoor(o);if(o instanceof Mesh&&o.material instanceof MeshStandardMaterial&&o.material.name==='Main_glass'){o.material=o.material.clone();o.material.emissive.set('#ffc26c');this.windows.push(o.material);}});
     house.traverse(o=>{if(['palm_left','palm_right'].includes(o.userData.part_id))o.visible=false;});
     for(const [x,z] of [[-2.7,-.5],[-1.4,-1.35]]){this.place('palm',x,3.44,z,.28);this.slab(x-.05,x+.09,3.44,4.40,z-.05,z+.05);}
     this.solid(this.place('bed',-1.94,3.97,-.40,.23));

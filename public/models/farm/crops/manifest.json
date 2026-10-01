@@ -1,0 +1,524 @@
+{
+  "version": 1,
+  "style": "Voxel / Low Poly, farm palette, solid flat-shaded meshes",
+  "assets": [
+    {
+      "number": 40,
+      "id": "crop_wheat_seed",
+      "label": "小麦 · 刚播种",
+      "file": "crop_wheat_seed.glb",
+      "blend": "crop_wheat_seed.blend",
+      "dimensions": {
+        "width": 0.62,
+        "height": 0.0435,
+        "depth": 0.41
+      },
+      "boundsBlender": {
+        "min": [
+          -0.3100000023841858,
+          -0.19499999284744263,
+          0.019999997690320015
+        ],
+        "max": [
+          0.3100000023841858,
+          0.2150000035762787,
+          0.06350000202655792
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 72,
+      "meshCount": 2,
+      "bytes": 5824,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "wheat",
+      "stageId": "seed",
+      "resourceId": "crop.wheat.seed"
+    },
+    {
+      "number": 41,
+      "id": "crop_wheat_sprout",
+      "label": "小麦 · 幼苗",
+      "file": "crop_wheat_sprout.glb",
+      "blend": "crop_wheat_sprout.blend",
+      "dimensions": {
+        "width": 0.5818,
+        "height": 0.1089,
+        "depth": 0.522
+      },
+      "boundsBlender": {
+        "min": [
+          -0.2877372205257416,
+          -0.27279672026634216,
+          0.02499999850988388
+        ],
+        "max": [
+          0.29410263895988464,
+          0.24919341504573822,
+          0.133868008852005
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 456,
+      "meshCount": 3,
+      "bytes": 24940,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "wheat",
+      "stageId": "sprout",
+      "resourceId": "crop.wheat.sprout"
+    },
+    {
+      "number": 42,
+      "id": "crop_wheat_growing",
+      "label": "小麦 · 生长",
+      "file": "crop_wheat_growing.glb",
+      "blend": "crop_wheat_growing.blend",
+      "dimensions": {
+        "width": 0.6472,
+        "height": 0.4318,
+        "depth": 0.5957
+      },
+      "boundsBlender": {
+        "min": [
+          -0.32296493649482727,
+          -0.3068980276584625,
+          0.025000005960464478
+        ],
+        "max": [
+          0.3242235481739044,
+          0.28883492946624756,
+          0.45680001378059387
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 528,
+      "meshCount": 3,
+      "bytes": 28848,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "wheat",
+      "stageId": "growing",
+      "resourceId": "crop.wheat.growing"
+    },
+    {
+      "number": 43,
+      "id": "crop_wheat_mature",
+      "label": "小麦 · 成熟",
+      "file": "crop_wheat_mature.glb",
+      "blend": "crop_wheat_mature.blend",
+      "dimensions": {
+        "width": 0.6472,
+        "height": 0.775,
+        "depth": 0.5957
+      },
+      "boundsBlender": {
+        "min": [
+          -0.32296493649482727,
+          -0.3068980276584625,
+          0.02499997615814209
+        ],
+        "max": [
+          0.3242235481739044,
+          0.28883492946624756,
+          0.8000340461730957
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 1680,
+      "meshCount": 3,
+      "bytes": 91036,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "wheat",
+      "stageId": "mature",
+      "resourceId": "crop.wheat.mature"
+    },
+    {
+      "number": 44,
+      "id": "crop_corn_seed",
+      "label": "玉米 · 刚播种",
+      "file": "crop_corn_seed.glb",
+      "blend": "crop_corn_seed.blend",
+      "dimensions": {
+        "width": 0.62,
+        "height": 0.0435,
+        "depth": 0.41
+      },
+      "boundsBlender": {
+        "min": [
+          -0.3100000023841858,
+          -0.19499999284744263,
+          0.019999997690320015
+        ],
+        "max": [
+          0.3100000023841858,
+          0.2150000035762787,
+          0.06350000202655792
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 72,
+      "meshCount": 2,
+      "bytes": 5824,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "corn",
+      "stageId": "seed",
+      "resourceId": "crop.corn.seed"
+    },
+    {
+      "number": 45,
+      "id": "crop_corn_sprout",
+      "label": "玉米 · 幼苗",
+      "file": "crop_corn_sprout.glb",
+      "blend": "crop_corn_sprout.blend",
+      "dimensions": {
+        "width": 0.609,
+        "height": 0.1515,
+        "depth": 0.5533
+      },
+      "boundsBlender": {
+        "min": [
+          -0.3045123517513275,
+          -0.2816614806652069,
+          0.02500000223517418
+        ],
+        "max": [
+          0.3045123517513275,
+          0.2716614902019501,
+          0.17650000751018524
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 216,
+      "meshCount": 2,
+      "bytes": 12532,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "corn",
+      "stageId": "sprout",
+      "resourceId": "crop.corn.sprout"
+    },
+    {
+      "number": 46,
+      "id": "crop_corn_growing",
+      "label": "玉米 · 生长",
+      "file": "crop_corn_growing.glb",
+      "blend": "crop_corn_growing.blend",
+      "dimensions": {
+        "width": 0.7232,
+        "height": 0.6011,
+        "depth": 0.6038
+      },
+      "boundsBlender": {
+        "min": [
+          -0.3616149127483368,
+          -0.3069142997264862,
+          0.02499997615814209
+        ],
+        "max": [
+          0.3616149127483368,
+          0.29691430926322937,
+          0.6261000037193298
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 344,
+      "meshCount": 3,
+      "bytes": 19372,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "corn",
+      "stageId": "growing",
+      "resourceId": "crop.corn.growing"
+    },
+    {
+      "number": 47,
+      "id": "crop_corn_mature",
+      "label": "玉米 · 成熟",
+      "file": "crop_corn_mature.glb",
+      "blend": "crop_corn_mature.blend",
+      "dimensions": {
+        "width": 0.7919,
+        "height": 0.98,
+        "depth": 0.7061
+      },
+      "boundsBlender": {
+        "min": [
+          -0.3959744870662689,
+          -0.3580624759197235,
+          0.02499997615814209
+        ],
+        "max": [
+          0.3959744870662689,
+          0.3480624854564667,
+          1.0049999952316284
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 936,
+      "meshCount": 6,
+      "bytes": 53492,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "corn",
+      "stageId": "mature",
+      "resourceId": "crop.corn.mature"
+    },
+    {
+      "number": 48,
+      "id": "crop_potato_seed",
+      "label": "土豆 · 刚播种",
+      "file": "crop_potato_seed.glb",
+      "blend": "crop_potato_seed.blend",
+      "dimensions": {
+        "width": 0.62,
+        "height": 0.057,
+        "depth": 0.41
+      },
+      "boundsBlender": {
+        "min": [
+          -0.3100000023841858,
+          -0.19499999284744263,
+          0.019999997690320015
+        ],
+        "max": [
+          0.3100000023841858,
+          0.2150000035762787,
+          0.07699999958276749
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 108,
+      "meshCount": 3,
+      "bytes": 8308,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "potato",
+      "stageId": "seed",
+      "resourceId": "crop.potato.seed"
+    },
+    {
+      "number": 49,
+      "id": "crop_potato_sprout",
+      "label": "土豆 · 幼苗",
+      "file": "crop_potato_sprout.glb",
+      "blend": "crop_potato_sprout.blend",
+      "dimensions": {
+        "width": 0.4882,
+        "height": 0.0965,
+        "depth": 0.4603
+      },
+      "boundsBlender": {
+        "min": [
+          -0.25356200337409973,
+          -0.19844181835651398,
+          0.02499999850988388
+        ],
+        "max": [
+          0.2346491813659668,
+          0.2618367671966553,
+          0.12150000035762787
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 324,
+      "meshCount": 2,
+      "bytes": 17664,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "potato",
+      "stageId": "sprout",
+      "resourceId": "crop.potato.sprout"
+    },
+    {
+      "number": 50,
+      "id": "crop_potato_growing",
+      "label": "土豆 · 生长",
+      "file": "crop_potato_growing.glb",
+      "blend": "crop_potato_growing.blend",
+      "dimensions": {
+        "width": 0.7604,
+        "height": 0.2504,
+        "depth": 0.7572
+      },
+      "boundsBlender": {
+        "min": [
+          -0.4164782166481018,
+          -0.34911784529685974,
+          0.02499999850988388
+        ],
+        "max": [
+          0.34395521879196167,
+          0.40803542733192444,
+          0.27538001537323
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 1656,
+      "meshCount": 3,
+      "bytes": 81860,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "potato",
+      "stageId": "growing",
+      "resourceId": "crop.potato.growing"
+    },
+    {
+      "number": 51,
+      "id": "crop_potato_mature",
+      "label": "土豆 · 成熟",
+      "file": "crop_potato_mature.glb",
+      "blend": "crop_potato_mature.blend",
+      "dimensions": {
+        "width": 0.8299,
+        "height": 0.3173,
+        "depth": 0.8367
+      },
+      "boundsBlender": {
+        "min": [
+          -0.4558657109737396,
+          -0.38896444439888,
+          0.025000005960464478
+        ],
+        "max": [
+          0.37407803535461426,
+          0.44769373536109924,
+          0.3422600030899048
+        ]
+      },
+      "up": "+Y",
+      "forward": "+Z",
+      "units": "meters",
+      "pivot": "ground",
+      "parts": [
+        "body"
+      ],
+      "triangles": 1860,
+      "meshCount": 6,
+      "bytes": 94788,
+      "notes": [
+        "One 1m farm cell; ground pivot; native flat-shaded solids",
+        "No terrain, collision, alpha cards, external textures or gameplay state"
+      ],
+      "animation": "semantic pivot nodes only; no animation clips",
+      "license": "Original authored geometry; no third-party model dependencies",
+      "cropId": "potato",
+      "stageId": "mature",
+      "resourceId": "crop.potato.mature"
+    }
+  ],
+  "sourceScript": "scripts/blender/crop_stages.py",
+  "reviewScene": "assets/blender/farm/crops/crop_stage_gallery.blend"
+}

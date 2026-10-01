@@ -1,0 +1,43 @@
+{
+  "number": 44,
+  "id": "crop_corn_seed",
+  "label": "玉米 · 刚播种",
+  "file": "crop_corn_seed.glb",
+  "blend": "crop_corn_seed.blend",
+  "dimensions": {
+    "width": 0.62,
+    "height": 0.0435,
+    "depth": 0.41
+  },
+  "boundsBlender": {
+    "min": [
+      -0.3100000023841858,
+      -0.19499999284744263,
+      0.019999997690320015
+    ],
+    "max": [
+      0.3100000023841858,
+      0.2150000035762787,
+      0.06350000202655792
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body"
+  ],
+  "triangles": 72,
+  "meshCount": 2,
+  "bytes": 5824,
+  "notes": [
+    "One 1m farm cell; ground pivot; native flat-shaded solids",
+    "No terrain, collision, alpha cards, external textures or gameplay state"
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies",
+  "cropId": "corn",
+  "stageId": "seed",
+  "resourceId": "crop.corn.seed"
+}

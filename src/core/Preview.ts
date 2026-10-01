@@ -1,5 +1,7 @@
 import type { Game } from './Game';
 import { DAY_DURATION } from './GameClock';
+import type { FarmWorld } from '../worlds/farm/FarmWorld';
+import { getImplement } from '../gameplay/vehicles/ImplementRegistry';
 // Development-only reproducible visual checkpoints; no extra controls in the game HUD.
 export function configurePreview(game:Game){
   const params=new URLSearchParams(location.search),hour=Number(params.get('hour'));
@@ -21,6 +23,86 @@ export function configurePreview(game:Game){
     if(id){const spawn=game.worldManager.currentWorld!.getSpawnPoint(id);game.camera.position.fromArray(spawn.position);game.camera.lookAt(...spawn.lookAt);game.explorer.syncLook();}
   }
   if(game.worldManager.currentWorldId==='FARM'){
+    const world=game.worldManager.currentWorld as FarmWorld;
+    const transportView=params.get('view')?.startsWith('farm-transport');
+    if(transportView&&world.combine&&world.trailer){
+      const trailer=world.trailer,tractor=world.vehicles[0],combine=world.combine,barn=params.get('view')==='farm-transport-barn';
+      if(params.get('fixture')==='1'){
+        const pose={x:barn?20:2.1,z:barn?-2.8:-9.59,yaw:0},front=trailer.frontPosition(pose),offset=tractor.hitchPosition('Hitch_Back',{x:0,z:0,yaw:0});
+        game.gameplay.vehicles.record({...combine.snapshot(),x:0,z:-9,yaw:0,workEnabled:false});
+        game.gameplay.vehicles.commitFleet({...tractor.snapshot(),x:front.x-offset.x,z:front.z-offset.z,yaw:0},world.implements.map(i=>i===trailer?{...i.snapshot(),...pose}:i.snapshot()),[{vehicleId:tractor.id,implementId:trailer.id,port:'Hitch_Back'}]);
+        world.enter({gameplay:game.gameplay,gameTime:game.clock.simulationTime,state:{lastSimulatedGameTime:0,discoveries:[]},spawn:world.getSpawnPoint()});
+        // Explicit throwaway-origin fixture only; production never grants cargo.
+        if(params.get('fill')==='1'&&!trailer.cargo.usedQuantity&&!combine.grainTank.used){trailer.cargo.add('crop.corn',100);combine.grainTank.exchange([],[{itemId:'crop.wheat',quantity:60}]);game.gameplay.inventory.add('wood',10);}
+        game.gameplay.requestSave(true);
+      }
+      const driver=barn||params.get('driver')==='tractor'?tractor:combine;
+      const entry=params.get('onfoot')==='1'?trailer.loadingPoint().addScaledVector({x:Math.cos(trailer.pose.yaw),y:0,z:-Math.sin(trailer.pose.yaw)},1):driver.entryPosition();
+      game.camera.position.copy(entry);game.camera.position.y=driver.root.position.y+.44;game.camera.lookAt(params.get('onfoot')==='1'?trailer.loadingPoint():driver.seatPosition());game.explorer.syncLook();
+    }
+    const combineView=params.get('view')?.startsWith('farm-combine');
+    if(combineView&&world.combine){
+      const combine=world.combine;
+      if(params.get('fixture')==='1'){
+        const unloading=params.get('view')==='farm-combine-unload';
+        game.gameplay.vehicles.record({...combine.snapshot(),x:unloading?20:0,z:unloading?-2.8:-9,yaw:unloading?0:Math.PI});combine.bindGameplay(game.gameplay);
+        if(!unloading){
+          const now=game.clock.simulationTime;
+          // An explicit isolated fixture consumes registered seed items normally.
+          // Existing planted/harvested cells are preserved when a fixture is revisited.
+          for(let row=0;row<18;row++)for(const column of [5,6]){
+            const ref={fieldId:'field-central',column,row};if(game.gameplay.farm.getCell(ref)?.landState!=='UNTILLED')continue;
+            const id=row===0?(column===5?'potato':'wheat'):row<8?'corn':'wheat',crop=game.gameplay.crops.registry.get(id)!;
+            game.clock.simulationTime=now-(row===0&&column===6?0:crop.growthGameMinutes*DAY_DURATION/1440);
+            game.gameplay.farm.till([ref]);game.gameplay.inventory.add(crop.seedItemId,1);game.gameplay.farm.seed([ref],id);
+          }
+          game.clock.simulationTime=now;
+        }
+        game.gameplay.requestSave(true);
+      }
+      game.camera.position.copy(combine.entryPosition());game.camera.position.y=combine.root.position.y+.44;game.camera.lookAt(combine.seatPosition());game.explorer.syncLook();
+    }
+    const plowing=params.get('view')==='farm-plowing';
+    const seeding=params.get('view')==='farm-seeding',working=plowing||seeding;
+    const tool=getImplement(seeding?'farm.seeder':plowing?'farm.plow':`farm.${params.get('view')?.replace('farm-hitch-','')}`);
+    if(tool&&(working||params.get('view')?.startsWith('farm-hitch-'))){
+      const tractor=world.vehicles[0],implement=world.implements.find(i=>i.id===tool.id)!;
+      // Explicit isolated DEV fixture, never reset a saved fleet implicitly.
+      if(params.get('fixture')==='1'){
+        const yaw=working?Math.PI:implement.pose.yaw,front=implement.frontPosition(),offset=tractor.hitchPosition('Hitch_Back',{x:0,z:0,yaw});
+        const parent=working?{x:0,z:-9,yaw}:{x:front.x+Math.sin(yaw)*.3-offset.x,z:front.z+Math.cos(yaw)*.3-offset.z,yaw};
+        const joint=tractor.hitchPosition('Hitch_Back',parent),f=implement.frontLocal;
+        const attached={x:joint.x-Math.cos(yaw)*f.x-Math.sin(yaw)*f.z,z:joint.z+Math.sin(yaw)*f.x-Math.cos(yaw)*f.z,yaw,workState:'RAISED' as const};
+        game.gameplay.vehicles.commitFleet({id:tractor.id,worldId:'FARM',...parent},world.implements.map(i=>working&&i.id===tool.id?{...i.snapshot(),...attached}:i.snapshot()),working?[{vehicleId:tractor.id,implementId:tool.id,port:'Hitch_Back'}]:[]);
+        world.hitches!.bind(game.gameplay.vehicles);tractor.bind(game.gameplay.vehicles);world.hitches!.restore();
+        if(seeding){
+          game.gameplay.farm.till(game.gameplay.farm.cellsInArea({kind:'bounds',minX:-6,maxX:6,minZ:-28,maxZ:-10},['UNTILLED','HARVESTED']));
+          if(!game.gameplay.farm.starterSeedsClaimed)game.gameplay.farm.claimStarterSeeds();
+        }
+        if(plowing&&params.get('protect')==='1'){
+          const ref={fieldId:'field-central',column:5,row:9},crop=game.gameplay.crops.registry.get('wheat')!;
+          if(!game.gameplay.farm.getCell(ref)?.crop){
+            const now=game.clock.simulationTime,minutes=crop.stages[2].startsAtGameMinute;game.clock.simulationTime=now-minutes*DAY_DURATION/1440;
+            game.gameplay.farm.till([ref]);game.gameplay.inventory.add(crop.seedItemId,1);game.gameplay.farm.seed([ref],crop.id);game.clock.advanceGameMinutes(minutes);
+          }
+        }
+      }
+      const entry=params.get('onfoot')==='1'?implement.frontPosition().addScaledVector({x:Math.cos(implement.pose.yaw),y:0,z:-Math.sin(implement.pose.yaw)},.9):tractor.entryPosition();game.camera.position.copy(entry);game.camera.position.y=tractor.root.position.y+.44;game.camera.lookAt(params.get('onfoot')==='1'?implement.frontPosition():tractor.seatPosition());game.explorer.syncLook();
+    }
+    if(transportView||combineView||(tool&&(working||params.get('view')?.startsWith('farm-hitch-')))){
+      const controls=document.createElement('details');controls.style.cssText='position:fixed;top:140px;left:18px;z-index:20;background:#142621e6;color:#ffe4a3;padding:10px;border:1px solid #d9bf79';
+      const summary=document.createElement('summary');summary.textContent='开发验证 · 驾驶输入';controls.append(summary);
+      const canvas=game.renderer.domElement,held=new Set<string>();let stopTimer=0;
+      const key=(code:string,down:boolean)=>canvas.dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code,key:code==='Space'?' ':code.replace('Key','').toLowerCase(),bubbles:true}));
+      const drive=(codes:readonly string[])=>{window.clearTimeout(stopTimer);canvas.focus();for(const code of held)key(code,false);held.clear();for(const code of codes){key(code,true);held.add(code);}controls.open=false;};
+      for(const [label,codes] of [['持续前进',['KeyW']],['持续前进左转',['KeyW','KeyA']],['持续倒车',['KeyS']],['持续倒车右转',['KeyS','KeyD']],['停车',['Space']]] as const){
+        const button=document.createElement('button');button.textContent=label;button.style.margin='6px';button.addEventListener('click',()=>drive(codes));controls.append(button);
+      }
+      for(const [label,codes,seconds] of [['前进 3 秒',['KeyW'],3],['前进 6 秒',['KeyW'],6],['倒车 6 秒',['KeyS'],6],['左转 2 秒',['KeyW','KeyA'],2]] as const){
+        const button=document.createElement('button');button.textContent=label;button.style.margin='6px';button.addEventListener('click',()=>{drive(codes);stopTimer=window.setTimeout(()=>drive(['Space']),seconds*1000);});controls.append(button);
+      }
+      document.body.append(controls);
+    }
     const views:Record<string,{position:[number,number,number];target:[number,number,number]}>={
       'farm-overview':{position:[48,65,43],target:[0,4.1,-26]},
       'farm-yard':{position:[-21,4.464,-1],target:[-25,5.2,4]},
