@@ -5,6 +5,8 @@ import { FOCUS_LABELS } from '../systems/SceneFocusSystem';
 import type { PlayerProgress } from '../gameplay/PlayerProgressState';
 import type { GameplayServices } from '../gameplay/GameplayFoundation';
 import type { FishingSystem } from '../gameplay/FishingSystem';
+import { WEATHER_LABELS } from '../systems/WeatherState';
+import type { WeatherKind } from '../systems/WeatherState';
 export class HUD {
   readonly element = document.createElement('div');
   private noticeTimeout=0;
@@ -17,7 +19,7 @@ export class HUD {
       <div class="bottom"><p class="hint" id="hint"><span>ⓘ</span> 点击拖动 · 移动视角 · 探索细节</p><nav class="toolbar" aria-label="世界控制">
         <button data-action="pause" aria-label="暂停时间" title="暂停时间">Ⅱ</button>
         <button data-speed="1" class="selected" aria-pressed="true">x1</button><button data-speed="4" aria-pressed="false">x4</button><button data-speed="12" aria-pressed="false">x12</button>
-        <i></i><button data-action="storm" aria-pressed="false"><span class="icon">♧</span><span>风暴</span></button><button data-action="sound" aria-pressed="false"><span class="icon">♫</span><span>声音</span></button><button data-action="explore" aria-pressed="false"><span class="icon">⌖</span><span>探索模式</span></button><button data-action="inventory">背包 [B]</button><button data-action="food">食物 [F]</button><button data-action="fishing-mode">钓鱼：长按 [R]</button>
+        <i></i><button data-action="storm" aria-pressed="false"><span class="icon">♧</span><span>风暴</span></button><button data-action="sound" aria-pressed="false"><span class="icon">♫</span><span>声音</span></button><button data-action="explore" aria-pressed="false"><span class="icon">⌖</span><span>探索模式</span></button><button data-action="progression">成长 [P]</button><button data-action="inventory">背包 [B]</button><button data-action="food">食物 [F]</button><button data-action="fishing-mode">钓鱼：长按 [R]</button>
       </nav></div><footer class="edition">✧ A SMALL WORLD IN TIME<br><span>VOXEL STORIES / 2026</span></footer><div class="voyage">◆ VOYAGE 01 <span id="fps">· — FPS</span></div>
       <section class="explore-panel" hidden><h2>航 海 手 记 <span id="progress">0 / 4</span></h2><ul id="quests"></ul><div class="key-help"><p><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动</p><p>鼠标 观察 · <kbd>E</kbd> 交互</p><p><kbd>Space</kbd> 跳跃 / 上升</p><p><kbd>C</kbd> 下潜 · <kbd>Shift</kbd> 加速</p><p><kbd>Esc</kbd> 释放鼠标</p></div></section>
       <div id="depth" hidden></div><div id="crosshair" hidden>+</div><div class="interaction-prompt" hidden role="status" aria-live="polite"><kbd>E</kbd><div><small>交互</small><strong></strong></div></div><div id="notice" role="status" aria-live="polite"></div>
@@ -64,10 +66,12 @@ export class HUD {
     if(text.textContent!==label)text.textContent=label;
     const state=prompt.available?'按键交互':'暂不可用';if(status.textContent!==state)status.textContent=state;
   }
-  updateClock(clock:GameClock,storm:boolean) {
+  setWeather(kind:WeatherKind){this.setActive('storm',kind!=='CLEAR');const button=this.element.querySelector<HTMLButtonElement>('[data-action="storm"]')!;button.querySelector('span:last-child')!.textContent=`天气：${WEATHER_LABELS[kind]}`;button.title='切换晴天 / 阴天 / 雨天 / 风暴';}
+  updateClock(clock:GameClock,weather:boolean|WeatherKind) {
+    const kind=typeof weather==='boolean'?weather?'STORM':'CLEAR':weather;this.setWeather(kind);
     this.element.querySelector('#clock')!.textContent=clock.formatted;
-    this.element.querySelector('#day')!.textContent=`第 ${clock.day} 天 · ${storm?'暴风':clock.hour>=19||clock.hour<6?'星夜':'晴天'}`;
-    this.element.querySelector('#forecast')!.textContent=storm?'狂风 · 雷鸣的海':'微风 · 平静的海';
+    this.element.querySelector('#day')!.textContent=`第 ${clock.day} 天 · ${clock.hour>=19||clock.hour<6?'星夜 · ':''}${WEATHER_LABELS[kind]}`;
+    this.element.querySelector('#forecast')!.textContent={CLEAR:'微风 · 晴朗的海',OVERCAST:'云聚 · 柔和天光',RAIN:'细雨 · 湿润的田野',STORM:'强风 · 远处雷鸣'}[kind];
   }
   updateHomeStats(progress:PlayerProgress,inside:boolean){const stats=this.element.querySelector<HTMLElement>('.home-stats')!;stats.hidden=!inside;stats.textContent=`体力 ${Math.round(progress.energy)} / ${progress.maxEnergy}`;}
   updateProductionStats(game:GameplayServices,exploring:boolean){

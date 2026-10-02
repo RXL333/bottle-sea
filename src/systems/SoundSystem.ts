@@ -5,11 +5,13 @@ import type { AudioMix,AudioMode } from './audio/AudioMixer';
 import type { GroundSurface } from './PlayerFeedback';
 import { FarmAudio } from './audio/FarmAudio';
 import type { FarmSoundFrame } from '../worlds/farm/FarmPresentation';
+import type { WeatherFrame } from './WeatherState';
 
 type Layer={source:AudioBufferSourceNode;filter:BiquadFilterNode;gain:GainNode};
 export class SoundSystem {
   private transientNodes=0;
-  get diagnostics(){return {enabled:this.enabled,state:this.context?.state??'uninitialized',layers:this.layers.length,nodes:this.layers.length*3+(this.master?1:0)+(this.lowpass?1:0)+this.transientNodes+(this.farm?.diagnostics.nodes??0),farm:this.farm?.diagnostics??{voices:0,working:0,nodes:0,cues:0}};}
+  get diagnostics(){return {enabled:this.enabled,state:this.context?.state??'uninitialized',mode:this.mode,mix:{...this.mix},layers:this.layers.length,nodes:this.layers.length*3+(this.master?1:0)+(this.lowpass?1:0)+this.transientNodes+(this.farm?.diagnostics.nodes??0),farm:this.farm?.diagnostics??{voices:0,working:0,nodes:0,cues:0}};}
+  private mode:AudioMode='OVERVIEW';
   private farm?:FarmAudio;
   enabled=false;private context:AudioContext|undefined;private master:GainNode|undefined;private lowpass:BiquadFilterNode|undefined;
   private assets=new AudioAssets();private noise:AudioBuffer|undefined;private layers:Layer[]=[];
@@ -31,24 +33,24 @@ export class SoundSystem {
     }
     await this.context.resume();this.enabled=!this.enabled;this.master!.gain.setTargetAtTime(this.enabled?.65:0,this.context.currentTime,.12);return this.enabled;
   }
-  update(time:number,storm:number,mode:AudioMode='OVERVIEW',flash=0){
-    if(!this.context||!this.enabled)return;const now=this.context.currentTime;
-    mixAudio(mode,storm,this.mix);this.gains[0]=this.mix.ocean*(1+Math.sin(time*.6)*.15);this.gains[1]=this.mix.wind;this.gains[2]=this.mix.stormWind;this.gains[3]=this.mix.rain;this.gains[4]=this.mix.underwater;
+  update(time:number,storm:number,mode:AudioMode='OVERVIEW',flash=0,weather?:WeatherFrame){
+    this.mode=mode;if(!this.context||!this.enabled)return;const now=this.context.currentTime;
+    mixAudio(mode,storm,this.mix,weather);this.gains[0]=this.mix.ocean*(1+Math.sin(time*.6)*.15);this.gains[1]=this.mix.wind;this.gains[2]=this.mix.stormWind;this.gains[3]=this.mix.rain;this.gains[4]=this.mix.underwater;
     for(let i=0;i<this.layers.length;i++)this.layers[i].gain.gain.setTargetAtTime(this.gains[i],now,.16);
     this.lowpass!.frequency.setTargetAtTime(this.mix.cutoff,now,.08);
-    if(flash>0&&this.previousFlash===0)this.play('thunder');this.previousFlash=flash;
-    if(time>this.nextBird){this.nextBird=time+25;if(storm<.3&&mode!=='UNDERWATER')this.play('seagull');}
+    if(flash>0&&this.previousFlash===0)this.play('thunder',mode==='INDOOR'?.25:1);this.previousFlash=flash;
+    if(time>this.nextBird){this.nextBird=time+25;if(storm<.3&&(weather?.rain??0)<.2&&mode!=='UNDERWATER'&&mode!=='INDOOR')this.play('seagull');}
   }
   footstep(surface:GroundSurface){this.play(`${surface}-step`);}
   updateFarm(frame?:FarmSoundFrame){
     if(this.enabled&&frame&&!this.farm&&this.context&&this.lowpass&&this.noise)this.farm=new FarmAudio(this.context,this.lowpass,this.noise);
     this.farm?.update(frame,this.enabled);
   }
-  play(id:AudioId){
+  play(id:AudioId,gainScale=1){
     if(!this.context||!this.enabled||!this.lowpass)return;const ctx=this.context,now=ctx.currentTime,gain=ctx.createGain(),filter=ctx.createBiquadFilter();
     const buffer=this.assets.get(id);let source:AudioBufferSourceNode|OscillatorNode;
     const duration=buffer?Math.max(.04,Math.min(buffer.duration,8)):id==='thunder'?1.5:id==='water-enter'?.55:id==='seagull'?.35:id==='ui-discover'?.3:.12;
-    const volume=id==='thunder'?.35:id==='ui-discover'?.055:.12;
+    const volume=(id==='thunder'?.35:id==='ui-discover'?.055:.12)*gainScale;
     if(buffer){const sample=ctx.createBufferSource();sample.buffer=buffer;source=sample;}
     else if(id==='ui-discover'||id==='seagull'){
       const tone=ctx.createOscillator();tone.type='sine';tone.frequency.setValueAtTime(id==='ui-discover'?660:1050,now);tone.frequency.exponentialRampToValueAtTime(id==='ui-discover'?990:700,now+duration);source=tone;

@@ -1,0 +1,14 @@
+{
+  "before": {
+    "gameTime": "3670.889999999926",
+    "quality": "HIGH",
+    "weather": "{\"kind\":\"RAIN\",\"cloud\":0.96,\"rain\":0.74,\"wind\":0.48,\"storm\":0,\"wetness\":0.74,\"windPhase\":62.22552820000005,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":36,\"stars\":160,\"fogNear\":40.079999999999735,\"fogFar\":140.37999999999894,\"skyTop\":\"587a9f\",\"horizon\":\"b0c4cc\"},\"drawCalls\":671,\"triangles\":435182}",
+    "world": "FARM"
+  },
+  "after": {
+    "gameTime": "3776.528099999837",
+    "quality": "HIGH",
+    "weather": "{\"kind\":\"RAIN\",\"cloud\":0.96,\"rain\":0.74,\"wind\":0.48,\"storm\":0,\"wetness\":0.74,\"windPhase\":154.9600638000102,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":36,\"stars\":160,\"fogNear\":40.08,\"fogFar\":140.38,\"skyTop\":\"435164\",\"horizon\":\"6b7883\"},\"drawCalls\":672,\"triangles\":435254}",
+    "world": "FARM"
+  }
+}

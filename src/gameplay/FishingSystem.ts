@@ -1,3 +1,4 @@
+import type { ActivitySink } from './progression/ProgressionRegistry';
 import { fishDefinition } from './FishingCatalog';
 import type { FishDefinition } from './FishingCatalog';
 import type { Inventory } from './Inventory';
@@ -20,7 +21,7 @@ export class FishingSystem {
   private mode:FishingInputMode;private pressing=false;private tensionValue=.5;private catchValue=.25;private zone=.5;private offset=0;private escapeTime=0;
   onEvent:(event:FishingEvent)=>void=()=>{};
   constructor(private inventory:Inventory,private progress:PlayerProgress,saved?:unknown,
-    private onChange:()=>void=()=>{},private random:()=>number=Math.random){
+    private onChange:()=>void=()=>{},private random:()=>number=Math.random,private onActivity:ActivitySink=()=>{}){
     const snapshot=normalizeFishing(saved,inventory.items);this.pending=snapshot.pendingCatch;this.mode=snapshot.inputMode;
   }
   get state(){return this.phase;}
@@ -53,7 +54,7 @@ export class FishingSystem {
     if(this.pending){
       const fish=fishDefinition(this.pending,this.inventory.items)!;this.pending=null;const result=this.inventory.add(fish.id);
       if(!result.ok){this.pending=fish.id;return {status:'unavailable',message:'背包空间不足，请先腾出空位。'};}
-      this.onChange();this.onEvent({kind:'caught',message:`获得 ${fish.name} × 1 · 已放入背包`,fish});return {status:'success'};
+      this.onActivity('fish.catch');this.onChange();this.onEvent({kind:'caught',message:`获得 ${fish.name} × 1 · 已放入背包`,fish});return {status:'success'};
     }
     const pool=this.inventory.items.fish().filter(fish=>this.inventory.canAdd(fish.id));
     let roll=this.roll()*pool.reduce((sum,fish)=>sum+fish.fishing.weight,0);this.hooked=pool.at(-1);
@@ -85,8 +86,10 @@ export class FishingSystem {
     else if(this.phase==='REELING'&&this.elapsed>=1.1){
       const fish=this.hooked!;this.reset();
       const result=this.inventory.add(fish.id);
+      if(!result.ok)this.pending=fish.id;
+      this.onActivity('fish.catch');this.onChange();
       if(result.ok)this.onEvent({kind:'caught',message:`获得 ${fish.name} × 1 · 已放入背包`,fish});
-      else {this.pending=fish.id;this.onChange();this.onEvent({kind:'stored',message:`钓到 ${fish.name}，背包已满；已暂存，腾空后回钓鱼台领取。`,fish});}
+      else this.onEvent({kind:'stored',message:`钓到 ${fish.name}，背包已满；已暂存，腾空后回钓鱼台领取。`,fish});
     }
   }
   cancel(message='已收起鱼竿。'){if(!this.active)return;this.reset();this.onEvent({kind:'cancel',message});}

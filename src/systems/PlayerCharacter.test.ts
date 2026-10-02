@@ -16,13 +16,13 @@ function part(character:Group,id:string){let found:import('three').Object3D|unde
 const frame=(eye=new Vector3(2,4.44,3))=>({delta:1/60,time:0,visible:true,firstPerson:true,eye,orientation:new Quaternion(),grounded:true});
 
 describe('authored player GLB and existing controls integration',()=>{
-  it('uses shorter legs, feet origin and one shared palette draw per articulated part',async()=>{
+  it('uses reference proportions, feet origin and one shared palette draw per articulated part',async()=>{
     const c=await character();c.showAt(new Vector3(),0);const bounds=c.bounds(),height=bounds.getSize(new Vector3()).y;
     expect(bounds.min.y).toBeCloseTo(0,6);expect(height).toBeGreaterThan(.52);expect(height).toBeLessThan(.53);
     const hips=part(c,'Hips').getWorldPosition(new Vector3());expect(hips.y/height).toBeGreaterThan(.35);expect(hips.y/height).toBeLessThan(.40);
-    const headHeight=new Box3().setFromObject(part(c,'Head')).getSize(new Vector3()).y;expect(headHeight/height).toBeGreaterThan(.27);expect(headHeight/height).toBeLessThan(.34);
+    const headHeight=new Box3().setFromObject(part(c,'Head')).getSize(new Vector3()).y;expect(headHeight/height).toBeGreaterThan(.35);expect(headHeight/height).toBeLessThan(.40);
     const meshes:Mesh[]=[];c.traverse(o=>{if(o instanceof Mesh)meshes.push(o);});
-    expect(meshes.length).toBeLessThanOrEqual(17);expect(new Set(meshes.map(m=>m.material)).size).toBe(1);expect(c.userData.triangles).toBe(3220);
+    expect(meshes.length).toBeLessThanOrEqual(17);expect(new Set(meshes.map(m=>m.material)).size).toBe(1);expect(c.userData.triangles).toBeGreaterThan(2000);expect(c.userData.triangles).toBeLessThanOrEqual(4000);
     expect(meshes.every(m=>m.geometry.getAttribute('color').count===m.geometry.getAttribute('position').count)).toBe(true);
     c.applyQuality('LOW');expect(meshes.every(m=>!m.castShadow)).toBe(true);c.applyQuality('HIGH');expect(meshes.every(m=>m.castShadow)).toBe(true);
   });

@@ -1,3 +1,4 @@
+import type { ActivitySink } from '../progression/ProgressionRegistry';
 import { DAY_DURATION } from '../../core/GameClock';
 import type { GameClock } from '../../core/GameClock';
 import type { Inventory,InventoryResult } from '../Inventory';
@@ -9,7 +10,7 @@ export type LivestockResult={ok:true;quantity:number;itemId:string}|Extract<Inve
 export class LivestockSystem {
   private state:LivestockSnapshot;private motionTime:number;
   revision=0;
-  constructor(private clock:GameClock,private inventory:Inventory,saved?:unknown,private onChange:()=>void=()=>{}){this.state=normalizeLivestock(saved,clock.simulationTime);this.motionTime=clock.simulationTime;this.synchronize(false);}
+  constructor(private clock:GameClock,private inventory:Inventory,saved?:unknown,private onChange:()=>void=()=>{},private onActivity:ActivitySink=()=>{}){this.state=normalizeLivestock(saved,clock.simulationTime);this.motionTime=clock.simulationTime;this.synchronize(false);}
   synchronize(notify=true){
     const now=this.clock.simulationTime;
     // An idle fixture may reset its hour; completed cycles must never be revived.
@@ -40,7 +41,7 @@ export class LivestockSystem {
     const quantity=Math.min(FEED_BATCH,PEN_FEED_CAPACITY-pen.feed,this.inventory.count(itemId)),consumed=[{itemId,quantity}],checked=this.inventory.canExchange(consumed,[]);if(!checked.ok)return checked;
     const before=structuredClone(this.state);pen.feed+=quantity;projectLivestock(this.state,this.clock.simulationTime);
     const result=this.inventory.exchange(consumed,[]);if(!result.ok){this.state=before;return result;}
-    this.revision++;this.onChange();return {ok:true,itemId,quantity};
+    this.onActivity('livestock.feed');this.revision++;this.onChange();return {ok:true,itemId,quantity};
   }
   collect(id:string):LivestockResult {
     this.synchronize();const animal=this.state.animals.find(a=>a.id===id);if(!animal)return {ok:false,reason:'unknown-animal'};
@@ -51,6 +52,6 @@ export class LivestockSystem {
     const produced=[{itemId,quantity}],checked=this.inventory.canExchange([],produced);if(!checked.ok)return checked;
     const before=structuredClone(this.state);animal.pending-=quantity;projectLivestock(this.state,this.clock.simulationTime);
     const result=this.inventory.exchange([],produced);if(!result.ok){this.state=before;return result;}
-    this.revision++;this.onChange();return {ok:true,itemId,quantity};
+    this.onActivity('livestock.collect');this.revision++;this.onChange();return {ok:true,itemId,quantity};
   }
 }

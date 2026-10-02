@@ -1,3 +1,4 @@
+import type { ActivitySink } from '../progression/ProgressionRegistry';
 import type { Inventory,InventoryResult,ItemStack } from '../Inventory';
 import { CropSystem } from './CropSystem';
 import type { CropGrowth,LandState } from './CropSystem';
@@ -26,7 +27,7 @@ export class FarmSystem {
   private fields:Map<string,FarmFieldSnapshot>;
   private claimed=false;
   revision=0;
-  constructor(readonly crops:CropSystem,private inventory:Inventory,saved?:unknown,private onChange:()=>void=()=>{}){
+  constructor(readonly crops:CropSystem,private inventory:Inventory,saved?:unknown,private onChange:()=>void=()=>{},private onActivity:ActivitySink=()=>{}){
     this.fields=this.restoreFields(saved);
   }
   private restoreFields(value:unknown){const state=normalizeFarm(value,this.crops.registry,this.crops.gameTime);this.claimed=state.starterSeedsClaimed;return new Map(state.fields.map(field=>[field.id,field]));}
@@ -148,6 +149,7 @@ export class FarmSystem {
       const result=destination.exchange(consumed,produced);
       if(!result.ok){previous.forEach(put);return result;}
     }
+    this.onActivity(cells[0].landState==='TILLED'?'farm.till':cells[0].landState==='SEEDED'?'farm.seed':'farm.harvest');
     this.changed();return {ok:true,changedCells:cells.length,consumed:consumed.map(s=>({...s})),produced:produced.map(s=>({...s}))};
   }
 }

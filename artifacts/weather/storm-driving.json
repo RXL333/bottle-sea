@@ -1,0 +1,16 @@
+{
+  "driving": {
+    "audio": "{\"enabled\":true,\"state\":\"running\",\"mode\":\"ISLAND\",\"mix\":{\"ocean\":0.1725,\"wind\":0.072,\"stormWind\":0.16,\"rain\":0.09,\"underwater\":0,\"cutoff\":6500},\"layers\":5,\"nodes\":29,\"farm\":{\"voices\":1,\"working\":0,\"nodes\":12,\"cues\":0}}",
+    "farm": "[{\"id\":\"field-west\",\"counts\":{\"UNTILLED\":216,\"TILLED\":0,\"SEEDED\":0,\"GROWING\":0,\"MATURE\":0,\"HARVESTED\":0}},{\"id\":\"field-central\",\"counts\":{\"UNTILLED\":216,\"TILLED\":0,\"SEEDED\":0,\"GROWING\":0,\"MATURE\":0,\"HARVESTED\":0}},{\"id\":\"field-east\",\"counts\":{\"UNTILLED\":216,\"TILLED\":0,\"SEEDED\":0,\"GROWING\":0,\"MATURE\":0,\"HARVESTED\":0}}]",
+    "fleet": "{\"version\":2,\"vehicles\":[{\"id\":\"farm.tractor\",\"worldId\":\"FARM\",\"x\":9.232845713727058e-16,\"z\":-16.53919066310001,\"yaw\":3.141592653589793},{\"id\":\"farm.combine\",\"worldId\":\"FARM\",\"x\":-25,\"z\":0,\"yaw\":3.141592653589793,\"headerState\":\"RAISED\",\"workEnabled\":false,\"grainTank\":{\"capacity\":2,\"slots\":[null,null],\"selectedSlot\":null}}],\"implements\":[{\"id\":\"farm.plow\",\"worldId\":\"FARM\",\"x\":7.787762445476506e-16,\"z\":-15.359190626145129,\"yaw\":3.141592653589793,\"workState\":\"RAISED\"},{\"id\":\"farm.seeder\",\"worldId\":\"FARM\",\"x\":-14.5,\"z\":2,\"yaw\":3.141592653589793,\"workState\":\"RAISED\",\"seedCropId\":\"wheat\"},{\"id\":\"farm.trailer\",\"worldId\":\"FARM\",\"x\":-17.5,\"z\":2.3,\"yaw\":3.141592653589793,\"cargo\":{\"capacity\":4,\"slots\":[null,null,null,null],\"selectedSlot\":null}}],\"attachments\":[{\"vehicleId\":\"farm.tractor\",\"implementId\":\"farm.plow\",\"port\":\"Hitch_Back\"}]}",
+    "performance": "54 FPS · 635 calls · 400,978 triangles · 312 geometries · CPU 18.1 ms · max frame 22.9 ms · visible · heap 59.2 MB",
+    "phase": "DRIVING",
+    "weather": "{\"kind\":\"STORM\",\"cloud\":1,\"rain\":1,\"wind\":1,\"storm\":1,\"wetness\":1,\"windPhase\":314.6173750000052,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":34.426654598869284,\"fogFar\":127.63998189830392,\"skyTop\":\"4e5868\",\"horizon\":\"7d8489\"},\"drawCalls\":635,\"triangles\":400978}"
+  },
+  "afterExit": {
+    "audio": "{\"enabled\":true,\"state\":\"running\",\"mode\":\"ISLAND\",\"mix\":{\"ocean\":0.1725,\"wind\":0.072,\"stormWind\":0.16,\"rain\":0.09,\"underwater\":0,\"cutoff\":6500},\"layers\":5,\"nodes\":29,\"farm\":{\"voices\":0,\"working\":0,\"nodes\":12,\"cues\":0}}",
+    "performance": "57 FPS · 477 calls · 384,992 triangles · 313 geometries · CPU 3.4 ms · max frame 19.5 ms · visible · heap 58.1 MB",
+    "phase": "ON_FOOT",
+    "weather": "{\"kind\":\"STORM\",\"cloud\":1,\"rain\":1,\"wind\":1,\"storm\":1,\"wetness\":1,\"windPhase\":375.1354449999979,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":30.741352269087947,\"fogFar\":122.11202840363195,\"skyTop\":\"697a95\",\"horizon\":\"bbc2c1\"},\"drawCalls\":477,\"triangles\":384992}"
+  }
+}

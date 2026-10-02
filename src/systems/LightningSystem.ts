@@ -7,7 +7,7 @@ export class LightningSystem extends Group {
   }
   update(time:number,intensity:number){
     if(intensity<.4){this.visible=false;this.flash=0;this.next=time+2;return;}
-    if(time>=this.next){this.end=time+.16;this.next=time+2+this.random()*4;this.position.x=this.random()>.5?-3.8:3.6;}
+    if(time>=this.next){this.end=time+.16;this.next=time+12+this.random()*14;this.position.x=this.random()>.5?-3.8:3.6;}
     const remaining=this.end-time;this.visible=remaining>0;this.flash=this.visible?(remaining>.09?1:.45):0;
   }
 }

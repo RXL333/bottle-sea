@@ -13,6 +13,8 @@ import { farmHeight } from './FarmTerrain';
 import { FARM_EFFECT_QUALITY,LAND_APPEARANCE } from './FarmPresentation';
 import type { FarmVisualEvent } from './FarmPresentation';
 import type { FarmCellView } from '../../gameplay/farm/FarmSystem';
+import { FarmWetness } from './FarmWeatherResponse';
+import type { WeatherFrame } from '../../systems/WeatherState';
 
 interface ResourceBatch {meshes:InstancedMesh[];parts:Matrix4[];count:number;crop:boolean}
 type Appearance={shape:'grain'|'cob'|'tuber';ripe:string};
@@ -24,6 +26,7 @@ const MAX_CELLS=FARM_FIELD_DEFINITIONS.reduce((total,f)=>total+f.grid.columns*f.
 
 /** World-owned rendering only. All growth is queried from the persistent CropSystem. */
 export class FarmCropPresentation extends Group {
+  private wetness=new FarmWetness();
   private sources=new Group();private batches=new Map<string,ResourceBatch>();
   private highlight=new Group();private lid=new Group();private seedBags=new Group();
   private revision=-1;private checkedGameTime=-1;private nextGrowthAtGameTime:number|null=null;private stamp='';
@@ -46,7 +49,7 @@ export class FarmCropPresentation extends Group {
   }
   drainChanges(){const changes=this.changes;this.changes=[];return changes;}
   applyQuality(quality:Quality){this.quality=quality;this.windAmount.value=FARM_EFFECT_QUALITY[quality].wind;for(const batch of this.batches.values())for(const mesh of batch.meshes)mesh.castShadow=batch.crop&&FARM_EFFECT_QUALITY[quality].cropShadows;}
-  animate(time:number){this.windTime.value=time;}
+  animate(time:number,weather?:WeatherFrame){this.windTime.value=weather?.windPhase??time;this.windAmount.value=FARM_EFFECT_QUALITY[this.quality].wind*(weather?.wind===undefined?1:.4+weather.wind*2.2);if(weather)this.wetness.update(weather.wetness);}
   focus(game:GameplayServices,ref:FarmCellRef|null){
     const center=ref?game.farm.cellCenter(ref):null;this.highlight.visible=!!center;
     if(!center)return;
@@ -124,7 +127,8 @@ export class FarmCropPresentation extends Group {
     const crop=!!stage&&stage.id!=='seed';
     for(const group of groups.values()){
       const geometry=mergeGeometries(group.geometries,false);for(const part of group.geometries)part.dispose();if(!geometry)throw new Error(`Cannot merge farm resource ${id}`);
-      const surface=crop?this.windy(group.material.clone()):group.material,mesh=new InstancedMesh(geometry,surface,MAX_CELLS);mesh.name=`CropInstances:${id}`;
+      const surface=crop?this.windy(group.material.clone()):group.material.clone(),mesh=new InstancedMesh(geometry,surface,MAX_CELLS);mesh.name=`CropInstances:${id}`;
+      if(!crop)this.wetness.register(mesh);
       mesh.instanceMatrix.setUsage(DynamicDrawUsage);mesh.count=0;mesh.visible=false;mesh.castShadow=crop&&FARM_EFFECT_QUALITY[this.quality].cropShadows;mesh.receiveShadow=true;
       if(crop)mesh.customDepthMaterial=this.windy(new MeshDepthMaterial({depthPacking:RGBADepthPacking}));
       this.add(mesh);meshes.push(mesh);parts.push(new Matrix4());

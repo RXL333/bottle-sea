@@ -1,3 +1,6 @@
+import { ProgressionSystem } from './progression/ProgressionSystem';
+import type { ProgressionSnapshot } from './progression/ProgressionState';
+import type { ActivitySink } from './progression/ProgressionRegistry';
 import type { GameClock } from '../core/GameClock';
 import { Inventory } from './Inventory';
 import type { InventorySnapshot } from './Inventory';
@@ -26,7 +29,7 @@ import { normalizeEconomy } from './economy/EconomyState';
 import type { EconomySnapshot } from './economy/EconomyState';
 import { BARN_CAPACITIES,GRAIN_CAPACITIES } from './economy/TradeCatalog';
 
-export interface GameplaySnapshot { inventory: InventorySnapshot; barn:InventorySnapshot;progress: PlayerProgressState; home: HomeSnapshot; fishing:FishingSnapshot;hotbar:HotbarSnapshot;farm:FarmSnapshot;vehicles:VehicleSnapshot;livestock:LivestockSnapshot;economy:EconomySnapshot }
+export interface GameplaySnapshot { inventory: InventorySnapshot; barn:InventorySnapshot;progress: PlayerProgressState; home: HomeSnapshot; fishing:FishingSnapshot;hotbar:HotbarSnapshot;farm:FarmSnapshot;vehicles:VehicleSnapshot;livestock:LivestockSnapshot;economy:EconomySnapshot;progression:ProgressionSnapshot }
 export interface GameplayServices {
   readonly items: ItemRegistry;
   readonly inventory: Inventory;
@@ -42,6 +45,7 @@ export interface GameplayServices {
   readonly vehicles:VehicleProgress;
   readonly livestock:LivestockSystem;
   readonly economy:EconomySystem;
+  readonly progression:ProgressionSystem;
   requestSave(immediate?:boolean): void;
 }
 
@@ -60,26 +64,29 @@ export class GameplayFoundation implements GameplayServices {
   readonly vehicles:VehicleProgress;
   readonly livestock:LivestockSystem;
   readonly economy:EconomySystem;
+  readonly progression:ProgressionSystem;
 
   constructor(clock: GameClock, saved?: Partial<GameplaySnapshot>,
     readonly items: ItemRegistry = ITEMS, private onChange: (immediate?:boolean) => void = () => {}) {
     const economy=normalizeEconomy(saved?.economy);
+    this.progression=new ProgressionSystem(clock,saved?.progression,()=>this.requestSave(true),saved!==undefined&&saved.progression===undefined);
+    const activity:ActivitySink=event=>{this.progression.record(event);};
     this.inventory = new Inventory(items, undefined, saved?.inventory, () => this.requestSave());
     this.barn=new Inventory(items,BARN_CAPACITIES[economy.upgrades.barn],saved?.barn,()=>this.requestSave(true));
     this.progress = new PlayerProgress(saved?.progress, () => this.requestSave());
     this.time = new GameplayTime(clock, () => this.requestSave());
-    this.home = new HomeSystem(items, this.progress, this.time, saved?.home, () => this.requestSave());
-    this.fishing=new FishingSystem(this.inventory,this.progress,saved?.fishing,()=>this.requestSave());
-    this.cooking=new CookingSystem(this.inventory,this.progress);
+    this.home = new HomeSystem(items, this.progress, this.time, saved?.home, () => this.requestSave(),activity);
+    this.fishing=new FishingSystem(this.inventory,this.progress,saved?.fishing,()=>this.requestSave(),undefined,activity);
+    this.cooking=new CookingSystem(this.inventory,this.progress,activity,id=>this.progression.registry.getUnlock(`recipe.${id}`)?this.progression.lockReason(`recipe.${id}`):undefined);
     this.hotbar=new Hotbar(this.inventory,saved?.hotbar,()=>this.requestSave());
     this.crops=new CropSystem(clock,getCropRegistry(items));
     // Farm commits land and Inventory before this callback; flush both together.
-    this.farm=new FarmSystem(this.crops,this.inventory,saved?.farm,()=>this.requestSave(true));
+    this.farm=new FarmSystem(this.crops,this.inventory,saved?.farm,()=>this.requestSave(true),activity);
     this.vehicles=new VehicleProgress(saved?.vehicles,GRAIN_CAPACITIES[economy.upgrades.grain]);
-    this.livestock=new LivestockSystem(clock,this.inventory,saved?.livestock,()=>this.requestSave(true));
-    this.economy=new EconomySystem(this.inventory,this.barn,this.vehicles,economy,()=>this.requestSave(true));
+    this.livestock=new LivestockSystem(clock,this.inventory,saved?.livestock,()=>this.requestSave(true),activity);
+    this.economy=new EconomySystem(this.inventory,this.barn,this.vehicles,economy,()=>this.requestSave(true),activity,()=>this.progression.canAccess('capacity.upgrades'));
   }
 
   requestSave(immediate=false): void { if(immediate)this.onChange(true);else this.onChange(); }
-  snapshot(): GameplaySnapshot { return { inventory: this.inventory.snapshot(),barn:this.barn.snapshot(), progress: this.progress.snapshot(), home: this.home.snapshot(),fishing:this.fishing.snapshot(),hotbar:this.hotbar.snapshot(),farm:this.farm.snapshot(),vehicles:this.vehicles.snapshot(),livestock:this.livestock.snapshot(),economy:this.economy.snapshot() }; }
+  snapshot(): GameplaySnapshot { return { inventory: this.inventory.snapshot(),barn:this.barn.snapshot(), progress: this.progress.snapshot(), home: this.home.snapshot(),fishing:this.fishing.snapshot(),hotbar:this.hotbar.snapshot(),farm:this.farm.snapshot(),vehicles:this.vehicles.snapshot(),livestock:this.livestock.snapshot(),economy:this.economy.snapshot(),progression:this.progression.snapshot() }; }
 }

@@ -1,0 +1,23 @@
+[
+  {
+    "gameTime": "3921.309100000098",
+    "travel": "IDLE",
+    "weather": "{\"kind\":\"RAIN\",\"cloud\":0.9600000000000014,\"rain\":0.7400000000000014,\"wind\":0.4800000000000007,\"storm\":6.362538541895615e-80,\"wetness\":0.7399971414928823,\"windPhase\":93.16658161810557,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":39.32336868173161,\"fogFar\":139.24505302259735,\"skyTop\":\"455265\",\"horizon\":\"6e7a84\"},\"drawCalls\":759,\"triangles\":985584}",
+    "world": "FARM"
+  },
+  {
+    "completedTrips": "1",
+    "gameTime": "3987.204666666844",
+    "travel": "IDLE",
+    "weather": "{\"kind\":\"RAIN\",\"cloud\":0.9600000000000009,\"rain\":0.7400000000000009,\"wind\":0.4800000000000004,\"storm\":8.648382205742458e-132,\"wetness\":0.739999999003771,\"windPhase\":151.42065241811056,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":null,\"drawCalls\":562,\"triangles\":144372}",
+    "world": "HOME"
+  },
+  {
+    "completedTrips": "2",
+    "farm": "[{\"id\":\"field-west\",\"counts\":{\"UNTILLED\":1,\"TILLED\":1,\"SEEDED\":0,\"GROWING\":159,\"MATURE\":54,\"HARVESTED\":1}},{\"id\":\"field-central\",\"counts\":{\"UNTILLED\":1,\"TILLED\":1,\"SEEDED\":0,\"GROWING\":159,\"MATURE\":54,\"HARVESTED\":1}},{\"id\":\"field-east\",\"counts\":{\"UNTILLED\":1,\"TILLED\":1,\"SEEDED\":0,\"GROWING\":106,\"MATURE\":107,\"HARVESTED\":1}}]",
+    "gameTime": "4154.856833333743",
+    "travel": "IDLE",
+    "weather": "{\"kind\":\"RAIN\",\"cloud\":0.9600000000000006,\"rain\":0.7400000000000007,\"wind\":0.4800000000000003,\"storm\":4.237949134082804e-263,\"wetness\":0.7399999999999763,\"windPhase\":298.9012098180689,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":40.07999999999973,\"fogFar\":140.37999999999892,\"skyTop\":\"59799e\",\"horizon\":\"b1c3ca\"},\"drawCalls\":751,\"triangles\":1080700}",
+    "world": "FARM"
+  }
+]

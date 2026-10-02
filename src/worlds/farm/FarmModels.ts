@@ -4,6 +4,9 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { FarmAssets } from './FarmAssets';
 import { FARM_GROUND } from './FarmMap';
 import { FARM_PLACEMENTS } from './FarmLayout';
+import { FarmWind } from './FarmWeatherResponse';
+import type { Quality } from '../../core/Renderer';
+import type { WeatherFrame } from '../../systems/WeatherState';
 
 type Batch={material:Material;geometry:BufferGeometry[]};
 function mergedMesh(name:string,batch:Batch){
@@ -28,6 +31,7 @@ export function compactInstance(model:Group){
   }
 }
 export class FarmModels extends Group {
+  private wind=new FarmWind();
   private rotors:Object3D[]=[];
   readonly placements=new Map<string,Group>();
   constructor(private assets:FarmAssets){super();this.name='BlenderFarmModels';}
@@ -35,7 +39,7 @@ export class FarmModels extends Group {
     const statics=new Group();statics.name='FarmEnvironmentSources';this.add(statics);
     for(const p of FARM_PLACEMENTS){
       const model=this.assets.instance(p.asset);model.name=p.id;model.userData.farmAsset=p.asset;model.userData.zoneId=p.zoneId;
-      model.position.set(p.x,p.y??FARM_GROUND,p.z);model.scale.setScalar(p.scale);model.rotation.y=p.yaw??0;
+      model.position.set(p.x,p.y??FARM_GROUND,p.z);model.scale.setScalar(p.scale);model.rotation.y=p.yaw??0;model.userData.foliage=p.asset==='orchard_tree';
       (p.independent?this:statics).add(model);this.placements.set(p.id,model);
       if(p.asset==='farmhouse')model.traverse(o=>{if(o.userData.part_id==='front_door')o.rotation.y=-Math.PI*.55;});
       model.updateMatrixWorld(true);
@@ -50,14 +54,16 @@ export class FarmModels extends Group {
     statics.traverse(o=>{
       if(!(o instanceof Mesh))return;
       if(Array.isArray(o.material))throw new Error('Farm exports must have one material per primitive');
-      const key=o.material.name,entry:Batch=batches.get(key)??{material:o.material,geometry:[]};
+      let parent:Object3D|null=o;while(parent&&!parent.userData.foliage)parent=parent.parent;
+      const key=o.material.name+(parent?':foliage':''),entry:Batch=batches.get(key)??{material:o.material,geometry:[]};
       entry.geometry.push(o.geometry.clone().applyMatrix4(o.matrixWorld));batches.set(key,entry);
     });
-    for(const [key,batch] of batches)this.add(mergedMesh(`FarmStatic_${key}`,batch));
+    for(const [key,batch] of batches){const mesh=mergedMesh(`FarmStatic_${key}`,batch);mesh.material=mesh.material.clone();if(key.endsWith(':foliage'))this.wind.install(mesh);this.add(mesh);}
     statics.clear();this.remove(statics);
     this.traverse(o=>{if(o instanceof Mesh){o.castShadow=true;o.receiveShadow=true;}});
     this.userData.assetsPlaced=FARM_PLACEMENTS.length;this.userData.staticBatches=batches.size;
     this.userData.independentAssets=FARM_PLACEMENTS.filter(p=>p.independent).map(p=>p.id);
   }
-  update(time:number){for(const rotor of this.rotors)rotor.rotation.z=time*.32;}
+  applyQuality(quality:Quality){this.wind.applyQuality(quality);}
+  update(time:number,weather?:WeatherFrame){if(weather)this.wind.update(weather);for(const rotor of this.rotors)rotor.rotation.z=weather?weather.windPhase*.35:time*.32;}
 }

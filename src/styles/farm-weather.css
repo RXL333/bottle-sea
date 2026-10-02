@@ -1,0 +1,4 @@
+.farm-world:not(.cottage-world) .weather{opacity:1;background:#142c3159;border:1px solid #d6e6d62b;padding:12px 16px;border-radius:4px;font-size:11px;letter-spacing:1px}
+.farm-world:not(.cottage-world).exploring .toolbar>[data-action=storm]{display:flex}
+.farm-world:not(.cottage-world) .weather time{font-size:25px;margin:7px 0}
+@media(max-width:700px){.farm-world:not(.cottage-world) .weather{top:12px;right:12px;font-size:9px;padding:8px}.farm-world:not(.cottage-world) .weather time{font-size:19px}}

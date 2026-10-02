@@ -1,0 +1,114 @@
+[
+  {
+    "kind": "CLEAR",
+    "phase": "dawn",
+    "performance": "57 FPS · 696 calls · 616,894 triangles · 350 geometries · CPU 4.6 ms · max frame 22.0 ms · visible · heap 40.1 MB",
+    "stats": "{\"fps\":57,\"calls\":696,\"triangles\":616894,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"CLEAR\",\"cloud\":0.24,\"rain\":0,\"wind\":0.16,\"storm\":0,\"wetness\":0,\"windPhase\":0.6504515999999991,\"rainVisible\":false,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":36.04627694562821,\"fogFar\":159.7894154184423,\"skyTop\":\"9e97ac\",\"horizon\":\"e4d4b5\"},\"drawCalls\":696,\"triangles\":616894}"
+  },
+  {
+    "kind": "CLEAR",
+    "phase": "noon",
+    "performance": "57 FPS · 696 calls · 616,894 triangles · 350 geometries · CPU 4.1 ms · max frame 20.2 ms · visible · heap 48.3 MB",
+    "stats": "{\"fps\":57,\"calls\":696,\"triangles\":616894,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"CLEAR\",\"cloud\":0.24,\"rain\":0,\"wind\":0.16,\"storm\":0,\"wetness\":0,\"windPhase\":0.6504515999999991,\"rainVisible\":false,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":45.999999975883995,\"fogFar\":174.71999996382598,\"skyTop\":\"4e9bdc\",\"horizon\":\"c6e5ec\"},\"drawCalls\":711,\"triangles\":831902}"
+  },
+  {
+    "kind": "CLEAR",
+    "phase": "sunset",
+    "performance": "57 FPS · 711 calls · 831,902 triangles · 350 geometries · CPU 4.5 ms · max frame 19.0 ms · visible · heap 50.4 MB",
+    "stats": "{\"fps\":57,\"calls\":711,\"triangles\":831902,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"CLEAR\",\"cloud\":0.24,\"rain\":0,\"wind\":0.16,\"storm\":0,\"wetness\":0,\"windPhase\":0.6504515999999991,\"rainVisible\":false,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":46,\"fogFar\":174.72,\"skyTop\":\"7d74a2\",\"horizon\":\"e4aa83\"},\"drawCalls\":711,\"triangles\":831902}"
+  },
+  {
+    "kind": "CLEAR",
+    "phase": "night",
+    "performance": "57 FPS · 711 calls · 831,902 triangles · 350 geometries · CPU 5.4 ms · max frame 19.9 ms · visible · heap 41.8 MB",
+    "stats": "{\"fps\":57,\"calls\":711,\"triangles\":831902,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"CLEAR\",\"cloud\":0.24,\"rain\":0,\"wind\":0.16,\"storm\":0,\"wetness\":0,\"windPhase\":0.6504515999999991,\"rainVisible\":false,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":46,\"fogFar\":174.72,\"skyTop\":\"0c1833\",\"horizon\":\"2a3c57\"},\"drawCalls\":711,\"triangles\":831902}"
+  },
+  {
+    "kind": "OVERCAST",
+    "phase": "dawn",
+    "performance": "57 FPS · 696 calls · 616,894 triangles · 350 geometries · CPU 4.9 ms · max frame 20.9 ms · visible · heap 55.7 MB",
+    "stats": "{\"fps\":57,\"calls\":696,\"triangles\":616894,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"OVERCAST\",\"cloud\":0.85,\"rain\":0,\"wind\":0.3,\"storm\":0,\"wetness\":0,\"windPhase\":1.4150990213398227,\"rainVisible\":false,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":36.04738245871573,\"fogFar\":146.3710736880736,\"skyTop\":\"787d92\",\"horizon\":\"c1beb3\"},\"drawCalls\":696,\"triangles\":616894}"
+  },
+  {
+    "kind": "OVERCAST",
+    "phase": "noon",
+    "performance": "57 FPS · 712 calls · 832,478 triangles · 350 geometries · CPU 4.3 ms · max frame 20.5 ms · visible · heap 49.9 MB",
+    "stats": "{\"fps\":57,\"calls\":712,\"triangles\":832478,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"OVERCAST\",\"cloud\":0.85,\"rain\":0,\"wind\":0.3,\"storm\":0,\"wetness\":0,\"windPhase\":1.4150990213398227,\"rainVisible\":false,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":45.999999975883995,\"fogFar\":161.299999963826,\"skyTop\":\"5580ab\",\"horizon\":\"b2cbd3\"},\"drawCalls\":711,\"triangles\":831902}"
+  },
+  {
+    "kind": "OVERCAST",
+    "phase": "sunset",
+    "performance": "56 FPS · 711 calls · 831,902 triangles · 350 geometries · CPU 4.1 ms · max frame 19.6 ms · visible · heap 45.1 MB",
+    "stats": "{\"fps\":56,\"calls\":711,\"triangles\":831902,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"OVERCAST\",\"cloud\":0.85,\"rain\":0,\"wind\":0.3,\"storm\":0,\"wetness\":0,\"windPhase\":1.4150990213398227,\"rainVisible\":false,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":46,\"fogFar\":161.3,\"skyTop\":\"676d8d\",\"horizon\":\"c1a89d\"},\"drawCalls\":711,\"triangles\":831902}"
+  },
+  {
+    "kind": "OVERCAST",
+    "phase": "night",
+    "performance": "57 FPS · 711 calls · 831,902 triangles · 350 geometries · CPU 5.4 ms · max frame 19.2 ms · visible · heap 64.3 MB",
+    "stats": "{\"fps\":57,\"calls\":711,\"triangles\":831902,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"OVERCAST\",\"cloud\":0.85,\"rain\":0,\"wind\":0.3,\"storm\":0,\"wetness\":0,\"windPhase\":1.4150990213398227,\"rainVisible\":false,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":46,\"fogFar\":161.3,\"skyTop\":\"3d4b5e\",\"horizon\":\"63707e\"},\"drawCalls\":711,\"triangles\":831902}"
+  },
+  {
+    "kind": "RAIN",
+    "phase": "dawn",
+    "performance": "56 FPS · 697 calls · 616,894 triangles · 350 geometries · CPU 5.7 ms · max frame 20.2 ms · visible · heap 55.6 MB",
+    "stats": "{\"fps\":56,\"calls\":697,\"triangles\":616894,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"RAIN\",\"cloud\":0.96,\"rain\":0.74,\"wind\":0.48,\"storm\":0,\"wetness\":0.06328485773883272,\"windPhase\":2.4097588890858894,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":30.126225603045235,\"fogFar\":125.44933840456785,\"skyTop\":\"6f778c\",\"horizon\":\"babab3\"},\"drawCalls\":697,\"triangles\":616894}"
+  },
+  {
+    "kind": "RAIN",
+    "phase": "noon",
+    "performance": "56 FPS · 713 calls · 832,478 triangles · 350 geometries · CPU 5.0 ms · max frame 20.8 ms · visible · heap 55.4 MB",
+    "stats": "{\"fps\":56,\"calls\":713,\"triangles\":832478,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"RAIN\",\"cloud\":0.96,\"rain\":0.74,\"wind\":0.48,\"storm\":0,\"wetness\":0.06328485773883272,\"windPhase\":2.4097588890858894,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":40.07999997588399,\"fogFar\":140.37999996382598,\"skyTop\":\"567ba0\",\"horizon\":\"aec6cf\"},\"drawCalls\":712,\"triangles\":831902}"
+  },
+  {
+    "kind": "RAIN",
+    "phase": "sunset",
+    "performance": "57 FPS · 712 calls · 831,902 triangles · 350 geometries · CPU 4.1 ms · max frame 21.0 ms · visible · heap 49.7 MB",
+    "stats": "{\"fps\":57,\"calls\":712,\"triangles\":831902,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"RAIN\",\"cloud\":0.96,\"rain\":0.74,\"wind\":0.48,\"storm\":0,\"wetness\":0.06328485773883272,\"windPhase\":2.4097588890858894,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":40.08,\"fogFar\":140.38,\"skyTop\":\"626c88\",\"horizon\":\"b9a8a2\"},\"drawCalls\":712,\"triangles\":831902}"
+  },
+  {
+    "kind": "RAIN",
+    "phase": "night",
+    "performance": "56 FPS · 712 calls · 831,902 triangles · 350 geometries · CPU 5.1 ms · max frame 20.1 ms · visible · heap 45.7 MB",
+    "stats": "{\"fps\":56,\"calls\":712,\"triangles\":831902,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"RAIN\",\"cloud\":0.96,\"rain\":0.74,\"wind\":0.48,\"storm\":0,\"wetness\":0.06328485773883272,\"windPhase\":2.4097588890858894,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":40.08,\"fogFar\":140.38,\"skyTop\":\"425164\",\"horizon\":\"697783\"},\"drawCalls\":712,\"triangles\":831902}"
+  },
+  {
+    "kind": "STORM",
+    "phase": "dawn",
+    "performance": "57 FPS · 697 calls · 616,894 triangles · 350 geometries · CPU 3.9 ms · max frame 20.9 ms · visible · heap 59.9 MB",
+    "stats": "{\"fps\":57,\"calls\":697,\"triangles\":616894,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"STORM\",\"cloud\":1,\"rain\":1,\"wind\":1,\"storm\":1,\"wetness\":0.17734806989249724,\"windPhase\":3.9044350527268454,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":28.04732012442696,\"fogFar\":118.07098018664044,\"skyTop\":\"6b758a\",\"horizon\":\"b7b9b3\"},\"drawCalls\":697,\"triangles\":616894}"
+  },
+  {
+    "kind": "STORM",
+    "phase": "noon",
+    "performance": "57 FPS · 712 calls · 831,902 triangles · 350 geometries · CPU 4.1 ms · max frame 20.1 ms · visible · heap 55.2 MB",
+    "stats": "{\"fps\":57,\"calls\":712,\"triangles\":831902,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"STORM\",\"cloud\":1,\"rain\":1,\"wind\":1,\"storm\":1,\"wetness\":0.17734806989249724,\"windPhase\":3.9044350527268454,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":37.999999975883995,\"fogFar\":132.99999996382599,\"skyTop\":\"57789c\",\"horizon\":\"adc4cd\"},\"drawCalls\":712,\"triangles\":831902}"
+  },
+  {
+    "kind": "STORM",
+    "phase": "sunset",
+    "performance": "57 FPS · 712 calls · 831,902 triangles · 350 geometries · CPU 3.7 ms · max frame 19.5 ms · visible · heap 57.4 MB",
+    "stats": "{\"fps\":57,\"calls\":712,\"triangles\":831902,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"STORM\",\"cloud\":1,\"rain\":1,\"wind\":1,\"storm\":1,\"wetness\":0.17734806989249724,\"windPhase\":3.9044350527268454,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":38,\"fogFar\":133,\"skyTop\":\"606b87\",\"horizon\":\"b7a8a3\"},\"drawCalls\":712,\"triangles\":831902}"
+  },
+  {
+    "kind": "STORM",
+    "phase": "night",
+    "performance": "57 FPS · 712 calls · 831,902 triangles · 350 geometries · CPU 4.3 ms · max frame 19.4 ms · visible · heap 45.4 MB",
+    "stats": "{\"fps\":57,\"calls\":712,\"triangles\":831902,\"geometries\":350,\"textures\":10,\"dom\":268}",
+    "weather": "{\"kind\":\"STORM\",\"cloud\":1,\"rain\":1,\"wind\":1,\"storm\":1,\"wetness\":0.17734806989249724,\"windPhase\":3.9044350527268454,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":38,\"fogFar\":133,\"skyTop\":\"435366\",\"horizon\":\"6c7985\"},\"drawCalls\":712,\"triangles\":831902}"
+  }
+]

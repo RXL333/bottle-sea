@@ -1,3 +1,4 @@
+import type { ActivitySink } from './progression/ProgressionRegistry';
 import { Inventory, normalizeInventory } from './Inventory';
 import type { InventorySnapshot } from './Inventory';
 import type { ItemRegistry } from './ItemRegistry';
@@ -23,7 +24,7 @@ export function normalizeHome(value: unknown, items: ItemRegistry): HomeSnapshot
 export class HomeSystem {
   readonly chest: Inventory;
   constructor(items: ItemRegistry, private progress: PlayerProgress, private time: GameplayTime,
-    saved?: unknown, onChange: () => void = () => {}) {
+    saved?: unknown, onChange: () => void = () => {}, private onActivity:ActivitySink=()=>{}) {
     const state = normalizeHome(saved, items);
     this.chest = new Inventory(items, HOME_CHEST_CAPACITY, state.chest, onChange);
   }
@@ -31,7 +32,7 @@ export class HomeSystem {
     // Advance first: if the clock rejects overflow, energy is left untouched.
     this.time.advanceToNextDay(6, 0);
     const recoveredEnergy = this.progress.restoreEnergy(this.progress.maxEnergy);
-    return { day: this.time.day, recoveredEnergy };
+    this.onActivity('home.sleep');return { day: this.time.day, recoveredEnergy };
   }
   snapshot(): HomeSnapshot { return { chest: this.chest.snapshot() }; }
 }

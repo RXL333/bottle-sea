@@ -1,0 +1,11 @@
+{
+  "start": {
+    "gameTime": "4255.130233333915",
+    "weather": "{\"kind\":\"CLEAR\",\"cloud\":0.7629946382028351,\"rain\":0.5375222670418028,\"wind\":0.39244206142348237,\"storm\":7e-323,\"wetness\":0.7397514653777439,\"windPhase\":386.93139564273685,\"rainVisible\":true,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":40.191049612454066,\"fogFar\":141.0241627857559,\"skyTop\":\"425164\",\"horizon\":\"6b7783\"},\"drawCalls\":751,\"triangles\":1080700}"
+  },
+  "end": {
+    "audio": "{\"enabled\":true,\"state\":\"running\",\"mode\":\"ISLAND\",\"mix\":{\"ocean\":0.1725,\"wind\":0.034200000000000015,\"stormWind\":1e-323,\"rain\":9.314374530102797e-49,\"underwater\":0,\"cutoff\":6500},\"layers\":5,\"nodes\":29,\"farm\":{\"voices\":0,\"working\":0,\"nodes\":12,\"cues\":0}}",
+    "gameTime": "4314.8893333339065",
+    "weather": "{\"kind\":\"CLEAR\",\"cloud\":0.24000000000000038,\"rain\":1.0349305033447552e-47,\"wind\":0.1600000000000004,\"storm\":7e-323,\"wetness\":0.3628511922960587,\"windPhase\":418.5044737302785,\"rainVisible\":false,\"sheltered\":false,\"atmosphere\":{\"clouds\":24,\"stars\":90,\"fogNear\":45.99999999999974,\"fogFar\":174.71999999999895,\"skyTop\":\"0c1733\",\"horizon\":\"2a3c57\"},\"drawCalls\":749,\"triangles\":1080628}"
+  }
+}

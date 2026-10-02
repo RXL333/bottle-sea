@@ -12,6 +12,14 @@ function setup(locked=false){
   const camera=new PerspectiveCamera(),controller=new VehicleController(camera,element as unknown as HTMLElement,{active:true,suspend(){}} as unknown as ExploreController);controller.vehicle=vehicle;controller.phase='DRIVING';return {doc,win,element,vehicle,controller,advance,camera};
 }
 afterEach(()=>vi.unstubAllGlobals());
+it('reports driving only after actual travel, never while blocked or boarding',()=>{
+  const s=setup(),reported=vi.fn();s.controller.onDrive=reported;
+  for(let i=0;i<30;i++)s.controller.update(1/60);expect(reported).not.toHaveBeenCalled();
+  s.advance.mockImplementation(()=>{s.vehicle.root.position.z+=.1;});
+  for(let i=0;i<4;i++)s.controller.update(1/60);expect(reported).not.toHaveBeenCalled();
+  s.controller.update(1/60);expect(reported).toHaveBeenCalledOnce();
+  for(let i=0;i<30;i++)s.controller.update(1/60);expect(reported).toHaveBeenCalledOnce();
+});
 it.each([false,true])('steers with mouse, retains keyboard, and separates left-drag orbit (locked=%s)',locked=>{
   const s=setup(locked),move=(x:number,y=0)=>locked?s.doc.dispatchEvent(event('mousemove',{movementX:x,movementY:y})):s.element.dispatchEvent(event('pointermove',{clientX:x,clientY:y,pointerId:1}));
   if(!locked)move(0);move(-50);s.controller.update(1/60);expect(s.advance.mock.lastCall![1].steer).toBeGreaterThan(0);

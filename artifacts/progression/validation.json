@@ -1,0 +1,42 @@
+{
+  "automated": {
+    "typecheck": "passed",
+    "testFiles": 66,
+    "testsPassed": 292,
+    "build": "passed"
+  },
+  "browser": {
+    "freshRoute": "passed",
+    "saleUnlockAndPaidUpgrade": "passed",
+    "cookingUnlock": "passed",
+    "reloadRestore": "passed",
+    "homeEntryAndSleep": "passed",
+    "realHomeFarmRoundTrip": "passed",
+    "manualTilling": "passed",
+    "drivingAfterActualMovement": "passed",
+    "feedingAndCollectingEgg": "passed",
+    "pShortcut": "passed"
+  },
+  "notPerformed": [
+    "完整长期人工游玩",
+    "钓鱼、播种、收获的浏览器全流程（对应自动测试已通过）"
+  ],
+  "state": {
+    "version": 1,
+    "completed": {
+      "first_home": 3627.9654999998997,
+      "first_cook": 3615.400099999919,
+      "first_sleep": 3960,
+      "first_farm": 4127.623933333272,
+      "first_till": 4148.520233333338,
+      "first_sale": 3597.215599999944,
+      "first_purchase": 3597.215599999944,
+      "first_drive": 4209.300733333493,
+      "first_feed": 4328.372233333769,
+      "first_product": 4954.425033334179
+    },
+    "grants": []
+  },
+  "console": [],
+  "unresolvedFailures": []
+}

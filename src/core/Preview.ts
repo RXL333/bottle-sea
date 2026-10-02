@@ -7,11 +7,26 @@ import { HOME_TRADE_POINT,FARM_TRADE_POINT } from '../worlds/trade/MerchantShip'
 import { HOME_MERCHANT_BERTH } from '../worlds/trade/MerchantRoute';
 import { PURCHASED_COMBINE_ID } from '../gameplay/vehicles/VehicleIds';
 import { Vector3 } from 'three';
+import { isWeatherKind,WEATHER_KINDS,WEATHER_LABELS,WEATHER_PROFILES } from '../systems/WeatherState';
+import { COTTAGE } from '../worlds/farm/FarmLayout';
 // Development-only reproducible visual checkpoints; no extra controls in the game HUD.
 export function configurePreview(game:Game){
   const params=new URLSearchParams(location.search),hour=Number(params.get('hour'));
   if(params.has('hour')&&Number.isFinite(hour)&&hour>=0&&hour<24)game.clock.simulationTime=DAY_DURATION*(7+hour/24);
-  if(params.get('weather')==='storm'){game.weather.storm=true;game.weather.intensity=1;game.hud.setActive('storm',true);}
+  const weather=params.get('weather')?.toUpperCase();if(isWeatherKind(weather))game.weather.restore({kind:weather,...WEATHER_PROFILES[weather],wetness:WEATHER_PROFILES[weather].rain,windPhase:game.clock.elapsed*.6});
+  if(params.get('view')==='farm-weather'){
+    game.overview.suspend();game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.set(-7.3,4.44,-8);game.camera.lookAt(0,5,-25);game.explorer.syncLook();
+    const controls=document.createElement('details');controls.style.cssText='position:fixed;top:112px;left:18px;z-index:20;background:#142621d9;color:#ffe4a3;padding:10px;max-width:480px';const title=document.createElement('summary');title.textContent='开发验证 · 天气与昼夜';controls.append(title);
+    const button=(label:string,action:()=>void)=>{const b=document.createElement('button');b.textContent=label;b.style.margin='5px';b.addEventListener('click',()=>{action();controls.open=false;game.renderer.domElement.focus();});controls.append(b);};
+    for(const kind of WEATHER_KINDS)button(WEATHER_LABELS[kind],()=>{game.weather.setWeather(kind);game.clock.paused=false;});
+    for(const [hour,label] of [[6,'清晨'],[12,'正午'],[18,'黄昏'],[23,'夜晚']] as const)button(label,()=>game.clock.simulationTime=DAY_DURATION*(Math.floor(game.clock.simulationTime/DAY_DURATION)+hour/24));
+    button('定格天气与时间',()=>{const kind=game.weather.kind;Object.assign(game.weather.frame,WEATHER_PROFILES[kind]);game.clock.paused=true;game.dayNight.update(game.clock.normalizedDayTime,game.clock.elapsed,game.weather.intensity,0,game.weather.frame,game.camera.position,60);});
+    const move=(x:number,y:number,z:number,lookZ:number)=>{game.overview.suspend();game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.set(x,y,z);game.camera.lookAt(x,y,lookZ);game.explorer.syncLook();};
+    button('小屋屋顶下',()=>move(COTTAGE.x,COTTAGE.floor+.44,COTTAGE.z,COTTAGE.z-3));
+    button('走到屋外',()=>move(COTTAGE.x,4.44,COTTAGE.z-4,COTTAGE.z));
+    button('农场码头 · 真实旅行',()=>{const spawn=game.worldManager.currentWorld!.getSpawnPoint();move(...spawn.position,spawn.lookAt[2]);});
+    document.body.append(controls);
+  }
   if(params.get('view')==='home-trade'||params.get('view')==='farm-trade'){
     const farm=game.worldManager.currentWorldId==='FARM',point=farm?FARM_TRADE_POINT:HOME_TRADE_POINT;game.overview.suspend();game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.set(point.x,point.y,point.z);game.camera.lookAt(farm?point.x-2:HOME_MERCHANT_BERTH.x,point.y-.4,farm?point.z:HOME_MERCHANT_BERTH.z);game.explorer.syncLook();
     if(params.get('fixture')==='1'&&game.gameplay.economy.nextRequest===1&&!game.gameplay.inventory.count('crop.corn')){game.gameplay.inventory.add('crop.corn',200);game.gameplay.inventory.add('fish.tuna',10);game.gameplay.inventory.add('food.grilled_fish',3);game.gameplay.inventory.add('livestock.milk',4);}
@@ -73,7 +88,7 @@ export function configurePreview(game:Game){
       }
       document.body.append(controls);
     }
-    if(params.get('view')==='farm-presentation'&&params.get('fixture')==='1'){
+    if(['farm-presentation','farm-weather'].includes(params.get('view')??'')&&params.get('fixture')==='1'){
       const now=game.clock.simulationTime,dense=params.get('dense')==='1',crops=game.gameplay.crops.registry.list();
       // Explicit disposable visual fixture: normal APIs retain inventory and growth rules.
       for(const [fieldIndex,field] of game.gameplay.farm.definitions.entries())for(let row=0;row<field.grid.rows;row++)for(let column=0;column<field.grid.columns;column++){

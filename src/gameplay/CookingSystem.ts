@@ -1,3 +1,4 @@
+import type { ActivitySink } from './progression/ProgressionRegistry';
 import { RECIPES } from './CookingCatalog';
 import type { RecipeDefinition } from './CookingCatalog';
 import type { Inventory,ItemStack } from './Inventory';
@@ -9,13 +10,14 @@ export interface CookingResult { ok:boolean;message:string;kind:'cooked'|'ate'|'
 export class CookingSystem {
   private job?:{recipeId:string;preferredFish?:string;elapsed:number};
   onResult:(result:CookingResult)=>void=()=>{};
-  constructor(private inventory:Inventory,private progress:PlayerProgress){}
+  constructor(private inventory:Inventory,private progress:PlayerProgress,private onActivity:ActivitySink=()=>{},private recipeLock:(id:string)=>string|undefined=()=>undefined){}
   get active(){return this.job!==undefined;}
   get cookingRecipe(){return RECIPES.find(recipe=>recipe.id===this.job?.recipeId);}
   get phaseProgress(){return this.job?Math.min(1,this.job.elapsed/COOKING_DURATION):0;}
   check(recipeId:string,preferredFish?:string):CookingCheck {
     const recipe=RECIPES.find(item=>item.id===recipeId),ingredients:ItemStack[]=[];
     if(!recipe)return {ok:false,reason:'未知食谱。',ingredients};
+    const locked=this.recipeLock(recipeId);if(locked)return {ok:false,reason:locked,ingredients,recipe};
     let remaining=recipe.fishQuantity;
     const fish=this.inventory.items.fish();
     const pool=recipe.specificFish?fish.filter(f=>f.id===recipe.specificFish)
@@ -39,7 +41,7 @@ export class CookingSystem {
     if(!checked.ok||!checked.recipe){this.onResult({ok:false,kind:'failed',message:checked.reason??'暂时无法制作。'});return;}
     const recipe=checked.recipe,result=this.inventory.exchange(checked.ingredients,[{itemId:recipe.outputId,quantity:1}]);
     if(!result.ok){this.onResult({ok:false,kind:'failed',message:'材料或背包空间已变化，本次没有扣除材料。'});return;}
-    this.progress.spendEnergy(recipe.energyCost);
+    this.progress.spendEnergy(recipe.energyCost);this.onActivity('cook.complete');
     this.onResult({ok:true,kind:'cooked',message:`做好了 ${recipe.name} × 1 · 已放入背包`});
   }
   cancel(){this.job=undefined;}

@@ -14,7 +14,8 @@ export class VehicleController {
   private startRotation=new Quaternion();private exitRotation=new Quaternion();
   private exitSpawn?:SpawnPoint;private follow:VehicleFollowCamera;
   private mouse=new VehicleMouseSteering();private orbitPointer?:number;private lastMouse?:{x:number;y:number};
-  private releaseMouse=()=>{};
+  private releaseMouse=()=>{};private drivenDistance=0;private driveReported=false;
+  onDrive=()=>{};
   onInteract=()=>{};onHitch=()=>{};onWork=()=>{};onDismount=(spawn:SpawnPoint)=>{void spawn;};onPark=()=>{};
   onSeed=(cropId?:string)=>{void cropId;};onMachine=()=>{};onUnload=()=>{};
   selectSeed(cropId?:string){if(this.phase==='DRIVING'&&this.active){this.element.focus();this.onSeed(cropId);}}
@@ -53,7 +54,7 @@ export class VehicleController {
     if(this.active||!this.explorer.active||vehicle.occupied)return {status:'unavailable',message:'当前无法上车。'};
     if(!vehicle.findExit())return {status:'unavailable',message:'车旁没有安全落脚点，请从另一侧靠近。'};
     this.explorer.suspend(true);this.vehicle=vehicle;vehicle.occupy(true);this.keys.clear();this.mouse.reset();this.lastMouse=undefined;this.keys.add('KeyE');
-    this.phase='BOARDING';this.capture();this.follow.reset(vehicle);this.camera.near=.08;this.camera.far=150;this.camera.fov=68;this.camera.updateProjectionMatrix();
+    this.drivenDistance=0;this.driveReported=false;this.phase='BOARDING';this.capture();this.follow.reset(vehicle);this.camera.near=.08;this.camera.far=150;this.camera.fov=68;this.camera.updateProjectionMatrix();
     document.body.classList.add('driving');this.element.focus();
     return {status:'success',message:'已上车 · 鼠标 / A/D 转向 · 左键拖动观察，松开复位 · Space 刹车 · 停稳后 E 下车'};
   }
@@ -69,8 +70,11 @@ export class VehicleController {
   update(delta:number){
     const vehicle=this.vehicle;if(!vehicle)return;const dt=Math.min(.1,Math.max(0,delta));
     if(this.phase==='DRIVING'){
+      const previousX=vehicle.root.position.x,previousZ=vehicle.root.position.z;
       const keyboard=Number(this.keys.has('KeyA'))-Number(this.keys.has('KeyD')),mouse=this.mouse.update(dt);
       vehicle.advance(dt,{throttle:Number(this.keys.has('KeyW'))-Number(this.keys.has('KeyS')),steer:this.keys.has('KeyA')||this.keys.has('KeyD')?keyboard:mouse,brake:this.braking||document.hidden||!document.hasFocus()});
+      this.drivenDistance+=Math.hypot(vehicle.root.position.x-previousX,vehicle.root.position.z-previousZ);
+      if(!this.driveReported&&this.drivenDistance>=.5){this.driveReported=true;this.onDrive();}
       this.follow.update(dt,vehicle);return;
     }
     this.elapsed+=dt;const p=Math.min(1,this.elapsed/.8),ease=(t:number)=>t*t*(3-2*t);
