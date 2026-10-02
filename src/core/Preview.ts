@@ -1,3 +1,4 @@
+import { configureSeasonPreview } from './SeasonPreview';
 import type { Game } from './Game';
 import { DAY_DURATION } from './GameClock';
 import type { FarmWorld } from '../worlds/farm/FarmWorld';
@@ -12,8 +13,10 @@ import { COTTAGE } from '../worlds/farm/FarmLayout';
 // Development-only reproducible visual checkpoints; no extra controls in the game HUD.
 export function configurePreview(game:Game){
   const params=new URLSearchParams(location.search),hour=Number(params.get('hour'));
-  if(params.has('hour')&&Number.isFinite(hour)&&hour>=0&&hour<24)game.clock.simulationTime=DAY_DURATION*(7+hour/24);
-  const weather=params.get('weather')?.toUpperCase();if(isWeatherKind(weather))game.weather.restore({kind:weather,...WEATHER_PROFILES[weather],wetness:WEATHER_PROFILES[weather].rain,windPhase:game.clock.elapsed*.6});
+  if(params.has('hour')&&Number.isFinite(hour)&&hour>=0&&hour<24)game.clock.simulationTime=DAY_DURATION*(Math.floor(game.clock.simulationTime/DAY_DURATION)+hour/24);
+  const previewDay=Number(params.get('day'));if(params.has('day')&&Number.isSafeInteger(previewDay)&&previewDay>=1&&previewDay<=100000)game.clock.simulationTime=DAY_DURATION*(previewDay-1+game.clock.normalizedDayTime);
+  const weather=params.get('weather')?.toUpperCase();if(isWeatherKind(weather))game.weather.restore({kind:weather,...WEATHER_PROFILES[weather],wetness:WEATHER_PROFILES[weather].rain,windPhase:game.clock.elapsed*.6},false,0,game.gameplay.calendar.date.dayIndex);
+  configureSeasonPreview(game,params);
   if(params.get('view')==='farm-weather'){
     game.overview.suspend();game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.set(-7.3,4.44,-8);game.camera.lookAt(0,5,-25);game.explorer.syncLook();
     const controls=document.createElement('details');controls.style.cssText='position:fixed;top:112px;left:18px;z-index:20;background:#142621d9;color:#ffe4a3;padding:10px;max-width:480px';const title=document.createElement('summary');title.textContent='开发验证 · 天气与昼夜';controls.append(title);

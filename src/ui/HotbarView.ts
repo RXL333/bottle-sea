@@ -6,7 +6,7 @@ export class HotbarView {
   readonly element=document.createElement('nav');private stamp='';
   onSelect=()=>{};onDrop:(index:number,event:DragEvent)=>void=()=>{};
   constructor(private hotbar:Hotbar){
-    this.element.className='hotbar';this.element.setAttribute('aria-label','物品快捷栏');
+    this.element.className='hotbar ui-hotbar';this.element.setAttribute('aria-label','物品快捷栏');
     for(let index=0;index<HOTBAR_SIZE;index++){
       const button=document.createElement('button');button.type='button';button.className='hotbar-slot';button.dataset.hotbar=String(index);button.dataset.focusKey=`hotbar-${index}`;
       button.addEventListener('click',()=>{hotbar.select(index);this.update();this.onSelect();});

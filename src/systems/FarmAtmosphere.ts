@@ -1,3 +1,5 @@
+import { SEASONS } from '../gameplay/calendar/SeasonRegistry';
+import type { SeasonVisual } from '../gameplay/calendar/CalendarSystem';
 import { BackSide,BufferGeometry,Color,DirectionalLight,Float32BufferAttribute,Fog,Group,Mesh,MeshBasicMaterial,Points,PointsMaterial,ShaderMaterial,SphereGeometry,Vector3 } from 'three';
 import type { Quality } from '../core/Renderer';
 import type { WeatherFrame } from './WeatherState';
@@ -47,14 +49,15 @@ export class FarmAtmosphere extends Group {
     this.rim.target.position.set(0,4,-28);this.rim.castShadow=false;this.applyQuality('MEDIUM');
   }
   applyQuality(quality:Quality){this.quality=quality;this.clouds.forEach((cloud,i)=>cloud.group.visible=i<ATMOSPHERE_QUALITY[quality].clouds);this.stars.geometry.setDrawRange(0,ATMOSPHERE_QUALITY[quality].stars);}
-  update(dayTime:number,weather:WeatherFrame,camera:Vector3,delta:number){
+  update(dayTime:number,weather:WeatherFrame,camera:Vector3,delta:number,season?:SeasonVisual){
     this.position.copy(camera);const day=daylightAt(dayTime),dawn=dawnWeight(dayTime),sunset=sunsetWeight(dayTime),shade=Math.max(0,(weather.cloud-.24)/.76),blend=this.initialized?1-Math.exp(-Math.max(0,delta)*.7):1;this.initialized=true;
     const top=new Color('#101d3c').lerp(new Color('#4e9bdc'),day).lerp(new Color('#dfad91'),dawn*.45).lerp(new Color('#8d729e'),sunset*.78).lerp(new Color('#596c82'),shade*.78);
     const horizon=new Color('#364b6c').lerp(new Color('#c6e5ec'),day).lerp(new Color('#ffe0ae'),dawn*.72).lerp(new Color('#f6ac75'),sunset*.86).lerp(new Color('#9daeb9'),shade*.65);
+    if(season){const seasonalTop=new Color().setRGB(0,0,0),seasonalHorizon=new Color().setRGB(0,0,0);SEASONS.forEach((s,i)=>{seasonalTop.add(new Color(s.sky).multiplyScalar(season.weights[i]));seasonalHorizon.add(new Color(s.horizon).multiplyScalar(season.weights[i]));});top.lerp(seasonalTop,day*.55*(1-shade*.65));horizon.lerp(seasonalHorizon,day*.5*(1-shade*.65));}
     // Cloud cover still respects night luminance instead of bright gray at midnight.
     top.multiplyScalar(.72+day*.28);horizon.multiplyScalar(.64+day*.36);
     this.top.value.lerp(top,blend);this.horizon.value.lerp(horizon,blend);this.fog.color.copy(this.horizon.value);
-    const range=farmFogRange(dayTime,weather);this.fog.near+=(range.near-this.fog.near)*blend;this.fog.far+=(range.far-this.fog.far)*blend;
+    const range=farmFogRange(dayTime,weather);if(season){const mist=SEASONS.reduce((n,s,i)=>n+s.morningMist*season.weights[i],0)*dawn;range.near=Math.max(28,range.near-mist*6);range.far-=mist*12;}this.fog.near+=(range.near-this.fog.near)*blend;this.fog.far+=(range.far-this.fog.far)*blend;
     const angle=(dayTime-.25)*Math.PI*2;this.direction.value.lerp(new Vector3(-Math.cos(angle),Math.sin(angle),.25).normalize(),blend).normalize();
     this.daylight.value+=(day*(1-shade*.94)-this.daylight.value)*blend;this.night.value+=((1-day)*(1-shade*.8)-this.night.value)*blend;this.flash.value=weather.storm;
     this.cloudColor.set('#8a9bb8').lerp(new Color('#fffbed'),day).lerp(new Color('#ffc79c'),Math.max(dawn*.25,sunset*.55)).lerp(new Color('#63758b'),shade*.7).lerp(new Color('#29374b'),weather.storm*.65).multiplyScalar(.42+day*.58);

@@ -1,3 +1,5 @@
+import { CalendarSystem } from './calendar/CalendarSystem';
+import type { CalendarSnapshot } from './calendar/CalendarSystem';
 import { ProgressionSystem } from './progression/ProgressionSystem';
 import type { ProgressionSnapshot } from './progression/ProgressionState';
 import type { ActivitySink } from './progression/ProgressionRegistry';
@@ -29,8 +31,9 @@ import { normalizeEconomy } from './economy/EconomyState';
 import type { EconomySnapshot } from './economy/EconomyState';
 import { BARN_CAPACITIES,GRAIN_CAPACITIES } from './economy/TradeCatalog';
 
-export interface GameplaySnapshot { inventory: InventorySnapshot; barn:InventorySnapshot;progress: PlayerProgressState; home: HomeSnapshot; fishing:FishingSnapshot;hotbar:HotbarSnapshot;farm:FarmSnapshot;vehicles:VehicleSnapshot;livestock:LivestockSnapshot;economy:EconomySnapshot;progression:ProgressionSnapshot }
+export interface GameplaySnapshot { calendar:CalendarSnapshot; inventory: InventorySnapshot; barn:InventorySnapshot;progress: PlayerProgressState; home: HomeSnapshot; fishing:FishingSnapshot;hotbar:HotbarSnapshot;farm:FarmSnapshot;vehicles:VehicleSnapshot;livestock:LivestockSnapshot;economy:EconomySnapshot;progression:ProgressionSnapshot }
 export interface GameplayServices {
+  readonly calendar:CalendarSystem;
   readonly items: ItemRegistry;
   readonly inventory: Inventory;
   readonly barn:Inventory;
@@ -51,6 +54,7 @@ export interface GameplayServices {
 
 /** Owned by Game for its whole lifetime, never by a disposable world. */
 export class GameplayFoundation implements GameplayServices {
+  readonly calendar:CalendarSystem;
   readonly inventory: Inventory;
   readonly barn:Inventory;
   readonly progress: PlayerProgress;
@@ -68,6 +72,7 @@ export class GameplayFoundation implements GameplayServices {
 
   constructor(clock: GameClock, saved?: Partial<GameplaySnapshot>,
     readonly items: ItemRegistry = ITEMS, private onChange: (immediate?:boolean) => void = () => {}) {
+    this.calendar=new CalendarSystem(clock,saved?.calendar,()=>this.requestSave(true));
     const economy=normalizeEconomy(saved?.economy);
     this.progression=new ProgressionSystem(clock,saved?.progression,()=>this.requestSave(true),saved!==undefined&&saved.progression===undefined);
     const activity:ActivitySink=event=>{this.progression.record(event);};
@@ -76,17 +81,17 @@ export class GameplayFoundation implements GameplayServices {
     this.progress = new PlayerProgress(saved?.progress, () => this.requestSave());
     this.time = new GameplayTime(clock, () => this.requestSave());
     this.home = new HomeSystem(items, this.progress, this.time, saved?.home, () => this.requestSave(),activity);
-    this.fishing=new FishingSystem(this.inventory,this.progress,saved?.fishing,()=>this.requestSave(),undefined,activity);
+    this.fishing=new FishingSystem(this.inventory,this.progress,saved?.fishing,()=>this.requestSave(),undefined,activity,()=>this.calendar.date.season);
     this.cooking=new CookingSystem(this.inventory,this.progress,activity,id=>this.progression.registry.getUnlock(`recipe.${id}`)?this.progression.lockReason(`recipe.${id}`):undefined);
     this.hotbar=new Hotbar(this.inventory,saved?.hotbar,()=>this.requestSave());
-    this.crops=new CropSystem(clock,getCropRegistry(items));
+    this.crops=new CropSystem(clock,getCropRegistry(items),this.calendar);
     // Farm commits land and Inventory before this callback; flush both together.
     this.farm=new FarmSystem(this.crops,this.inventory,saved?.farm,()=>this.requestSave(true),activity);
     this.vehicles=new VehicleProgress(saved?.vehicles,GRAIN_CAPACITIES[economy.upgrades.grain]);
     this.livestock=new LivestockSystem(clock,this.inventory,saved?.livestock,()=>this.requestSave(true),activity);
-    this.economy=new EconomySystem(this.inventory,this.barn,this.vehicles,economy,()=>this.requestSave(true),activity,()=>this.progression.canAccess('capacity.upgrades'));
+    this.economy=new EconomySystem(this.inventory,this.barn,this.vehicles,economy,()=>this.requestSave(true),activity,()=>this.progression.canAccess('capacity.upgrades'),()=>this.calendar.date.season);
   }
 
   requestSave(immediate=false): void { if(immediate)this.onChange(true);else this.onChange(); }
-  snapshot(): GameplaySnapshot { return { inventory: this.inventory.snapshot(),barn:this.barn.snapshot(), progress: this.progress.snapshot(), home: this.home.snapshot(),fishing:this.fishing.snapshot(),hotbar:this.hotbar.snapshot(),farm:this.farm.snapshot(),vehicles:this.vehicles.snapshot(),livestock:this.livestock.snapshot(),economy:this.economy.snapshot(),progression:this.progression.snapshot() }; }
+  snapshot(): GameplaySnapshot { return { calendar:this.calendar.snapshot(),inventory: this.inventory.snapshot(),barn:this.barn.snapshot(), progress: this.progress.snapshot(), home: this.home.snapshot(),fishing:this.fishing.snapshot(),hotbar:this.hotbar.snapshot(),farm:this.farm.snapshot(),vehicles:this.vehicles.snapshot(),livestock:this.livestock.snapshot(),economy:this.economy.snapshot(),progression:this.progression.snapshot() }; }
 }

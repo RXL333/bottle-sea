@@ -1,5 +1,7 @@
 import type { GameplayServices } from '../gameplay/GameplayFoundation';
 import { RECIPES } from '../gameplay/CookingCatalog';
+import { panelHeader } from './UIChrome';
+import { itemIcon } from './ItemIcon';
 
 /** A stove menu and a small food-only pouch; no equipment/general bag UI. */
 export class CookingPanel {
@@ -7,7 +9,7 @@ export class CookingPanel {
   private gameplay?:GameplayServices;private onClose=()=>{};private mode:'stove'|'food'='stove';private preferredFish='';
   private message='';private renderedBusy=false;
   constructor(root:HTMLElement){
-    this.element.className='home-panel cooking-panel';root.append(this.element);
+    this.element.className='home-panel cooking-panel ui-panel';root.append(this.element);
     this.element.addEventListener('cancel',event=>{event.preventDefault();this.close();});
   }
   get open(){return this.element.open;}
@@ -28,9 +30,9 @@ export class CookingPanel {
   private button(label:string,action:()=>void){const b=document.createElement('button');b.type='button';b.textContent=label;b.addEventListener('click',action);return b;}
   private render(){
     const game=this.gameplay!;this.renderedBusy=game.cooking.active;this.element.replaceChildren();
-    const title=document.createElement('h2');title.textContent=this.mode==='stove'?'炉火与晚餐':'随身食物';
+    const header=panelHeader(this.mode==='stove'?'炉火与晚餐':'随身食物','ISLAND KITCHEN · 一餐温暖',()=>this.close());
     const subtitle=document.createElement('p');subtitle.textContent=`体力 ${game.progress.energy} / ${game.progress.maxEnergy} · ${this.mode==='stove'?'食材取自随身背包，箱内物品请先取出。':'带着做好的料理，继续今天的探索。'}`;
-    this.element.append(title,subtitle);
+    this.element.append(header,subtitle);
     if(this.mode==='stove')this.recipes();
     this.foods();
     const status=document.createElement('p');status.className='cooking-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.textContent=this.message;
@@ -53,7 +55,7 @@ export class CookingPanel {
     const grid=document.createElement('div');grid.className='recipe-grid';
     for(const recipe of RECIPES){
       const check=cooking.check(recipe.id,this.preferredFish),food=game.items.get(recipe.outputId)!;
-      const card=document.createElement('section');card.className='recipe-card';
+      const card=document.createElement('section');card.className='recipe-card ui-card';
       const heading=document.createElement('h3');heading.textContent=recipe.name;
       const description=document.createElement('p');description.textContent=recipe.description;
       const needed=document.createElement('p');needed.className='recipe-materials';
@@ -63,7 +65,7 @@ export class CookingPanel {
       const button=this.button(cooking.active?'炉灶使用中':check.ok?'制作一份':check.reason??'暂不可制作',()=>{
         const result=cooking.start(recipe.id,this.preferredFish);this.message=result.ok?'炉火正暖，稍候就能开饭。取消不会消耗食材。':result.reason??'暂时无法制作。';this.render();
       });button.disabled=cooking.active||!check.ok;
-      card.append(heading,description,needed,effect,button);grid.append(card);
+      card.append(itemIcon(food),heading,description,needed,effect,button);grid.append(card);
     }
     this.element.append(grid);
   }

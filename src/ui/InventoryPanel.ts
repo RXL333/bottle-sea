@@ -16,7 +16,7 @@ export class InventoryPanel {
   private warehouse?:Inventory;private warehouseName='小屋储物箱';
   private partialTransfers=false;
   constructor(root:HTMLElement){
-    this.element.className='home-panel inventory-panel';root.append(this.element);
+    this.element.className='home-panel inventory-panel ui-panel';root.append(this.element);
     this.element.addEventListener('cancel',event=>{event.preventDefault();this.close();});
     this.element.addEventListener('dragend',()=>{this.drag=undefined;this.element.querySelectorAll('.drop-target').forEach(cell=>cell.classList.remove('drop-target'));});
     window.addEventListener('keydown',event=>{
@@ -53,11 +53,11 @@ export class InventoryPanel {
   private render(){
     const g=this.game!,focusKey=(document.activeElement as HTMLElement|null)?.dataset.focusKey;
     this.element.replaceChildren();this.stamp=this.revision();
-    const header=this.node('header','inventory-header'),heading=this.node('div');
+    const header=this.node('header','inventory-header ui-panel-header'),heading=this.node('div');
     heading.append(this.node('small','inventory-eyebrow',this.storage?'STORAGE':'THE MARINER’S PACK'),this.node('h2','',this.storage?`背包与${this.warehouseName}`:'背包'));
-    const close=this.button('关闭 ×',()=>this.close(),'inventory-close');close.dataset.focusKey='close';header.append(heading,close);
+    const close=this.button('关闭 ×',()=>this.close(),'inventory-close ui-close');close.dataset.focusKey='close';header.append(heading,close);
     const tips=this.node('p','inventory-help',this.storage?'拖拽存取或换位 · Shift 点击快速转移整堆 · Esc / B 关闭':'拖拽换位或合并 · Shift 拖拽拆出半堆 · Esc / B 关闭');
-    const tabs=this.node('nav','inventory-filters');tabs.setAttribute('aria-label','物品分类');
+    const tabs=this.node('nav','inventory-filters ui-tabs');tabs.setAttribute('aria-label','物品分类');
     for(const category of ['all',...ITEM_CATEGORIES] as const){const tab=this.button(category==='all'?'全部':CATEGORY_LABELS[category],()=>{
       this.filter=category;this.discard=undefined;this.quantity=1;
       const inventory=this.inventory(this.side),selected=inventory.selectedSlot,stack=selected===null?null:inventory.getSlot(selected);
@@ -77,11 +77,11 @@ export class InventoryPanel {
     const inventory=this.inventory(side),section=this.node('section','inventory-container'),header=this.node('header','inventory-container-header');
     const limit=Number.isFinite(inventory.quantityCapacity)?` · 装载 ${inventory.usedQuantity} / ${inventory.quantityCapacity} 份`:'';
     header.append(this.node('h3','',side==='bag'?'随身背包':this.warehouseName),this.node('span','inventory-capacity',`${inventory.occupiedSlots} / ${inventory.capacity} 格 · 空位 ${inventory.emptySlots}${limit}`));section.append(header);
-    if(this.storage&&side==='bag'){const all=this.button('全部存入',()=>this.transfer(inventory,this.inventory('chest')),'inventory-store-all');all.disabled=!inventory.occupiedSlots;all.dataset.focusKey='store-all';section.append(all);}
+    if(this.storage&&side==='bag'){const all=this.button('全部存入',()=>this.transfer(inventory,this.inventory('chest')),'inventory-store-all');all.disabled=!inventory.occupiedSlots;all.dataset.focusKey='store-all';header.append(all);}
     const grid=this.node('div','inventory-grid');grid.setAttribute('role','grid');grid.setAttribute('aria-label',side==='bag'?'背包槽位':`${this.warehouseName}槽位`);
     inventory.snapshot().slots.forEach((stack,index)=>{
       const item=stack?this.game!.items.get(stack.itemId):undefined;if(item&&this.filter!=='all'&&item.category!==this.filter)return;
-      const cell=this.button('',()=>{},'inventory-slot');cell.dataset.focusKey=`${side}-${index}`;cell.setAttribute('role','gridcell');cell.setAttribute('aria-selected',String(this.side===side&&inventory.selectedSlot===index));cell.classList.toggle('selected',this.side===side&&inventory.selectedSlot===index);cell.classList.toggle('empty',!stack);
+      const cell=this.button('',()=>{},'inventory-slot ui-item-slot');cell.dataset.focusKey=`${side}-${index}`;cell.setAttribute('role','gridcell');cell.setAttribute('aria-selected',String(this.side===side&&inventory.selectedSlot===index));cell.classList.toggle('selected',this.side===side&&inventory.selectedSlot===index);cell.classList.toggle('empty',!stack);
       const number=this.node('small','slot-number',String(index+1));cell.append(number);
       if(item&&stack){cell.append(itemIcon(item),this.node('span','stack-count',String(stack.quantity)),this.node('span','slot-name',item.name));cell.title=`${item.name} × ${stack.quantity}\n${CATEGORY_LABELS[item.category]} · ${item.description}`;cell.draggable=true;}
       else {cell.append(this.node('span','empty-mark','·'));cell.title=`空槽 ${index+1}`;}

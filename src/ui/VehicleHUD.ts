@@ -27,8 +27,8 @@ export class VehicleHUD {
     for(const choice of choices){
       let button=this.seedButtons.get(choice.id);
       if(!button){button=document.createElement('button');button.type='button';button.addEventListener('click',()=>controller.selectSeed(choice.id));this.seedButtons.set(choice.id,button);this.seeds.append(button);}
-      const text=`${choice.name} × ${choice.count}`;if(button.textContent!==text)button.textContent=text;
-      button.setAttribute('aria-label',`选择${choice.name}种子`);button.setAttribute('aria-pressed',String(choice.selected));button.disabled=controller.phase!=='DRIVING';
+      const text=`${choice.name} × ${choice.count}${choice.seasonReason?' · 非适种季':''}`;if(button.textContent!==text)button.textContent=text;
+      button.setAttribute('aria-label',`选择${choice.name}种子`);button.setAttribute('aria-pressed',String(choice.selected));button.disabled=controller.phase!=='DRIVING';button.title=choice.seasonReason??'';
     }
     this.gear.textContent=controller.phase==='BOARDING'?'正在上车':controller.phase==='EXITING'?'正在下车':controller.braking?'刹车':vehicle.speed>.02?'前进 D':vehicle.speed<-.02?'倒车 R':'停放 N';
   }

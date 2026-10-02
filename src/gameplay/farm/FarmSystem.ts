@@ -17,7 +17,7 @@ export interface FarmFieldView {
   nextGrowthAtGameTime:number|null;
 }
 export type FarmFailureReason=Extract<InventoryResult,{ok:false}>['reason']
-  |'invalid-cell'|'duplicate-cell'|'invalid-land-state'|'unknown-crop'|'invalid-game-time'|'already-claimed';
+  |'invalid-cell'|'duplicate-cell'|'invalid-land-state'|'unknown-crop'|'invalid-game-time'|'already-claimed'|'wrong-season';
 export type FarmResult={ok:true;changedCells:number;consumed:ItemStack[];produced:ItemStack[]}|{ok:false;reason:FarmFailureReason};
 export type HarvestReceiver=Pick<Inventory,'canExchange'|'exchange'>;
 
@@ -119,6 +119,7 @@ export class FarmSystem {
   }
   seed(refs:readonly FarmCellRef[],cropId:string):FarmResult {
     const definition=this.crops.registry.get(cropId);if(!definition)return {ok:false,reason:'unknown-crop'};
+    if(this.crops.plantingReason(cropId))return {ok:false,reason:'wrong-season'};
     const crop=this.crops.plant(cropId);if(!crop)return {ok:false,reason:'invalid-game-time'};
     const cells=this.resolve(refs);if(!Array.isArray(cells))return cells;
     if(cells.some(c=>c.landState!=='TILLED'))return {ok:false,reason:'invalid-land-state'};

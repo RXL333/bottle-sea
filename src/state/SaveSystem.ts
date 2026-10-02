@@ -1,3 +1,4 @@
+import { normalizeCalendar } from '../gameplay/calendar/CalendarSystem';
 import { defaultProgression,normalizeProgression } from '../gameplay/progression/ProgressionState';
 import { GameClock } from '../core/GameClock';
 import type { ClockSnapshot } from '../core/GameClock';
@@ -33,7 +34,7 @@ export interface SaveData extends GameplaySnapshot {
 export interface SaveStorage { getItem(key: string): string | null; setItem(key: string, value: string): void }
 export function defaultSave(items:ItemRegistry=ITEMS): SaveData {
   const gameTime=new GameClock().snapshot();
-  return {version:2,gameTime,player:defaultPlayerState(),worlds:new WorldStateRegistry().snapshot(),lastSuccessfulWorld:'HOME',global:{storm:false,intensity:0,quality:'MEDIUM'},inventory:new Inventory(items).snapshot(),barn:new Inventory(items,BARN_CAPACITY).snapshot(),progress:defaultPlayerProgressState(),home:normalizeHome(undefined,items),fishing:normalizeFishing(undefined,items),hotbar:normalizeHotbar(undefined,items),farm:normalizeFarm(undefined,getCropRegistry(items),gameTime.simulationTime),vehicles:normalizeVehicles(undefined),livestock:normalizeLivestock(undefined,gameTime.simulationTime),economy:normalizeEconomy(undefined),progression:defaultProgression()};
+  return {version:2,calendar:normalizeCalendar(undefined,gameTime.simulationTime),gameTime,player:defaultPlayerState(),worlds:new WorldStateRegistry().snapshot(),lastSuccessfulWorld:'HOME',global:{storm:false,intensity:0,quality:'MEDIUM'},inventory:new Inventory(items).snapshot(),barn:new Inventory(items,BARN_CAPACITY).snapshot(),progress:defaultPlayerProgressState(),home:normalizeHome(undefined,items),fishing:normalizeFishing(undefined,items),hotbar:normalizeHotbar(undefined,items),farm:normalizeFarm(undefined,getCropRegistry(items),gameTime.simulationTime),vehicles:normalizeVehicles(undefined),livestock:normalizeLivestock(undefined,gameTime.simulationTime),economy:normalizeEconomy(undefined),progression:defaultProgression()};
 }
 const record=(value: unknown): Record<string,unknown> => value!==null && typeof value==='object' && !Array.isArray(value) ? value as Record<string,unknown> : {};
 // Version routing is intentionally small; unknown future schemas are not guessed.
@@ -41,6 +42,7 @@ export function migrateSave(value: unknown,items:ItemRegistry=ITEMS): SaveData {
   const raw=record(value);
   if(raw.version!==1&&raw.version!==2)throw new Error('Unsupported save version');
   const result=defaultSave(items),clock=new GameClock();clock.restore(record(raw.gameTime));result.gameTime=clock.snapshot();
+  result.calendar=normalizeCalendar(raw.version===2?raw.calendar:undefined,clock.simulationTime);
   result.economy=normalizeEconomy(raw.version===2?raw.economy:undefined);
   result.progression=normalizeProgression(raw.version===2?raw.progression:undefined,clock.simulationTime,raw.version===1||raw.progression===undefined);
   if(raw.version===2){result.inventory=normalizeInventory(raw.inventory,items);result.progress=normalizePlayerProgress(raw.progress);}

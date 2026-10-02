@@ -1,3 +1,4 @@
+import { SeasonalEnvironment } from '../../systems/SeasonalEnvironment';
 import { Group } from 'three';
 import { QUALITY } from '../../core/Renderer';
 import type { Quality } from '../../core/Renderer';
@@ -21,6 +22,7 @@ import { merchantTarget } from '../trade/MerchantShip';
 import { sampleMerchantRoute,MERCHANT_SCHEDULE } from '../trade/MerchantRoute';
 import type { TradeAccess } from '../../gameplay/economy/EconomySystem';
 export class HomeWorld implements GameWorld {
+  private seasons=new SeasonalEnvironment();
   readonly id='HOME' as const;
   readonly boat=new PlayerTravelBoat();
   private merchantState=sampleMerchantRoute(0);
@@ -40,13 +42,15 @@ export class HomeWorld implements GameWorld {
   readonly navigation=homeNavigation(()=>[...this.world.ship.collisionBoxes,...this.boat.collisionBoxes],()=>this.models.colliders);
   constructor(loader?:ModelLoader){this.models=new HomeModels(loader);this.root.name='HomeWorld';this.departureSea.visible=false;this.root.add(this.departureSea);this.root.add(this.room,this.bottle,this.world,this.micro,this.boat,this.models);this.boat.anchor(.65,2.35,-Math.PI/2);this.boat.departureDistance=.8;this.merchant.unavailable=()=>this.merchantState.available?undefined:this.merchantState.prompt;this.interaction.setTargets([...discoveryTargets.map(t=>t.id==='lighthouse'?{...t,x:t.x+.65}:t),{id:'cottage_door',name:'进入小屋',action:'ENTER_COTTAGE',x:-1.564,y:4.44,z:.80,range:.70},{id:'home_boat',name:'登船',action:'TRAVEL',x:.65,y:4.12,z:1.82,range:.72},this.fishingTarget,this.merchant]);}
   load(){return this.pending??=this.loadModels();}
-  private async loadModels(){await this.models.load();if(this.disposed)return;this.models.build(this.world);this.boat.setModel(this.models.instance('launch'));this.pulse=new DiscoveryPulse(this.world);}
+  private async loadModels(){await this.models.load();if(this.disposed)return;this.models.build(this.world);this.seasons.register(this.world.island);this.models.traverse(o=>{if(o.userData.seasonFoliage)this.seasons.register(o);});this.boat.setModel(this.models.instance('launch'));this.pulse=new DiscoveryPulse(this.world);}
   enter({state,gameplay,gameTime}:WorldEnterContext){this.gameplay=gameplay;this.updateMerchant(gameTime,0,0);this.interaction.restore(state.discoveries);}
   private updateMerchant(gameTime:number,time:number,storm:number){this.merchantState=sampleMerchantRoute(gameTime);this.merchant.prompt=this.merchantState.prompt;this.world.prepareShip(time,storm,this.merchantState.pose);}
   prepare(context:WorldUpdateContext){this.updateMerchant(context.gameTime,context.time,context.storm);this.boat.update(context.time,context.storm);}
   update(c:WorldUpdateContext){
+    if(c.season)this.seasons.update(c.season);
     this.fishingTarget.prompt=this.gameplay?.fishing.prompt;
     if(this.departureSea.visible)this.departureSea.update(c.time,c.storm,c.dayTime);this.boat.update(c.time,c.storm);this.world.update(c.time,c.storm,c.dayTime,c.player);this.bottle.update(c.time,c.storm,c.flash);
+    if(c.weather)this.world.island.update(c.time,c.weather.wind);
     this.world.island.house.setNight(c.night);this.world.island.lighthouse.update(c.time,c.night,c.storm);
     this.micro.update(c.time,c.night,c.storm);this.pulse.update(c.delta);
     this.models.update(c.night);

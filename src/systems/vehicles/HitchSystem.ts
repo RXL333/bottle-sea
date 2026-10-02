@@ -89,8 +89,8 @@ export class HitchSystem implements VehicleAttachmentDriver {
     const tool=this.seeder,work=this.seeding;if(!tool||!work||!this.tractor.occupied)return {status:'unavailable',message:'请先上车并挂接播种机，再选择种子。'};
     const crops=work.registry.list(),id=cropId??crops[(crops.findIndex(c=>c.id===tool.seedCropId)+1)%crops.length]?.id;
     const crop=id?work.registry.get(id):undefined;if(!crop)return {status:'unavailable',message:'请选择已注册的作物种子。'};
-    tool.seedCropId=crop.id;if(!work.count(crop.id))tool.setWorkState('RAISED');this.seedReport=undefined;this.seededThisRun=0;this.record();this.save();
-    return {status:'success',changed:true,message:`已选择${crop.name}种子 · 背包剩余 ${work.count(crop.id)} 份${work.count(crop.id)?'':' · 种子不足，播种机已停止'}`};
+    tool.seedCropId=crop.id;if(!work.count(crop.id)||work.plantingReason(crop.id))tool.setWorkState('RAISED');this.seedReport=undefined;this.seededThisRun=0;this.record();this.save();
+    return {status:'success',changed:true,message:`已选择${crop.name}种子 · 背包剩余 ${work.count(crop.id)} 份${work.plantingReason(crop.id)?` · ${work.plantingReason(crop.id)}`:work.count(crop.id)?'':' · 种子不足，播种机已停止'}`};
   }
   private get workingTool(){return this.seeder??this.tools.find(t=>t.definition.work&&this.isAttached(t.id));}
   get presentationWork(){const tool=this.workingTool;return {kind:tool?.definition.work?.kind==='till'?'till' as const:tool?.definition.work?.kind==='seed'?'seed' as const:undefined,enabled:tool?.workState==='LOWERED',operations:tool?.definition.work?.kind==='seed'?this.seededThisRun:this.tilledThisRun};}
@@ -100,7 +100,7 @@ export class HitchSystem implements VehicleAttachmentDriver {
     if(tool.definition.work?.kind==='seed'){
       const crop=tool.seedCropId?this.seeding?.registry.get(tool.seedCropId):undefined,count=crop?this.seeding!.count(crop.id):0,r=this.seedReport;
       const mode=tool.workState==='LOWERED'?'落下 · 作业开启 · J 停止':'抬起 · 作业停止 · J 开启';
-      const feedback=!crop?'请选择种子':!count?'种子不足 · 已停止播种':r?.failed?'播种失败 · 已停止':tool.workState==='RAISED'?'不播种':Math.abs(this.tractor.speed)<.02?'停稳待作业':r?.changedCells?'播种中':r?.protectedCells?'已有作物已保护':r&&!r.inField&&!r.coveredCells?'农田外 · 不播种':'仅在空白已耕地播种';
+      const feedback=crop&&this.seeding?.plantingReason(crop.id)?this.seeding.plantingReason(crop.id):!crop?'请选择种子':!count?'种子不足 · 已停止播种':r?.failed?'播种失败 · 已停止':tool.workState==='RAISED'?'不播种':Math.abs(this.tractor.speed)<.02?'停稳待作业':r?.changedCells?'播种中':r?.protectedCells?'已有作物已保护':r&&!r.inField&&!r.coveredCells?'农田外 · 不播种':'仅在空白已耕地播种';
       return `播种机 ${mode} · ${crop?.name??'未选种'}种子 ${count} 份 · ${feedback} · 本次播种 ${this.seededThisRun} 格 · 宽 ${width}m · K 换种`;
     }
     if(tool.workState==='RAISED')return `犁地机 抬起 · 不作业 · J 落下 · 宽 ${width}m`;
@@ -110,6 +110,7 @@ export class HitchSystem implements VehicleAttachmentDriver {
   toggleWork():InteractionOutcome {
     const tool=this.workingTool;if(!tool||!this.work||!this.tractor.occupied)return {status:'unavailable',message:'请先上车并挂接作业农具，再按 J 抬起 / 落下。'};
     if(tool.definition.work?.kind==='seed'&&tool.workState==='RAISED'&&(!tool.seedCropId||!this.seeding?.count(tool.seedCropId)))return {status:'unavailable',message:'背包种子不足 · 换一种种子或补充后按 J 开启播种。'};
+    if(tool.definition.work?.kind==='seed'&&tool.workState==='RAISED'&&tool.seedCropId){const reason=this.seeding?.plantingReason(tool.seedCropId);if(reason)return {status:'unavailable',message:reason};}
     tool.setWorkState(tool.workState==='RAISED'?'LOWERED':'RAISED');this.resetFeedback();this.record();this.save();
     return {status:'success',changed:true,message:tool.workState==='LOWERED'?(tool.definition.work?.kind==='seed'?'播种机已落下 · 使用背包种子，仅对空白已耕地播种。':'犁地机已落下 · 经过主农田时耕地，已有作物会被保护。'):`${tool.definition.name}已抬起 · 停止作业，可安全转场。`};
   }

@@ -1,7 +1,9 @@
+import { SEASON_IDS } from './calendar/SeasonRegistry';
+import type { SeasonId } from './calendar/SeasonRegistry';
 export const ITEM_CATEGORIES=['food','fish','crop','seed','material','tool','special'] as const;
 export type ItemCategory=typeof ITEM_CATEGORIES[number];
 export const CATEGORY_LABELS:Readonly<Record<ItemCategory,string>>={food:'食物',fish:'鱼类',crop:'作物',seed:'种子',material:'材料',tool:'工具',special:'特殊'};
-export interface FishProperties {readonly weight:number;readonly color:string;readonly rarity:'常见'|'少见'|'稀有'}
+export interface FishProperties {readonly weight:number;readonly color:string;readonly rarity:'常见'|'少见'|'稀有';readonly seasonWeights?:Readonly<Partial<Record<SeasonId,number>>>}
 export interface ItemDefinition {
   readonly id:string;readonly name:string;readonly category:ItemCategory;readonly description:string;
   readonly icon:string;readonly maxStack:number;
@@ -21,9 +23,9 @@ export class ItemRegistry {
       ||(item.energyRestore!==undefined&&(!Number.isFinite(item.energyRestore)||item.energyRestore<0))
       ||(item.sellPrice!==undefined&&(!Number.isSafeInteger(item.sellPrice)||item.sellPrice<0))
       ||(item.cropId!==undefined&&!/^[a-z][a-z0-9_.-]*$/.test(item.cropId))
-      ||(item.fishing&&(!Number.isFinite(item.fishing.weight)||item.fishing.weight<=0||!item.fishing.color.trim())))throw new Error(`Invalid item definition: ${item.id}`);
+      ||(item.fishing&&(!Number.isFinite(item.fishing.weight)||item.fishing.weight<=0||!item.fishing.color.trim()||(item.fishing.seasonWeights!==undefined&&Object.entries(item.fishing.seasonWeights).some(([id,weight])=>!SEASON_IDS.includes(id as SeasonId)||typeof weight!=='number'||!Number.isFinite(weight)||weight<0)))))throw new Error(`Invalid item definition: ${item.id}`);
     if(this.definitions.has(item.id))throw new Error(`Item already registered: ${item.id}`);
-    this.definitions.set(item.id,Object.freeze({...item,...(item.fishing?{fishing:Object.freeze({...item.fishing})}:{})}));return this;
+    this.definitions.set(item.id,Object.freeze({...item,...(item.fishing?{fishing:Object.freeze({...item.fishing,...(item.fishing.seasonWeights?{seasonWeights:Object.freeze({...item.fishing.seasonWeights})}:{})})}:{})}));return this;
   }
   get(id:string):Readonly<ItemDefinition>|undefined{return this.definitions.get(id);}
   has(id:string){return this.definitions.has(id);}
@@ -35,12 +37,12 @@ export class ItemRegistry {
 export const ITEM_DEFINITIONS:readonly ItemDefinition[]=[
   {id:'wood',name:'木材',category:'material',description:'干燥的木料，可用于烟熏料理和后续建造。',icon:'wood',maxStack:99},
   {id:'stone',name:'石料',category:'material',description:'结实的岛屿石料，留作后续建造材料。',icon:'stone',maxStack:99},
-  {id:'fish.sardine',name:'沙丁鱼',category:'fish',description:'常见的小型海鱼，适合烤制或煮汤。',icon:'sardine',maxStack:20,fishing:{weight:35,color:'#b4d5dc',rarity:'常见'}},
-  {id:'fish.horse_mackerel',name:'竹荚鱼',category:'fish',description:'银绿相间的鲜鱼，鱼肉细嫩。',icon:'horse-mackerel',maxStack:20,fishing:{weight:24,color:'#92beaf',rarity:'常见'}},
-  {id:'fish.mackerel',name:'鲭鱼',category:'fish',description:'背部带有深色条纹，适合烟熏。',icon:'mackerel',maxStack:20,fishing:{weight:18,color:'#668faf',rarity:'常见'}},
-  {id:'fish.sea_bass',name:'海鲈鱼',category:'fish',description:'少见的海鲈鱼，可以制作香煎鲈鱼。',icon:'sea-bass',maxStack:20,fishing:{weight:12,color:'#b1c4a1',rarity:'少见'}},
-  {id:'fish.red_snapper',name:'红鲷鱼',category:'fish',description:'暖红色的海鱼，挣扎时格外有力。',icon:'red-snapper',maxStack:20,fishing:{weight:8,color:'#d7846e',rarity:'少见'}},
-  {id:'fish.tuna',name:'金枪鱼',category:'fish',description:'罕见的海中游泳健将，需要稳住鱼线张力。',icon:'tuna',maxStack:20,fishing:{weight:3,color:'#587889',rarity:'稀有'}},
+  {id:'fish.sardine',name:'沙丁鱼',category:'fish',description:'常见的小型海鱼，适合烤制或煮汤。',icon:'sardine',maxStack:20,fishing:{seasonWeights:{spring:1.4,summer:1,autumn:1.1,winter:1.5},weight:35,color:'#b4d5dc',rarity:'常见'}},
+  {id:'fish.horse_mackerel',name:'竹荚鱼',category:'fish',description:'银绿相间的鲜鱼，鱼肉细嫩。',icon:'horse-mackerel',maxStack:20,fishing:{seasonWeights:{spring:1.4,summer:1.1,autumn:1,winter:.7},weight:24,color:'#92beaf',rarity:'常见'}},
+  {id:'fish.mackerel',name:'鲭鱼',category:'fish',description:'背部带有深色条纹，适合烟熏。',icon:'mackerel',maxStack:20,fishing:{seasonWeights:{spring:.8,summer:1,autumn:1.7,winter:1.2},weight:18,color:'#668faf',rarity:'常见'}},
+  {id:'fish.sea_bass',name:'海鲈鱼',category:'fish',description:'少见的海鲈鱼，可以制作香煎鲈鱼。',icon:'sea-bass',maxStack:20,fishing:{seasonWeights:{spring:1.2,summer:1.2,autumn:1,winter:.6},weight:12,color:'#b1c4a1',rarity:'少见'}},
+  {id:'fish.red_snapper',name:'红鲷鱼',category:'fish',description:'暖红色的海鱼，挣扎时格外有力。',icon:'red-snapper',maxStack:20,fishing:{seasonWeights:{spring:.8,summer:1.8,autumn:1,winter:0},weight:8,color:'#d7846e',rarity:'少见'}},
+  {id:'fish.tuna',name:'金枪鱼',category:'fish',description:'罕见的海中游泳健将，需要稳住鱼线张力。',icon:'tuna',maxStack:20,fishing:{seasonWeights:{spring:.6,summer:1.8,autumn:1.2,winter:.4},weight:3,color:'#587889',rarity:'稀有'}},
   {id:'food.grilled_fish',name:'烤鱼',category:'food',description:'鱼皮焦香，适合作为探索途中的简单餐食。',icon:'grilled-fish',maxStack:10,energyRestore:20},
   {id:'food.seafood_soup',name:'海鲜汤',category:'food',description:'两条鲜鱼煮成的暖汤，能恢复更多体力。',icon:'seafood-soup',maxStack:10,energyRestore:45},
   {id:'food.pan_sea_bass',name:'香煎鲈鱼',category:'food',description:'用海鲈鱼煎制的料理，外酥里嫩。',icon:'pan-sea-bass',maxStack:10,energyRestore:35},

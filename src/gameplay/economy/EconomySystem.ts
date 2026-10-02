@@ -1,3 +1,5 @@
+import type { SeasonId } from '../calendar/SeasonRegistry';
+import { offerSeasonReason } from './TradeCatalog';
 import type { ActivitySink } from '../progression/ProgressionRegistry';
 import type { Inventory } from '../Inventory';
 import { normalizeVehicles } from '../vehicles/VehicleState';
@@ -5,11 +7,12 @@ import type { VehiclePose,VehicleProgress } from '../vehicles/VehicleState';
 import { normalizeEconomy } from './EconomyState';
 import type { EconomySnapshot } from './EconomyState';
 import { BARN_CAPACITIES,GRAIN_CAPACITIES,MAX_COINS,MAX_TRADE_QUANTITY,SELL_PRICES,tradeOffer,validateTradeCatalog } from './TradeCatalog';
-export type TradeFailure='unknown-product'|'invalid-quantity'|'insufficient-coins'|'insufficient-items'|'full'|'already-owned'|'upgrade-order'|'delivery-blocked'|'farm-only'|'stale-request'|'balance-limit'|'transaction-failed'|'merchant-away'|'locked';
+export type TradeFailure='unknown-product'|'invalid-quantity'|'insufficient-coins'|'insufficient-items'|'full'|'already-owned'|'upgrade-order'|'delivery-blocked'|'farm-only'|'stale-request'|'balance-limit'|'transaction-failed'|'merchant-away'|'locked'|'out-of-season';
 export type TradeResult={ok:true;total:number;quantity:number}|{ok:false;reason:TradeFailure};
 export interface MachineDeliveryPlan {pose:VehiclePose;apply():void;rollback():void}
 export interface TradeAccess {farm:boolean;available?():boolean;label?:string;upgraded?():void;delivery?:{available():boolean;prepare():MachineDeliveryPlan|undefined}}
 export const TRADE_FAILURES:Readonly<Record<TradeFailure,string>>={
+  'out-of-season':'当前季节暂不供应此商品，金币与物品已保留；适种季节见日历。',
   'locked':'首次出售商品后解锁容量升级；原有金币和物品已保留。',
   'merchant-away':'商船尚未靠稳或已离港，每日 08:00–20:00 可交易，金币和物品已保留。',
   'unknown-product':'商船不经营此商品。','invalid-quantity':'数量必须是 1～999 的整数；农机和升级每次一份。','insufficient-coins':'金币不足，交易未扣款。','insufficient-items':'背包中物品数量不足。','full':'背包空间不足，交易未扣款。','already-owned':'此农机已购买，原有农机也会保留。','upgrade-order':'已升级或需先购买前一级升级。','delivery-blocked':'交付停放位被占用，请移开车辆或离开停放区后重试。','farm-only':'请到农场码头购买并接收农机。','stale-request':'该交易请求已处理或已过期，没有重复扣款或发放。','balance-limit':'金币或交易记录达到上限。','transaction-failed':'交易未完成，资源已保留，请重试。',
@@ -17,9 +20,10 @@ export const TRADE_FAILURES:Readonly<Record<TradeFailure,string>>={
 /** Synchronous resource transactions. A persisted sequence rejects replayed purchase/sell requests. */
 export class EconomySystem {
   private state:EconomySnapshot;revision=0;
-  constructor(private inventory:Inventory,private barn:Inventory,private vehicles:VehicleProgress,saved?:unknown,private onChange:()=>void=()=>{},private onActivity:ActivitySink=()=>{},private upgradeAccess:()=>boolean=()=>true){validateTradeCatalog(inventory.items);this.state=normalizeEconomy(saved);}
+  constructor(private inventory:Inventory,private barn:Inventory,private vehicles:VehicleProgress,saved?:unknown,private onChange:()=>void=()=>{},private onActivity:ActivitySink=()=>{},private upgradeAccess:()=>boolean=()=>true,private season:()=>SeasonId=()=> 'spring'){validateTradeCatalog(inventory.items);this.state=normalizeEconomy(saved);}
   get coins(){return this.state.coins;}get nextRequest(){return this.state.sequence+1;}
   get barnCapacity(){return BARN_CAPACITIES[this.state.upgrades.barn];}get grainCapacity(){return GRAIN_CAPACITIES[this.state.upgrades.grain];}
+  seasonReason(id:string){return offerSeasonReason(id,this.season(),this.inventory.items);}
   snapshot(){return structuredClone(this.state);}
   check(mode:'buy'|'sell',id:string,quantity:number,access:TradeAccess={farm:false},request=this.nextRequest):TradeResult {
     if(request!==this.nextRequest)return {ok:false,reason:'stale-request'};
@@ -32,6 +36,7 @@ export class EconomySystem {
     if(this.state.sequence>=MAX_COINS||mode==='sell'&&this.coins+total>MAX_COINS)return {ok:false,reason:'balance-limit'};
     if(mode==='sell'){if(!this.inventory.has(id,quantity))return {ok:false,reason:'insufficient-items'};}
     else {
+      if(this.seasonReason(id))return {ok:false,reason:'out-of-season'};
       if(offer!.kind==='upgrade'&&!this.upgradeAccess())return {ok:false,reason:'locked'};
       if(offer!.kind==='upgrade'&&offer!.level!==this.state.upgrades[offer!.target]+1)return {ok:false,reason:'upgrade-order'};
       if(offer!.kind==='machine'){

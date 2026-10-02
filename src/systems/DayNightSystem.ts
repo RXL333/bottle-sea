@@ -1,3 +1,5 @@
+import { SEASONS } from '../gameplay/calendar/SeasonRegistry';
+import type { SeasonVisual } from '../gameplay/calendar/CalendarSystem';
 import { AmbientLight, BufferGeometry, Color, DirectionalLight, Float32BufferAttribute, Group, HemisphereLight, Mesh, MeshBasicMaterial, MeshStandardMaterial, Points, PointsMaterial, Scene, SphereGeometry } from 'three';
 import { daylightAt,dawnWeight,sunsetWeight,dayPhase } from './DayTimeMath';
 import type { DayPhase } from './DayTimeMath';
@@ -9,6 +11,7 @@ import type { Quality } from '../core/Renderer';
 import { Vector3 } from 'three';
 
 export class DayNightSystem {
+  private seasonalLight=new Color('#ffe2ad');private seasonalSky=new Color('#79b4dc');
   readonly farm=new FarmAtmosphere();
   applyQuality(quality:Quality){this.farm.applyQuality(quality);}
   readonly ambient=new AmbientLight('#d4e4d6',1.4);
@@ -52,12 +55,13 @@ export class DayNightSystem {
     Object.assign(this.sun.shadow.camera,home?{left:-13,right:13,top:10,bottom:-10,near:.5,far:35}:farm?{left:-50,right:50,top:55,bottom:-55,near:.5,far:180}:{left:-25,right:25,top:25,bottom:-25,near:.5,far:90});
     this.sun.shadow.camera.updateProjectionMatrix();this.sun.target.updateMatrixWorld();this.sun.updateMatrixWorld();this.sun.shadow.needsUpdate=true;
   }
-  update(dayTime:number,time:number,storm:number,flash=0,weather?:WeatherFrame,camera=new Vector3(),delta=1/60) {
+  update(dayTime:number,time:number,storm:number,flash=0,weather?:WeatherFrame,camera=new Vector3(),delta=1/60,season?:SeasonVisual) {
+    if(season){this.seasonalLight.setRGB(0,0,0);this.seasonalSky.setRGB(0,0,0);SEASONS.forEach((s,i)=>{this.seasonalLight.add(new Color(s.light).multiplyScalar(season.weights[i]));this.seasonalSky.add(new Color(s.sky).multiplyScalar(season.weights[i]));});this.warm.copy(this.seasonalLight);}
     const daylight=daylightAt(dayTime);this.night=1-daylight;
     const dawn=dawnWeight(dayTime),sunset=sunsetWeight(dayTime);this.phase=dayPhase(dayTime);
     if(this.farm.visible){
       const frame=weather??{...WEATHER_PROFILES.CLEAR,wetness:0,windPhase:time},shade=Math.max(0,(frame.cloud-.24)/.76),blend=1-Math.exp(-Math.max(0,delta)*.8);
-      this.farm.update(dayTime,frame,camera,delta);this.farm.setFlash(flash);(this.scene.background as Color).copy(this.farm.fog.color);
+      this.farm.update(dayTime,frame,camera,delta,season);this.farm.setFlash(flash);(this.scene.background as Color).copy(this.farm.fog.color);
       this.ambient.intensity+=((.63+daylight*.77-shade*.16+flash*.15)-this.ambient.intensity)*blend;
       this.hemi.intensity+=((.68+daylight*.77-shade*.18)-this.hemi.intensity)*blend;
       this.sun.intensity+=((.25+daylight*2.75*(1-shade*.76)+flash*.45)-this.sun.intensity)*blend;
@@ -66,6 +70,7 @@ export class DayNightSystem {
     }
     if(this.scene.fog)this.scene.fog.color.copy(this.waterNight).lerp(this.waterDay,daylight*(1-storm*.3));
     (this.scene.background as Color).copy(this.nightColor).lerp(this.dayColor,daylight).lerp(this.stormColor,storm*.7);
+    if(season)(this.scene.background as Color).lerp(this.seasonalSky,daylight*.22*(1-storm*.7));
     (this.scene.background as Color).lerp(this.dawnColor,dawn*.5*(1-storm)).lerp(this.sunsetColor,sunset*.55*(1-storm));
     this.ambient.intensity=.6+daylight*.74-storm*.18+flash*.8;
     this.hemi.intensity=.65+daylight*.6;

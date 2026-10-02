@@ -1,3 +1,5 @@
+import type { SeasonId } from './calendar/SeasonRegistry';
+import { fishSeasonWeight,seasonalFish } from './FishingCatalog';
 import type { ActivitySink } from './progression/ProgressionRegistry';
 import { fishDefinition } from './FishingCatalog';
 import type { FishDefinition } from './FishingCatalog';
@@ -21,9 +23,10 @@ export class FishingSystem {
   private mode:FishingInputMode;private pressing=false;private tensionValue=.5;private catchValue=.25;private zone=.5;private offset=0;private escapeTime=0;
   onEvent:(event:FishingEvent)=>void=()=>{};
   constructor(private inventory:Inventory,private progress:PlayerProgress,saved?:unknown,
-    private onChange:()=>void=()=>{},private random:()=>number=Math.random,private onActivity:ActivitySink=()=>{}){
+    private onChange:()=>void=()=>{},private random:()=>number=Math.random,private onActivity:ActivitySink=()=>{},private season:()=>SeasonId=()=> 'spring'){
     const snapshot=normalizeFishing(saved,inventory.items);this.pending=snapshot.pendingCatch;this.mode=snapshot.inputMode;
   }
+  get seasonalPool(){return seasonalFish(this.inventory.items,this.season());}
   get state(){return this.phase;}
   get active(){return this.phase!=='IDLE';}
   get phaseProgress(){return Math.min(1,this.elapsed/(this.phase==='CASTING'?.85:this.phase==='WAITING'?this.wait:this.phase==='BITE'?BITE_WINDOW:1.1));}
@@ -46,7 +49,8 @@ export class FishingSystem {
     if(this.phase==='BITE')return;
     if(this.pending)return this.inventory.canAdd(this.pending)?undefined:'背包空间不足，请先腾出空位领取鱼';
     if(this.progress.energy<FISHING_ENERGY)return '体力不足，吃点东西或回家睡觉';
-    if(!this.inventory.items.fish().some(fish=>this.inventory.canAdd(fish.id)))return '背包已满，请先回家储物';
+    if(!this.seasonalPool.length)return '当前季节没有可钓鱼种。';
+    if(!this.seasonalPool.some(fish=>this.inventory.canAdd(fish.id)))return '背包已满，请先回家储物';
   }
   interact():InteractionOutcome {
     const reason=this.blockReason();if(reason)return {status:'unavailable',message:reason};
@@ -56,9 +60,9 @@ export class FishingSystem {
       if(!result.ok){this.pending=fish.id;return {status:'unavailable',message:'背包空间不足，请先腾出空位。'};}
       this.onActivity('fish.catch');this.onChange();this.onEvent({kind:'caught',message:`获得 ${fish.name} × 1 · 已放入背包`,fish});return {status:'success'};
     }
-    const pool=this.inventory.items.fish().filter(fish=>this.inventory.canAdd(fish.id));
-    let roll=this.roll()*pool.reduce((sum,fish)=>sum+fish.fishing.weight,0);this.hooked=pool.at(-1);
-    for(const fish of pool){roll-=fish.fishing.weight;if(roll<0){this.hooked=fish;break;}}
+    const pool=this.seasonalPool.filter(fish=>this.inventory.canAdd(fish.id));
+    let roll=this.roll()*pool.reduce((sum,fish)=>sum+fishSeasonWeight(fish,this.season()),0);this.hooked=pool.at(-1);
+    for(const fish of pool){roll-=fishSeasonWeight(fish,this.season());if(roll<0){this.hooked=fish;break;}}
     if(!this.hooked||!this.progress.spendEnergy(FISHING_ENERGY))return {status:'unavailable',message:'暂时无法抛竿。'};
     this.wait=4+this.roll()*4;this.phase='CASTING';this.elapsed=0;return {status:'success'};
   }

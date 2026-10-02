@@ -1,0 +1,244 @@
+/* Existing screen adapters. Shared components and tokens are defined in ui-theme.css. */
+.progression-panel.ui-panel {padding:24px}
+.progression-intro {color:var(--ui-muted);font-size:13px;margin:0 0 16px}
+.progression-main {padding:20px 24px;border:1px solid #c39752;border-left:4px solid var(--ui-gold);border-radius:8px;background:linear-gradient(120deg,#fff7df,#f4dfb5)}
+.progression-main small {color:var(--ui-wood);font-size:11px;letter-spacing:2px}
+.progression-main h3 {font-size:23px;margin:8px 0}
+.progression-main p {color:var(--ui-ink);font-size:14px}
+.progression-count {color:var(--ui-wood);margin:16px 0 8px;font-size:13px}
+.progression-panel>.ui-progress {margin-bottom:24px}
+.progression-columns {gap:24px}
+.progression-columns>section>h3 {color:var(--ui-navy);border-color:var(--ui-line);font-size:17px;margin-bottom:12px}
+.progression-route {display:grid;gap:10px}
+.progression-route li.ui-card,.progression-unlock.ui-card {padding:16px;border:1px solid var(--ui-line)}
+.progression-route strong,.progression-unlock strong {color:var(--ui-navy);font-size:15px;font-weight:700}
+.progression-route p,.progression-unlock p {color:var(--ui-muted);font-size:13px;margin:7px 0}
+.progression-route small {color:var(--ui-wood);font-size:12px}
+.progression-route .complete {border-color:#9ab687!important}
+.progression-route .complete strong {color:var(--ui-success)}
+.progression-route .current {border-color:#c28a32!important}
+.progression-route .current strong {color:var(--ui-navy)}
+.progression-unlock {margin-bottom:10px}
+.progression-unlock small {font-size:11px;color:var(--ui-muted)}
+.progression-unlock small.ready {color:var(--ui-success);font-weight:700}
+.progression-unlock .unlock-requirements {color:var(--ui-wood);font-size:12px}
+
+.inventory-panel.ui-panel {width:min(1000px,calc(100vw - 36px));height:min(840px,92dvh);padding:24px;overflow:hidden}
+.inventory-panel.ui-panel.with-storage {width:min(1280px,calc(100vw - 36px))}
+.inventory-panel[open] {grid-template-areas:'header' 'help' 'filters' 'content' 'status' 'footer'}
+.inventory-header {grid-area:header}.inventory-help {grid-area:help}.inventory-filters {grid-area:filters}
+.inventory-layout {grid-area:content}.inventory-status {grid-area:status}.inventory-footer {grid-area:footer}
+.inventory-panel .inventory-header {align-items:center}
+.inventory-panel .inventory-header h2 {margin:0;font-size:26px;letter-spacing:2px}
+.inventory-panel .inventory-eyebrow {color:#d5e8ef;margin-bottom:4px;letter-spacing:2px}
+.inventory-panel .inventory-help {color:var(--ui-muted)!important;font-size:12px!important;margin:0 0 14px}
+.inventory-panel .inventory-filters {padding:8px;margin-bottom:18px;border-bottom:1px solid #123551}
+.inventory-panel .inventory-layout {gap:20px}
+.inventory-container-header h3 {color:var(--ui-navy);font-size:17px}
+.inventory-container-header {align-items:center;min-height:30px}
+.inventory-panel .inventory-store-all {margin:0;padding:4px 8px!important;font-size:11px!important}
+.inventory-capacity {font-size:11px;color:var(--ui-wood);font-variant-numeric:tabular-nums}
+.inventory-panel .inventory-slot {
+  background:linear-gradient(140deg,#fff8e8,#e9d9bc);border:1px solid #c5ac85;border-radius:6px;padding:7px 3px 3px;
+  box-shadow:inset 0 0 0 2px #fff5,0 2px 0 #ad936330;transition:background .15s,border-color .15s;
+}
+.inventory-panel .inventory-slot.empty {background:linear-gradient(140deg,#efdfc4,#e5d3b3);border-color:#cfba99;box-shadow:inset 0 2px 4px #8b5e3c0d}
+.inventory-panel .inventory-slot:hover,.inventory-panel .inventory-slot:focus-visible {background:#fff0c9;border-color:#c49236;box-shadow:inset 0 0 0 1px var(--ui-gold);filter:none}
+.inventory-panel .inventory-slot.selected {background:linear-gradient(#eef5ef,#d4e7ef);border:2px solid var(--ui-ocean);box-shadow:0 0 0 1px var(--ui-gold),inset 0 0 0 1px #fff9}
+.inventory-slot .item-icon {filter:drop-shadow(0 2px 1px #70523230)}
+.inventory-slot .slot-number {color:#8c785c;font-size:10px}
+.inventory-slot .slot-name {color:var(--ui-ink);font-size:10px;font-weight:500}
+.inventory-slot .stack-count {color:var(--ui-navy);background:#fff8e9df;border-radius:3px;padding:0 3px;text-shadow:none;font-weight:700;font-size:13px}
+.inventory-slot .empty-mark {font-size:22px;color:#b59c73}
+.inventory-panel .inventory-inspector {padding:16px;border:1px solid var(--ui-line);border-radius:8px;background:linear-gradient(#fff8e9,#f0e1c5);scrollbar-gutter:stable}
+.inventory-details>.item-icon {width:64px;height:64px;float:left;margin:0 12px 10px 0;filter:drop-shadow(0 3px 2px #70523222)}
+.inventory-panel .inventory-details {height:210px;min-height:0;overflow:auto;scrollbar-gutter:auto}
+.inventory-details .item-category {display:table;width:max-content;padding:3px 9px;border:1px solid var(--ui-line);border-radius:12px;background:#f1dfb9;color:var(--ui-wood);letter-spacing:1px;font-size:11px}
+.inventory-details h3 {color:var(--ui-navy);font-size:23px;margin:10px 0;display:flow-root}
+.inventory-details .item-description {clear:both}
+.inventory-details p,.inventory-details .item-quantity {color:var(--ui-ink);font-size:13px;margin:8px 0;line-height:1.7}
+.item-location {color:var(--ui-muted);font-size:11px}
+.inventory-actions {border-color:var(--ui-line);gap:8px;margin-top:12px;padding-top:12px}
+.inventory-actions button {font-size:12px;padding:7px 10px}
+.inventory-quantity-label {color:var(--ui-muted);font-size:12px}
+.inventory-panel .inventory-discard {background:#fff0d7;border-color:#b88058;color:var(--ui-warning);box-shadow:none}
+.inventory-panel .inventory-discard:hover {background:#ffe3bd}
+.inventory-confirm {border:1px solid #c58b54;background:var(--ui-warning-soft);border-radius:6px}
+.inventory-panel .inventory-status {color:var(--ui-navy)!important;font-size:12px!important;margin:10px 0;height:24px;padding:0 8px;line-height:24px}
+.inventory-footer {border-color:var(--ui-line);padding-top:12px}
+.inventory-footer>p,.inventory-empty {color:var(--ui-muted);font-size:11px}
+.inventory-panel .drop-target,.hotbar .drop-target {outline:2px solid var(--ui-gold);outline-offset:2px}
+
+.trade-panel.ui-panel {max-height:92dvh;overflow:auto}
+.trade-panel .ui-panel-header {display:grid;grid-template-columns:1fr auto;gap:5px 16px;position:relative;top:auto;background:linear-gradient(110deg,#184566,var(--ui-navy) 60%,#326a8d)}
+.trade-panel header small {color:#d5e8ef;font-size:10px;letter-spacing:2px}
+.trade-panel header strong {color:var(--ui-gold-light);font-size:13px;grid-column:1;grid-row:3}
+.trade-panel header button {grid-column:2;grid-row:1/4;align-self:center}
+.trade-panel nav.ui-tabs {margin:16px 0}
+.trade-note {color:var(--ui-muted);font-size:12px}
+.trade-panel .trade-product {background:var(--ui-paper-light);color:var(--ui-navy);border:1px solid var(--ui-line);padding:12px;box-shadow:none}
+.trade-panel .trade-product:hover {background:#fff0cd;border-color:#c59640}
+.trade-panel .trade-product[aria-pressed=true] {background:#dbeaf0;border-color:var(--ui-ocean);box-shadow:inset 3px 0 0 var(--ui-gold)}
+.trade-product small {color:var(--ui-muted);font-size:12px}
+.trade-symbol {color:var(--ui-wood)}
+.trade-detail {border-color:var(--ui-line);background:var(--ui-paper-light);border-radius:8px}
+.trade-detail h3 {font-size:22px}
+.trade-detail p {color:var(--ui-muted)}
+.trade-quote {border-color:var(--ui-line)}
+.trade-quote strong {color:var(--ui-wood)}
+.trade-panel .trade-submit {background:linear-gradient(var(--ui-gold-light),var(--ui-gold))!important;color:var(--ui-navy);border-color:#b5853d}
+.trade-panel .trade-submit:disabled {background:var(--ui-disabled)!important;color:#6d6b64;border-color:#b4b2aa}
+.trade-panel .trade-status {color:var(--ui-navy);font-size:13px}
+
+.cooking-panel.ui-panel>p {font-size:13px;color:var(--ui-muted)}
+.fish-select {color:var(--ui-ink);font-size:13px}
+.recipe-card.ui-card {padding:18px;border-color:var(--ui-line)}
+.recipe-card h3 {color:var(--ui-navy);font-size:19px}
+.recipe-card p,.recipe-card .recipe-materials {color:var(--ui-muted);font-size:13px}
+.recipe-card .recipe-materials {color:var(--ui-wood)}
+.recipe-card>.item-icon {width:44px;height:44px;float:right;margin-left:10px}
+.prepared-foods,.food-row {border-color:var(--ui-line)}
+.prepared-foods h3 {font-size:17px}
+.storage-empty,.cooking-status {color:var(--ui-muted)}
+.cooking-process {border-color:var(--ui-line);background:#e9edda;border-radius:8px}
+.cooking-process p {color:var(--ui-navy)}
+.cooking-progress {background:#d1bc97;height:9px;border-radius:6px;overflow:hidden}
+.cooking-progress-fill {background:var(--ui-gold)}
+.cooking-pot b {background:var(--ui-navy);border-color:#88b9d0}
+.cooking-pot b::before {border-color:var(--ui-navy)}
+.cooking-pot i {background:#7194a080}
+.destination-panel .destination {background:var(--ui-paper-light);border:1px solid var(--ui-line);border-radius:8px;margin-top:12px;padding:18px;box-shadow:none}
+.destination-panel .destination:hover:enabled {background:#ffefcb;border-color:#b78b40}
+.destination strong {color:var(--ui-navy);font-family:var(--ui-heading);font-size:18px;font-weight:700}
+.destination span {color:var(--ui-muted);line-height:1.7}
+.destination-panel .destination:disabled {opacity:1;background:#e9e5da}
+.destination-panel .destination:disabled strong,.destination-panel .destination:disabled span {color:#77756d}
+.ui-panel .home-actions button:last-child,.ui-panel .home-back,.ui-panel .destination-back {background:linear-gradient(#32658a,var(--ui-navy));color:var(--ui-paper-light);border-color:#608ba7;box-shadow:inset 0 1px 0 #fff3,0 2px 0 #123551}
+.ui-panel .home-actions button:last-child:hover,.ui-panel .home-back:hover,.ui-panel .destination-back:hover {background:#437ca1;color:white;border-color:var(--ui-gold)}
+
+/* HUD uses the same paper cards, with opaque ink for legibility over any weather. */
+.hint,.explore-panel,.focus-menu,.discovery-card,.production-stats,.farm-feedback,.vehicle-hud,.progression-objective,.interaction-prompt,.fishing-status,#notice,#depth,.progression-notice,.wallet-hud {
+  color:var(--ui-ink);background:var(--ui-paper-texture),#f7ebd6f5;border:1px solid var(--ui-line);border-radius:8px;
+  box-shadow:0 4px 20px #082a4640,inset 0 0 0 1px #fff8e966;font-family:var(--ui-body);
+}
+.toolbar {background:linear-gradient(#245477f5,#153e5cf5);border:1px solid #ba9659;border-radius:9px;box-shadow:0 4px 22px #082a4655,inset 0 0 0 1px #f4c15d33}
+.toolbar button {color:var(--ui-paper-light);border:1px solid transparent}
+.toolbar button:hover {background:#437ca1;filter:none;border-color:#83aebf}
+.toolbar button.selected,.toolbar button.engaged {background:var(--ui-gold);color:var(--ui-navy);border-color:#ffe5a4;box-shadow:inset 0 0 0 1px #b88a38}
+.toolbar i {background:#87afc04d}
+.toolbar button[data-action] {font-size:12px}
+.toolbar button:focus-visible,.hotbar button:focus-visible {outline-color:var(--ui-gold-light)}
+.hint {font-size:12px;color:var(--ui-ink)}
+.hint span {color:var(--ui-ocean)}
+kbd {background:var(--ui-gold-light);color:var(--ui-navy);border:1px solid #c8a15a;border-radius:4px;box-shadow:0 1px 0 #9d7a42}
+.explore-panel {opacity:1!important}
+.explore-panel h2 {font-family:var(--ui-heading);color:var(--ui-navy);font-size:15px}
+.explore-panel h2 span {color:var(--ui-wood)}
+.key-help {color:var(--ui-muted);border-color:var(--ui-line)}
+.focus-menu summary {color:var(--ui-navy)}
+.discovery-card h2 {font-family:var(--ui-heading);font-size:22px;color:var(--ui-navy)}
+.discovery-card .journal-text {color:var(--ui-ink);font-size:14px}
+.discovery-card small {color:var(--ui-wood)}
+.discovery-card button {color:var(--ui-navy);background:var(--ui-paper-shade);border:1px solid var(--ui-line);border-radius:4px}
+.production-stats {border-left:3px solid var(--ui-gold);font-size:12px}
+.progression-objective {border-left:3px solid var(--ui-gold);text-align:left}
+.progression-objective:hover {background:#fff0cd;filter:none;border-color:#bd985a}
+.progression-objective small {color:var(--ui-wood);font-size:11px}
+.progression-objective strong {color:var(--ui-navy);font-family:var(--ui-heading);font-size:16px;font-weight:700}
+.progression-objective span {color:var(--ui-muted);font-size:12px}
+.progression-notice {border-color:#92ae77;border-left:4px solid var(--ui-success);color:var(--ui-success);font-weight:700}
+.wallet-hud {background:var(--ui-navy);color:var(--ui-gold-light);border-color:#ba9659;font-variant-numeric:tabular-nums}
+.weather,.farm-world:not(.cottage-world) .weather {
+  background:linear-gradient(#245477ed,#153e5ced);border:1px solid #93b6c78c;border-radius:8px;padding:12px 16px;color:var(--ui-paper-light);text-align:right;
+}
+.weather time {font-variant-numeric:tabular-nums;color:var(--ui-gold-light)}
+.home-stats,.cottage-world .weather #day {color:var(--ui-paper-light)}
+.quality,.edition,.voyage {color:var(--ui-paper-light);text-shadow:0 1px 3px #123551;opacity:.85}
+.edition span {color:#d4e6e9}
+.identity {text-shadow:0 2px 8px #12355180}
+.identity h1 {font-family:var(--ui-heading)}
+.identity .eyebrow span {color:var(--ui-gold-light)}
+.identity .tagline {border-color:#e6ebda80}
+.interaction-prompt {border:2px solid var(--ui-navy)}
+.fishing-active .interaction-prompt {border-color:var(--ui-navy)}
+.interaction-prompt kbd {background:linear-gradient(var(--ui-gold-light),var(--ui-gold));color:var(--ui-navy);border-color:#fff2cf;box-shadow:0 3px 0 #a17f4e}
+.interaction-prompt small {color:var(--ui-wood)}
+.interaction-prompt strong {color:var(--ui-navy);font-size:18px;font-weight:700}
+.interaction-prompt.blocked {color:var(--ui-muted);border-color:#9b9a8e}
+.interaction-prompt.blocked kbd {background:var(--ui-disabled);border-color:#c4c2b9;color:#6d6b64;box-shadow:0 2px 0 #9b998e}
+.interaction-prompt.blocked strong {color:var(--ui-muted)}
+.vehicle-hud strong {color:var(--ui-navy)}
+.vehicle-hitch-hint {color:var(--ui-wood);border-color:var(--ui-line)}
+.vehicle-work-hint {color:var(--ui-navy);border-color:var(--ui-gold);background:#f3dfb9}
+.vehicle-cargo-hint {color:var(--ui-wood);border-color:var(--ui-line);background:#fff7e4}
+.vehicle-seed-choices button {background:var(--ui-navy);color:white;border-color:#6794ae;font-size:12px}
+.vehicle-seed-choices button:hover {background:var(--ui-ocean);filter:none}
+.vehicle-seed-choices button[aria-pressed=true] {background:var(--ui-gold);color:var(--ui-navy);border-color:#ba883a}
+.vehicle-seed-choices button:disabled {background:var(--ui-disabled);color:#6d6b64;opacity:1}
+.farm-feedback>strong {color:var(--ui-navy);font-family:var(--ui-heading)}
+.farm-land-legend {color:var(--ui-muted)}
+.farm-land-legend i {border-color:var(--ui-wood)}
+.farm-plot-info {color:var(--ui-ink);border-color:var(--ui-line)}
+.fishing-status strong {color:var(--ui-navy);font-weight:700}
+.fishing-status small,.tension-feedback {color:var(--ui-muted)}
+.fishing-meter {background:#d5bf98;border-radius:4px;height:7px;overflow:hidden}
+.fishing-meter span {background:var(--ui-gold)}
+.fishing-status.bite {background:#fff1cd;border-color:#c28a32;box-shadow:0 4px 24px #082a4640}
+.fishing-status.bite strong {color:#87521d}
+.fishing-status.danger strong {color:#aa432b}
+.tension-track {background:var(--ui-navy);border-color:#537f9e}
+.tension-cursor {background:#fff8e9;box-shadow:0 0 0 1px #153e5c}
+.catch-track {stroke:#d4be97}
+.catch-fill {stroke:var(--ui-success)}
+.catch-progress b {color:var(--ui-navy);font-weight:700}
+#notice {border-left:3px solid var(--ui-gold);max-width:calc(100vw - 32px);font-size:14px;line-height:1.7}
+
+@media(max-width:700px) {
+  .inventory-panel.ui-panel,.inventory-panel.ui-panel.with-storage {width:calc(100vw - 16px);height:94dvh;max-height:94dvh;padding:16px}
+  .inventory-panel .inventory-header h2 {font-size:20px}
+  .inventory-panel .inventory-help {font-size:11px!important;margin-bottom:8px}
+  .inventory-panel .inventory-filters {margin-bottom:10px;padding:6px}
+  .inventory-panel .inventory-layout {gap:10px}
+  .inventory-panel .inventory-inspector {padding:10px;gap:12px}
+  .inventory-details h3 {font-size:18px}
+  .inventory-details>.item-icon {width:48px;height:48px;float:none;margin:0 0 6px}
+  .inventory-panel .inventory-details {height:100%;min-height:0;overflow:auto}
+  .inventory-panel .inventory-status {margin:6px 0}
+  .inventory-actions button {font-size:11px;padding:6px 8px}
+  .inventory-container-header h3 {font-size:15px}
+  .inventory-capacity {font-size:10px}
+  .inventory-panel .inventory-slot .slot-name {font-size:9px}
+  .progression-panel.ui-panel {padding:16px}
+  .progression-main {padding:16px}
+  .progression-main h3 {font-size:21px}
+  .progression-main p {font-size:13px}
+  .trade-panel header small {font-size:8px;letter-spacing:1px}
+  .trade-panel .ui-panel-header {padding-left:54px;gap:4px 8px}
+  .trade-panel header strong {font-size:11px}
+}
+@media(min-width:701px) and (max-height:800px) {
+  .inventory-panel .ui-panel-header {min-height:72px;padding-top:9px;padding-bottom:9px;margin-bottom:14px}
+  .inventory-panel .inventory-filters {padding:6px;margin-bottom:12px}
+  .inventory-panel .inventory-help {margin-bottom:10px}
+  .inventory-panel .inventory-grid {grid-auto-rows:64px;gap:6px}
+  .inventory-panel .inventory-slot {height:64px}
+  .inventory-panel .inventory-slot .item-icon {width:40px;height:40px}
+  .inventory-panel .hotbar-slot {height:48px}
+  .inventory-panel .hotbar-slot>.item-icon {width:36px;height:36px}
+  .inventory-panel .ui-hotbar {padding:4px}
+  .inventory-panel .inventory-footer>p {margin-bottom:6px;line-height:16px}
+  .inventory-panel .inventory-details>.item-icon {width:60px;height:60px}
+}
+@media(max-height:600px) and (orientation:landscape) {
+  .inventory-panel.ui-panel {height:94dvh}
+  .inventory-panel .inventory-help,.inventory-footer>p {display:none}
+  .inventory-panel .ui-panel-header {min-height:60px;padding-top:8px;padding-bottom:8px;margin-bottom:10px}
+  .inventory-panel .ui-panel-header h2 {font-size:22px}
+  .inventory-panel .inventory-filters {margin-bottom:10px;padding:5px}
+  .inventory-panel .inventory-details {height:180px}
+  .inventory-panel .inventory-layout {grid-template-rows:minmax(0,1fr)}
+  .inventory-panel .inventory-status {height:18px;line-height:18px;margin:3px 0}
+  .inventory-panel .inventory-footer {padding-top:6px}
+  .inventory-panel .hotbar-slot {height:40px}
+  .inventory-panel .hotbar-slot>.item-icon {width:32px;height:32px}
+}

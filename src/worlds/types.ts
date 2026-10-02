@@ -1,3 +1,4 @@
+import type { SeasonVisual } from '../gameplay/calendar/CalendarSystem';
 import type { NavigationSurface } from './NavigationSurface';
 import type { InteractionSystem } from '../systems/InteractionSystem';
 import type { PlayerTravelBoat } from './travel/PlayerTravelBoat';
@@ -17,7 +18,7 @@ export interface SpawnPoint { id: string; position: [number,number,number]; look
 export interface WorldLoadContext { gameTime: number }
 export interface WorldEnterContext extends WorldLoadContext { state: WorldState; spawn: SpawnPoint; gameplay: GameplayServices }
 export interface WorldLeaveContext extends WorldLoadContext {}
-export interface WorldUpdateContext { delta: number; time: number; gameTime: number; storm: number; dayTime: number; night: number; flash: number;weather?:WeatherFrame; player?: Vector3;listener?:Vector3;presentationPaused?:boolean }
+export interface WorldUpdateContext { delta: number; time: number; gameTime: number; storm: number; dayTime: number; night: number; flash: number;season?:SeasonVisual;weather?:WeatherFrame; player?: Vector3;listener?:Vector3;presentationPaused?:boolean }
 export interface GameWorld {
   readonly id: WorldId;
   readonly root: Group;

@@ -58,7 +58,7 @@ export class HomeModels extends Group {
     const house=this.place('house',0,0,0,.4,0,island.house);
     house.traverse(o=>{if(o.userData.part_id==='front_door')this.closeCottageDoor(o);if(o instanceof Mesh&&o.material instanceof MeshStandardMaterial&&o.material.name==='Main_glass'){o.material=o.material.clone();o.material.emissive.set('#ffc26c');this.windows.push(o.material);}});
     house.traverse(o=>{if(['palm_left','palm_right'].includes(o.userData.part_id))o.visible=false;});
-    for(const [x,z] of [[-2.7,-.5],[-1.4,-1.35]]){this.place('palm',x,3.44,z,.28);this.slab(x-.05,x+.09,3.44,4.40,z-.05,z+.05);}
+    for(const [x,z] of [[-2.7,-.5],[-1.4,-1.35]]){const palm=this.place('palm',x,3.44,z,.28);palm.userData.seasonFoliage=true;this.slab(x-.05,x+.09,3.44,4.40,z-.05,z+.05);}
     this.solid(this.place('bed',-1.94,3.97,-.40,.23));
     this.solid(this.place('stove',-1.09,3.97,-.59,.14));
     this.solid(this.place('storage',-1.02,3.97,.02,.13,Math.PI/2));

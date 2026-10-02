@@ -1,3 +1,7 @@
+import { seasonWeatherLabel } from '../gameplay/calendar/SeasonRegistry';
+import type { SeasonId } from '../gameplay/calendar/SeasonRegistry';
+import { calendarAt,dateLabel } from '../gameplay/calendar/CalendarSystem';
+import type { CalendarDate } from '../gameplay/calendar/CalendarSystem';
 import type { GameClock } from '../core/GameClock';
 import { JOURNAL_TEXT,LANDMARKS } from '../world/underwater/Landmarks';
 import { icons } from './icons';
@@ -15,7 +19,7 @@ export class HUD {
     this.element.className = 'hud';
     this.element.innerHTML = `
       <header class="identity"><p class="eyebrow">THE MARINER’S KEEPSAKE <span>/</span> No. 01</p><h1>瓶中沧海</h1><p class="tagline">一座孤岛，一段未完的航程。</p></header>
-      <aside class="weather"><div id="day">第 8 天 · 晴天</div><time id="clock">17:41</time><div id="forecast">微风 · 平静的海</div><div class="home-stats" hidden></div></aside>
+      <aside class="weather"><button id="day" class="calendar-link" data-action="calendar" aria-label="打开海岛日历" title="日历 [L]">第 1 年 · 春 8 日</button><time id="clock">17:41</time><div id="forecast">微风 · 平静的海</div><div class="home-stats" hidden></div></aside>
       <div class="bottom"><p class="hint" id="hint"><span>ⓘ</span> 点击拖动 · 移动视角 · 探索细节</p><nav class="toolbar" aria-label="世界控制">
         <button data-action="pause" aria-label="暂停时间" title="暂停时间">Ⅱ</button>
         <button data-speed="1" class="selected" aria-pressed="true">x1</button><button data-speed="4" aria-pressed="false">x4</button><button data-speed="12" aria-pressed="false">x12</button>
@@ -26,10 +30,15 @@ export class HUD {
       <div class="production-stats" hidden></div>
       <section class="fishing-status" hidden aria-label="钓鱼"><strong aria-live="polite"></strong><small></small><div class="fishing-meter"><span></span></div><div class="fishing-fight" hidden><div class="tension-track" role="meter" aria-label="鱼线张力" aria-valuemin="0" aria-valuemax="100"><div class="tension-zone"></div><div class="tension-cursor"></div></div><div class="catch-progress" role="progressbar" aria-label="钓鱼进度" aria-valuemin="0" aria-valuemax="100"><svg viewBox="0 0 40 40" aria-hidden="true"><circle class="catch-track" cx="20" cy="20" r="16"/><circle class="catch-fill" cx="20" cy="20" r="16" pathLength="100"/></svg><b></b></div><p class="tension-feedback"></p></div></section>
       <section class="discovery-card" hidden aria-live="polite"><button aria-label="关闭航海手记">×</button><p class="eyebrow">航海手记</p><h2></h2><p class="journal-text"></p><small></small></section>
-      <details class="focus-menu"><summary>⌖ 观察点</summary><nav aria-label="观察点">${Object.entries(FOCUS_LABELS).map(([id,label])=>`<button data-focus="${id}" aria-pressed="${id==='overview'}">${label}</button>`).join('')}</nav></details>
+      <details class="focus-menu"><summary>⌖ 观察点</summary><nav class="ui-sidebar" aria-label="观察点">${Object.entries(FOCUS_LABELS).map(([id,label])=>`<button data-focus="${id}" aria-pressed="${id==='overview'}">${label}</button>`).join('')}</nav></details>
       <button class="quality" title="切换像素精度" aria-label="切换像素精度">PIXEL / MEDIUM</button>`;
     root.append(this.element);
     for(const action of ['storm','sound','explore'] as const)this.element.querySelector(`[data-action="${action}"] .icon`)!.innerHTML=icons[action];
+    for(const action of ['progression','inventory','food'] as const){
+      const button=this.element.querySelector<HTMLButtonElement>(`[data-action="${action}"]`)!;
+      const label=button.textContent!;const image=document.createElement('span');image.className='icon';image.innerHTML=icons[action];
+      const text=document.createElement('span');text.textContent=label;button.replaceChildren(image,text);
+    }
     this.updateQuests(new Set());
     this.element.querySelector('.discovery-card button')!.addEventListener('click',()=>this.closeDiscovery());
     window.addEventListener('keydown',event=>{if(event.code==='Escape')this.closeDiscovery();});
@@ -66,12 +75,12 @@ export class HUD {
     if(text.textContent!==label)text.textContent=label;
     const state=prompt.available?'按键交互':'暂不可用';if(status.textContent!==state)status.textContent=state;
   }
-  setWeather(kind:WeatherKind){this.setActive('storm',kind!=='CLEAR');const button=this.element.querySelector<HTMLButtonElement>('[data-action="storm"]')!;button.querySelector('span:last-child')!.textContent=`天气：${WEATHER_LABELS[kind]}`;button.title='切换晴天 / 阴天 / 雨天 / 风暴';}
-  updateClock(clock:GameClock,weather:boolean|WeatherKind) {
-    const kind=typeof weather==='boolean'?weather?'STORM':'CLEAR':weather;this.setWeather(kind);
+  setWeather(kind:WeatherKind,season?:SeasonId){this.setActive('storm',kind!=='CLEAR');const button=this.element.querySelector<HTMLButtonElement>('[data-action="storm"]')!;button.querySelector('span:last-child')!.textContent=`天气：${season?seasonWeatherLabel(kind,season):WEATHER_LABELS[kind]}`;button.title='切换晴天 / 阴天 / 雨天 / 风暴';}
+  updateClock(clock:GameClock,weather:boolean|WeatherKind,date:CalendarDate=calendarAt(clock.simulationTime)) {
+    const kind=typeof weather==='boolean'?weather?'STORM':'CLEAR':weather;this.setWeather(kind,date.season);
     this.element.querySelector('#clock')!.textContent=clock.formatted;
-    this.element.querySelector('#day')!.textContent=`第 ${clock.day} 天 · ${clock.hour>=19||clock.hour<6?'星夜 · ':''}${WEATHER_LABELS[kind]}`;
-    this.element.querySelector('#forecast')!.textContent={CLEAR:'微风 · 晴朗的海',OVERCAST:'云聚 · 柔和天光',RAIN:'细雨 · 湿润的田野',STORM:'强风 · 远处雷鸣'}[kind];
+    this.element.querySelector('#day')!.textContent=`${dateLabel(date)} · ${seasonWeatherLabel(kind,date.season)}`;
+    this.element.querySelector('#forecast')!.textContent=date.season==='winter'&&(kind==='RAIN'||kind==='STORM')?(kind==='RAIN'?'轻雪 · 霜色田野':'风雪 · 屋中灯火'):{CLEAR:'微风 · 晴朗的海',OVERCAST:'云聚 · 柔和天光',RAIN:'细雨 · 湿润的田野',STORM:'强风 · 远处雷鸣'}[kind];
   }
   updateHomeStats(progress:PlayerProgress,inside:boolean){const stats=this.element.querySelector<HTMLElement>('.home-stats')!;stats.hidden=!inside;stats.textContent=`体力 ${Math.round(progress.energy)} / ${progress.maxEnergy}`;}
   updateProductionStats(game:GameplayServices,exploring:boolean){

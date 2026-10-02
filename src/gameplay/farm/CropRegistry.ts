@@ -1,9 +1,11 @@
+import { SEASON_IDS } from '../calendar/SeasonRegistry';
+import type { SeasonId } from '../calendar/SeasonRegistry';
 import { ITEMS } from '../ItemRegistry';
 import type { ItemRegistry } from '../ItemRegistry';
 
 export const CROP_STAGE_IDS=Object.freeze(['seed','sprout','growing','mature'] as const);
 export type CropStageId=typeof CROP_STAGE_IDS[number];
-export type CropSeason='spring'|'summer'|'autumn'|'winter';
+export type CropSeason=SeasonId;
 export type CropWeather='clear'|'rain'|'storm';
 export interface CropStageDefinition {
   readonly id:CropStageId;readonly name:string;readonly startsAtGameMinute:number;
@@ -24,7 +26,7 @@ export interface CropDefinition {
 
 const validId=(id:string)=>/^[a-z][a-z0-9_.-]*$/.test(id);
 const positive=(value:number)=>Number.isFinite(value)&&value>0;
-const SEASONS:readonly CropSeason[]=['spring','summer','autumn','winter'];
+const SEASONS=SEASON_IDS;
 const WEATHER:readonly CropWeather[]=['clear','rain','storm'];
 
 /** Contains agronomy rules; item display/stack metadata stays in ItemRegistry. */
@@ -69,9 +71,9 @@ function stages(cropId:string,sprout:number,growing:number,mature:number):readon
 }
 // Private authoring input: all consumers read validated definitions via Registry.
 const CROP_DEFINITIONS:readonly CropDefinition[]=[
-  {id:'wheat',name:'小麦',seedItemId:'seed.wheat',harvestItemId:'crop.wheat',growthGameMinutes:4320,stageCount:4,stages:stages('wheat',720,2160,4320),baseYield:3,machineHarvestable:true},
-  {id:'corn',name:'玉米',seedItemId:'seed.corn',harvestItemId:'crop.corn',growthGameMinutes:5760,stageCount:4,stages:stages('corn',1440,2880,5760),baseYield:2,machineHarvestable:true},
-  {id:'potato',name:'土豆',seedItemId:'seed.potato',harvestItemId:'crop.potato',growthGameMinutes:2880,stageCount:4,stages:stages('potato',720,1440,2880),baseYield:4},
+  {id:'wheat',allowedSeasons:['spring','autumn'],name:'小麦',seedItemId:'seed.wheat',harvestItemId:'crop.wheat',growthGameMinutes:4320,stageCount:4,stages:stages('wheat',720,2160,4320),baseYield:3,machineHarvestable:true},
+  {id:'corn',allowedSeasons:['spring','summer'],name:'玉米',seedItemId:'seed.corn',harvestItemId:'crop.corn',growthGameMinutes:5760,stageCount:4,stages:stages('corn',1440,2880,5760),baseYield:2,machineHarvestable:true},
+  {id:'potato',allowedSeasons:['spring','autumn'],name:'土豆',seedItemId:'seed.potato',harvestItemId:'crop.potato',growthGameMinutes:2880,stageCount:4,stages:stages('potato',720,1440,2880),baseYield:4},
 ];
 export function createCropRegistry(items:ItemRegistry=ITEMS){
   const registry=new CropRegistry(items);

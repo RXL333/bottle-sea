@@ -1,3 +1,6 @@
+import { calendarAt } from '../calendar/CalendarSystem';
+import { seasonNames } from '../calendar/SeasonRegistry';
+import type { CalendarSystem } from '../calendar/CalendarSystem';
 import { DAY_DURATION } from '../../core/GameClock';
 import type { GameClock } from '../../core/GameClock';
 import { CROPS } from './CropRegistry';
@@ -33,8 +36,13 @@ export function cropGrowthAt(crop:CropPlanting,registry:CropRegistry,gameTime:nu
     nextStageAtGameTime:next?crop.plantedAtGameTime+next.startsAtGameMinute*DAY_DURATION/1440:null};
 }
 export class CropSystem {
-  constructor(private clock:GameClock,readonly registry:CropRegistry=CROPS){}
+  constructor(private clock:GameClock,readonly registry:CropRegistry=CROPS,private calendar?:CalendarSystem){}
   get gameTime(){return this.clock.simulationTime;}
+  plantingReason(cropId:string):string|undefined {
+    const crop=this.registry.get(cropId);if(!crop)return '作物未注册。';
+    const season=this.calendar?.date.season??calendarAt(this.gameTime).season;
+    if(crop.allowedSeasons&&!crop.allowedSeasons.includes(season))return `${crop.name}适种季节：${seasonNames(crop.allowedSeasons)} · 当前不适合播种，种子已保留。`;
+  }
   plant(cropId:string):CropInstance|null {
     return this.registry.has(cropId)&&validCropTime(this.gameTime)?{cropId,plantedAtGameTime:this.gameTime,currentStage:'seed'}:null;
   }

@@ -15,6 +15,8 @@ export class ManualFarmingSystem {
     if(cell.landState==='TILLED'){
       const crop=this.selectedCrop;
       if(!crop)return {action:'SEED',prompt:'选择种子后播种',reason:'已耕地 · B 打开背包拿起种子，1～8 选择'};
+      const seasonalReason=this.game.crops.plantingReason(crop.id);
+      if(seasonalReason)return {action:'SEED',prompt:`${crop.name} · 季节不适合`,reason:seasonalReason};
       const seed=this.game.items.get(crop.seedItemId)!;
       if(!this.game.inventory.has(seed.id))return {action:'SEED',prompt:`播种${crop.name}`,reason:`${seed.name}已用完 · 换一种种子或补充库存`};
       return {action:'SEED',prompt:`播种${crop.name} · 消耗 ${seed.name} × 1`,cropId:crop.id};
@@ -54,6 +56,7 @@ export class ManualFarmingSystem {
     return result.ok?{status:'success',message}:{status:'unavailable',message:this.failure(result.reason)};
   }
   private failure(reason:FarmFailureReason):string {
+    if(reason==='wrong-season')return '季节已变化，本次没有播种，土地与种子已保留。';
     if(reason==='full')return '背包空间不足，本次没有领取或收割，物品仍保留。';
     if(reason==='insufficient-items')return '种子数量不足，本次没有播种。';
     if(reason==='already-claimed')return '初始种子已经领取过，可从背包或小屋箱子取用。';
