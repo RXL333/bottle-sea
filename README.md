@@ -1,298 +1,295 @@
-# 🌊 瓶中沧海 · Bottle Sea
+# 瓶中沧海 · Bottle Sea
 
-> 一个能走进去的桌面微缩海洋世界。探索岛屿、钓鱼、种田，在玻璃瓶中发现无限可能。
+*一个能走进去的桌面微缩海洋。在玻璃瓶中探索岛屿、钓鱼、种田，发现那些被时光遗忘的故事。*
 
-[![在线游玩](https://img.shields.io/badge/Play%20Online-Live-brightgreen?style=flat-square)](https://rxl333.github.io/bottle-sea/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-80.3%25-blue?style=flat-square)](https://www.typescriptlang.org/)
-[![Three.js](https://img.shields.io/badge/Three.js-0.186.0-black?style=flat-square)](https://threejs.org/)
+**[在线体验](https://rxl333.github.io/bottle-sea/)** · **[完整文档](docs/)** · **[问题反馈](https://github.com/RXL333/bottle-sea/issues)**
 
-<div align="center">
-  <img src="assets/preview.png" alt="Bottle Sea Preview" width="600" />
-</div>
+![TypeScript](https://img.shields.io/badge/TypeScript-80.3%25-3178c6?style=flat-square)
+![Python](https://img.shields.io/badge/Python-17.6%25-3776ab?style=flat-square)
+![Three.js](https://img.shields.io/badge/Three.js-0.186.0-black?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
-## ✨ 特点
+## 🌊 这是什么
 
-- 🎨 **完全程序化生成**：纯前端实现，无依赖第三方模型库
-- 📦 **零后端架构**：Vite + TypeScript strict + Three.js WebGL 2
-- 🌍 **完整世界**：主岛、农场、海洋、水下等多个探索区域
-- 🎮 **丰富玩法**：自由探索、钓鱼、烹饪、种田、家居装扮
-- 💾 **本地存档**：游戏进度自动保存，支持跨会话继承
-- 🔧 **高度可定制**：完善的游戏系统架构，易于扩展
+这是一个独立开发的 3D 网页游戏，完全运行在浏览器中。没有后端服务器，没有第三方模型库，所有的地形、建筑、海浪、天气都是用代码生成出来的。
 
-## 🚀 快速开始
+想象一个装在玻璃瓶里的大洋世界——你可以自由旋转、缩放去观察；也可以进入第一人称，踏上码头、进入小屋、跳入大海去探险。白天捕鱼、烹饪、打理家园，晚上看星星；风暴来临时要抵挡狂风暴雨；找到隐藏的发现点，记录航海笔记。
+
+这个项目从 2024 年开始开发，用 **TypeScript + Three.js + Vite**，追求高性能、可扩展的架构。单文件 Gzip 压缩后只有 164 KB，在 1080p 分辨率下稳定 57～60 FPS。
+
+## 🎮 玩法速览
+
+### 自由观察
+- 用鼠标拖动旋转整个世界，滚轮缩放视距
+- 右侧菜单切换观察点：全景、灯塔、帆船、岛屿、深海
+- 时间控制：暂停、加速（4倍、12倍）
+- 开启/关闭声音、调整画质
+
+### 进入探索模式
+在码头停留约 1.7 秒后自动切换到第一人称：
+
+```
+WASD    - 移动
+鼠标    - 观察
+Space   - 跳跃/上升
+C       - 下潜
+Shift   - 加速冲刺
+E       - 交互（进屋、开箱、钓鱼、发现）
+B       - 打开背包
+F/Q     - 食用料理
+Esc     - 返回自由视角
+```
+
+### 小屋生活
+进门后有一间温暖的小屋。床边睡觉跳过白天（恢复体力），铁皮箱里可以储物，炉灶上可以烹饪刚钓到的鱼。所有物品、进度都会自动存档。
+
+### 🎣 钓鱼
+在码头的木制钓鱼台按 E 抛竿。等 4～8 秒咬钩后，有 2.8 秒的时间按 E 提钩。接下来进入挣扎阶段——按住鼠标让张力条保持在黄色区域，直到钓上鱼。
+
+可以钓 6 种鱼：沙丁鱼、竹荚鱼、鲭鱼、海鲈鱼、红鲷鱼、金枪鱼。稀有鱼难度更高，但值得挑战。
+
+### 🍳 烹饪与进度
+把鱼带回小屋，在炉灶旁制作料理：
+
+| 料理 | 材料 | 效果 |
+|------|------|------|
+| 烤鱼 | 任意鱼 | 恢复 20 体力 |
+| 海鲜汤 | 混合鱼 | 恢复 45 体力 |
+| 香煎鲈鱼 | 海鲈鱼 | 恢复 35 体力 |
+| 烟熏鱼 | 特定鱼 | 恢复 30 体力 |
+
+### 🎒 背包系统
+24 格网格背包，支持分类筛选（食物、鱼类、材料等）。拖拽管理物品，还有 8 格快捷栏可以绑定常用料理。
+
+### ⛈️ 天气变化
+点击进入风暴模式，天空会渐变成乌云，海浪变成狂浪，还有雨、闪电、雷声。船会跟着波浪摇晃。沉浸感十足。
+
+### 🗺️ 多个世界
+码头边有一艘交通船。按 E 打开菜单，可以选择回家或去农场岛。未来还会开放深海与遗迹（目前是占位）。
+
+**农场岛**是一个 72×76 的大农场，有谷仓、水塔、农机棚、三块田地、鸡舍、牛棚等建筑。目前已经接入正式道路和模型，为种田玩法预留了空间。
+
+### 🔍 发现系统
+靠近灯塔、宝箱、船锚、沉船遗迹，按 E 可以解锁发现、写航海手记。四处全部发现就能完成这一航次。进度存档在本地，刷新后恢复。
+
+## 🛠️ 技术亮点
+
+### 纯前端架构
+- **零后端**：所有逻辑都在浏览器，用 LocalStorage 存档
+- **无依赖**：不依赖任何第三方 UI 框架，HTML + CSS 自己写
+- **程序化生成**：地形、海洋、树木、建筑用算法生成，不加载美术资源
+
+### 高效渲染
+- **WebGL 2**：充分利用现代浏览器能力
+- **实例化渲染**：用 InstancedMesh 快速绘制重复对象（如海浪）
+- **性能计数**：右下角 PIXEL 按钮可查看 FPS、顶点数、三角形数等实时数据
+- **质量切换**：LOW / MEDIUM / HIGH 三档画质，适应不同设备
+
+### 完整系统
+- **昼夜循环**：24 小时游戏日，一个游戏日约 8 分钟
+- **动态光照**：太阳位置变化，影响全局光和阴影
+- **天气系统**：风暴会改变光照、海浪、音效
+- **Web Audio**：5 层环境音（海浪、风、鸟叫等）+ 3 类脚步音 + 雷声
+- **物理感受**：重力、游泳浮力、碰撞检测、鼠标指针锁定
+
+### 项目管理
+- **TypeScript strict**：全代码库严格类型检查，零 any
+- **70+ 单元测试**：保证核心系统可靠性
+- **模块化架构**：系统清晰分离，易于维护和扩展
+- **本地存档 v2**：兼容旧版存档，支持跨会话升级
+
+## 🚀 本地运行
 
 ### 环境要求
-- Node.js 22.12+ (推荐 24.11.1)
-- 现代浏览器 (Chrome/Firefox/Safari/Edge)
+- Node.js 22.12 或更新版本
+- 现代浏览器（Chrome、Firefox、Safari、Edge）
 
-### 安装与运行
+### 快速开始
 
 ```bash
-# 安装依赖
+# 1. 克隆或下载
+git clone https://github.com/RXL333/bottle-sea.git
+cd bottle-sea
+
+# 2. 安装依赖
 npm install
 
-# 启动开发服务器
+# 3. 启动开发服务器
 npm run dev
-# 访问：http://127.0.0.1:5173/
-
-# 代码质量检查
-npm run typecheck    # TypeScript 类型检查
-npm run test        # 运行单元测试（70+ 项）
-
-# 构建与预览
-npm run build       # 生产构建
-npm run preview     # 预览生产版本
+# 打开浏览器访问：http://127.0.0.1:5173/
 ```
 
-构建产物位于 `dist/` 目录，可部署到任何静态 Web 服务。
-
-> ⚠️ **不要**直接用 `file://` 协议打开 `index.html`
-
-## 🎮 游戏玩法
-
-### 基础操作
-
-| 操作 | 按键/手势 | 说明 |
-|------|---------|------|
-| 旋转视角 | 拖动鼠标 | 自由旋转观察 |
-| 缩放 | 滚轮 | 调整视距 |
-| 场景切换 | 右侧菜单 | 全景、灯塔、帆船、岛屿、海底 |
-| 时间控制 | UI 按钮 | 暂停/继续、1x/4x/12x 倍速 |
-| 声音开关 | UI 按钮 | 5 层环境音 + 3 类脚步音 |
-
-### 探索模式
-
-进入码头约 1.7 秒后自动进入探索模式：
-
-| 操作 | 按键 | 说明 |
-|------|------|------|
-| 移动 | WASD | 前后左右移动 |
-| 观察 | 鼠标 | 第一人称视角 |
-| 跳跃/上升 | Space | 跳跃（陆地）或上升（水中） |
-| 下潜 | C | 水下下潜 |
-| 加速 | Shift | 冲刺（视野扩大） |
-| 交互 | E | 打开背包、进屋、发现、钓鱼等 |
-| 食用 | F/Q | 快捷食用已选料理 |
-| 菜单 | B | 打开背包 |
-| 退出 | Esc | 返回自由视角 |
-
-> 💡 当鼠标指针变为 ◇ 时，表示可交互
-
-### 🏠 小屋生活
-
-- **进屋**：门外按 E
-- **睡觉**：床边按 E 选择"睡到明天"（6 秒动画 → 次日 06:00，恢复全部体力）
-- **储物**：铁皮箱旁打开双栏网格背包
-- **烹饪**：炉灶旁选择食谱，用鱼制作料理
-- **保存**：关闭游戏自动存档
-
-### 🎣 钓鱼系统
-
-1. 木制钓鱼台按 E 抛竿（消耗 6 体力）
-2. 等待 4～8 秒咬钩
-3. 咬钩后 2.8 秒内按 E 提钩
-4. 挣扎阶段：
-   - **长按模式**（默认）：按住鼠标让张力条向右，松开向左
-   - **点击模式**：每次点击推一段，停止回落
-5. 保持在黄色区域内直到进度环完成
-
-**可钓鱼类**：沙丁鱼、竹荚鱼、鲭鱼、海鲈鱼、红鲷鱼、金枪鱼
-（稀有鱼难度更高）
-
-### 🍳 烹饪食谱
-
-| 料理 | 材料 | 恢复体力 |
-|------|------|--------|
-| 烤鱼 | 任意鱼 | 20 |
-| 海鲜汤 | 混合鱼 | 45 |
-| 香煎鲈鱼 | 海鲈鱼 | 35 |
-| 烟熏鱼 | 特定鱼 | 30 |
-
-### 🎒 背包与快捷栏
-
-- **打开背包**：探索时按 B
-- **24 格网格**：拖拽、合并、拆分、丢弃
-- **分类筛选**：全部、食物、鱼类、作物、种子、材料、工具、特殊
-- **快捷栏**（8 格）：拖拽物品绑定，按 1～8 快速切换
-- **与小屋共享**：同一套物品系统
-
-### ⛈️ 天气系统
-
-点击进入/退出风暴模式：
-- 渐变云层效果
-- 连续强浪
-- 雨、闪电视效
-- 船体摇摆
-- 海浪声增强
-
-### 🗺️ 旅行与农场
-
-码头交通船附近按 E 选择目的地：
-- **家园岛**：主岛小屋、灯塔、码头
-- **农场岛**：12×76 网格农场，含建筑、农机、田地
-- **深海 / 遗迹**：占位目的地（开发中）
-
-## 📁 项目结构
-
-```
-bottle-sea/
-├── src/
-│   ├── main.ts                    # 启动入口
-│   ├── core/                      # 游戏循环、渲染、时钟
-│   ├── controls/                  # 自由视角 & 第一人称控制
-│   ├── world/
-│   │   ├── bottle/                # 玻璃瓶容器
-│   │   ├── ocean/                 # 程序化波浪水面
-│   │   ├── island/                # 分层地形、建筑、灯塔
-│   │   ├── ship/                  # 帆船航线与浮力系统
-│   │   ├── underwater/            # 海底、珊瑚、海草
-│   │   └── Details.ts             # 装饰物件（浮标、海鸟等）
-│   ├── systems/
-│   │   ├── DayNightSystem.ts      # 昼夜循环与光照
-│   │   ├── WeatherSystem.ts       # 风暴、雨、闪电
-│   │   ├── FishingSystem.ts       # 钓鱼玩法
-│   │   ├── AudioManager.ts        # Web Audio 环境音
-│   │   ├── GameFoundation.ts      # 存档、进度、物品系统
-│   │   └── DiscoverySystem.ts     # 发现点与航海手记
-│   ├── ui/                        # HTML HUD & SVG 图标
-│   ├── utils/                     # 共享几何、材质、性能计数
-│   └── styles/                    # 响应式像素渲染样式
-├── docs/                          # 详细文档
-│   ├── GAMEPLAY_FOUNDATION.md     # 游戏系统架构
-│   ├── HOME_SYSTEM.md             # 小屋系统详解
-│   ├── FISHING_COOKING.md         # 钓鱼烹饪规则
-│   ├── INVENTORY_SYSTEM.md        # 背包系统 API
-│   ├── FARM_MAP_FOUNDATION.md     # 农场地图规划
-│   ├── PERFORMANCE.md             # 性能指标
-│   └── STAGE1_BUGFIX_REPORT.md    # 修复记录
-├── assets/blender/                # Blender 源文件与模型
-├── public/models/                 # GLB 模型及 manifest
-└── package.json
-```
-
-## 🔍 调试与开发
-
-### 预览参数
-
-仅在 `npm run dev` 时支持（不进入生产包）：
+### 其他命令
 
 ```bash
-# 时间与天气预设
-http://localhost:5173/?hour=14                    # 白天
-http://localhost:5173/?hour=22                    # 夜晚
-http://localhost:5173/?weather=storm&hour=17     # 风暴
+# 类型检查
+npm run typecheck
 
-# 视角预设
-http://localhost:5173/?view=dock&hour=14         # 码头第一人称
-http://localhost:5173/?view=underwater&hour=14   # 水下第一人称
-http://localhost:5173/?view=home-fishing&hour=14 # 钓鱼台
-http://localhost:5173/?view=chest&hour=14        # 宝箱发现
+# 运行测试
+npm run test
 
-# 世界选择（扩展分支）
-http://localhost:5173/?world=farm                # 农场岛
-http://localhost:5173/?world=travel              # 旅行面板
+# 生产构建
+npm run build
+
+# 预览生产版本
+npm run preview
 ```
 
-### 性能监控
+构建产物位于 `dist/` 目录，可以部署到任何静态 Web 服务（GitHub Pages、Vercel、Netlify 等）。
 
-右下角 **PIXEL** 按钮：
-- **LOW / MEDIUM / HIGH** 质量切换
-- **FPS** 实时帧率显示
-- 悬停查看绘制统计（顶点、三角形等）
+> 💡 **开发调试**：支持 URL 参数快速切换场景和时间
+> - `/?hour=14` - 白天
+> - `/?hour=22` - 夜晚
+> - `/?weather=storm&hour=17` - 风暴
+> - `/?view=dock&hour=14` - 码头第一人称
+> - `/?view=underwater&hour=14` - 水下视角
+> - `/?view=home-fishing&hour=14` - 钓鱼台
 
-## 📊 技术指标
+## 📁 代码结构
 
-### 构建与性能
-- **主包体积**：约 500 kB（Gzip 164 kB，无大型美术资源）
-- **帧率**（1080p）：57～60 FPS
-- **测试覆盖**：70+ 单元测试通过
-- **类型检查**：TypeScript strict 完全通过
-- **浏览器兼容**：Chrome、Firefox、Safari、Edge（WebGL 2 支持）
+项目采用功能模块化设计：
 
-### 实现特性
-- ✅ 昼夜循环与动态光照
-- ✅ 风暴天气系统（云、浪、雨、电）
-- ✅ Web Audio 5 层环境音 + 脚步音
-- ✅ 钓鱼与烹饪完整流程
-- ✅ 24 格背包 + 快捷栏
-- ✅ 多世界存档系统（v2 版本）
-- ✅ 发现点系统与航海手记
-- ✅ 正式农场地图（72×76 网格）
-- ✅ 响应式 UI（390×844 ~ 1920×1080）
+```
+src/
+├── main.ts                        # 程序入口
+├── core/                          # 游戏循环、渲染引擎、时钟系统
+├── controls/                      # 自由视角 & 第一人称控制器
+├── world/                         # 世界构建
+│   ├── bottle/                    # 玻璃瓶容器与边界
+│   ├── ocean/                     # 程序化波浪系统
+│   ├── island/                    # 岛屿地形、建筑、灯塔
+│   ├── ship/                      # 帆船航线与物理浮力
+│   ├── underwater/                # 海底、珊瑚、海草、地标
+│   └── Details.ts                 # 装饰物件（浮标、海鸟等）
+├── systems/                       # 游戏系统
+│   ├── DayNightSystem.ts          # 昼夜循环
+│   ├── WeatherSystem.ts           # 天气与风暴
+│   ├── FishingSystem.ts           # 钓鱼玩法
+│   ├── CookingSystem.ts           # 烹饪系统
+│   ├── AudioManager.ts            # 音效与环境音
+│   ├── GameFoundation.ts          # 存档、进度、物品注册表
+│   └── DiscoverySystem.ts         # 发现点与任务
+├── ui/                            # UI 组件
+├── utils/                         # 工具函数、共享几何与材质
+└── styles/                        # 样式与响应式布局
+```
 
-### 已验证
-- 默认构图、拖动旋转、风暴效果
-- 夜景与水下视效
-- E 交互与发现反馈
-- 声音倍速与质量切换
-- 多分辨率布局
+这个结构让每个模块职责明确，新功能可以独立开发和测试。
 
-## 📝 文档
+## 📊 开发进度
 
-详细技术文档位于 `docs/` 目录：
+### ✅ 已完成
+- 完整的第一人称与自由视角系统
+- 昼夜循环与动态光照
+- 风暴天气与音效系统
+- 钓鱼与烹饪完整流程
+- 24 格背包 + 8 格快捷栏
+- 小屋系统（睡觉、储物、烹饪）
+- 多世界切换与旅行系统
+- 发现点系统与航海手记
+- 正式农场地图（72×76 网格）
+- 响应式 UI（从 390×844 到 1920×1080）
+- 本地存档与存档迁移（v1 → v2）
 
-- **[GAMEPLAY_FOUNDATION.md](docs/GAMEPLAY_FOUNDATION.md)** - 游戏系统架构与存档格式
-- **[HOME_SYSTEM.md](docs/HOME_SYSTEM.md)** - 小屋系统实现与待验收项
-- **[FISHING_COOKING.md](docs/FISHING_COOKING.md)** - 钓鱼烹饪规则与食谱
-- **[INVENTORY_SYSTEM.md](docs/INVENTORY_SYSTEM.md)** - 背包系统 API 与筛选
-- **[FARM_MAP_FOUNDATION.md](docs/FARM_MAP_FOUNDATION.md)** - 农场地图规划与布局
-- **[PERFORMANCE.md](docs/PERFORMANCE.md)** - 帧率与绘制统计
-- **[STAGE1_BUGFIX_REPORT.md](docs/STAGE1_BUGFIX_REPORT.md)** - 已知问题与修复状态
+### 🔄 开发中
+- 种田系统（作物生长、收获）
+- 更多天气类型（雪、雾等）
+- 水下探险扩展
+
+### 📅 计划中
+- 移动端虚拟摇杆
+- 多人协作（暂定）
+- 故事线与 NPC
+
+## 📚 详细文档
+
+如果你想深入了解系统设计，可以查看 `docs/` 目录：
+
+- **[GAMEPLAY_FOUNDATION.md](docs/GAMEPLAY_FOUNDATION.md)** — 游戏系统架构、存档格式、物品注册表
+- **[HOME_SYSTEM.md](docs/HOME_SYSTEM.md)** — 小屋系统实现细节
+- **[FISHING_COOKING.md](docs/FISHING_COOKING.md)** — 钓鱼烹饪规则与食谱
+- **[INVENTORY_SYSTEM.md](docs/INVENTORY_SYSTEM.md)** — 背包 API、分类筛选、快捷栏
+- **[FARM_MAP_FOUNDATION.md](docs/FARM_MAP_FOUNDATION.md)** — 农场地图规划、网格系统
+- **[PERFORMANCE.md](docs/PERFORMANCE.md)** — 性能指标、帧率分析
+- **[STAGE1_BUGFIX_REPORT.md](docs/STAGE1_BUGFIX_REPORT.md)** — 已知问题与修复记录
 
 ## 🎨 美术资源
 
-### Blender 模型库
+所有 3D 模型都用 **Blender** 制作，然后导出为 GLB 格式：
 
 ```
 assets/blender/
-├── farm_asset_library.blend            # 农场资源库（20+ 类模型）
-├── farm/                               # 独立模型源文件
-├── character/player_character.blend    # 玩家角色源文件
-└── scripts/                            # 建模、导出、验证脚本
+├── farm_asset_library.blend       # 农场资源库（20+ 类模型）
+├── farm/                          # 独立模型源文件
+├── character/                     # 玩家角色源文件
+└── scripts/                       # Blender 导出脚本
 ```
 
-所有模型已导出为 GLB 格式，位于 `public/models/`：
-- 坐标系：Blender Z 向上 → 导出后 Y 向上
-- 摆放配置：统一在 `src/world/FarmLayout.ts` 管理
-- 模型元数据：包含 `manifest.json`
+模型数据位于 `public/models/`，每个模型都有对应的元数据和清单文件。
 
-## 🌐 部署
+**坐标系说明**：Blender 中是 Z 向上，导出后转换为 Y 向上（适配 Three.js 约定）。
 
-### 本地构建与部署
+## 🌍 部署与在线体验
+
+### 快速部署
 
 ```bash
-npm run build      # 生成 dist/ 目录
-npm run preview    # 本地预览
-
-# 部署到静态服务（如 GitHub Pages、Vercel、Netlify）
-# 仅需上传 dist/ 目录内容
+npm run build       # 生成 dist/ 目录
+# 将 dist/ 文件夹上传到任何静态服务
 ```
+
+支持的部署平台：
+- GitHub Pages（推荐）
+- Vercel
+- Netlify
+- 任何支持静态文件的服务器
 
 ### 在线游玩
 
-默认部署地址：https://rxl333.github.io/bottle-sea/
+项目已部署在 GitHub Pages：
+**[https://rxl333.github.io/bottle-sea/](https://rxl333.github.io/bottle-sea/)**
 
-## ✋ 已知限制
+在浏览器中打开即可游玩，首次加载会自动下载所需资源。
 
-- 🖱️ **鼠标指针锁定**：某些嵌入式浏览器中被拒绝，已提供拖动备用方案
-- 📱 **移动端**：暂未实现虚拟摇杆，主要针对桌面优化
-- 🎬 **动画**：船只、角色、天气效果已完成；部分高级动画开发中
-- 🔔 **第三方库**：完全自研实现，无依赖
+## 💡 值得一提的细节
 
-## 📄 许可证
+- **鼠标指针锁定备用**：某些嵌入式浏览器会拒绝 Pointer Lock 请求。本游戏已提供拖动观察的备用方案，在失败时自动切换。
+- **低带宽优化**：所有资源都是程序生成，没有大型美术文件。Gzip 后仅 164 KB，即使在 3G 网络上也能快速加载。
+- **无框架设计**：没有 React、Vue 等前端框架，UI 用原生 HTML + CSS 编写。这样减少了依赖，提高了启动速度。
+- **本地存档**：游戏数据全部存在浏览器 LocalStorage 中，完全离线可用。清除浏览器数据才会丢失进度。
+- **准星反馈**：鼠标指针会根据交互状态变化（普通箭头 → ◇ 准星），给玩家清晰的视觉反馈。
 
-详见 LICENSE 文件
+## 🐛 已知限制
 
-## 🙋 反馈与贡献
+- 📱 **移动端支持有限**：虽然 UI 是响应式的，但核心玩法针对桌面键鼠优化。虚拟摇杆还在计划中。
+- 🎬 **部分动画**：人物坐姿动画、更复杂的天气动画还在开发。
+- 🔊 **音频文件可选**：如果你想自定义环境音，可以替换 `public/audio/` 目录下的文件。
+- 🌍 **浏览器兼容**：需要支持 WebGL 2 的现代浏览器。IE 及过旧的浏览器不支持。
 
-- 🐛 问题报告：[Issues](https://github.com/RXL333/bottle-sea/issues)
-- 💡 功能建议：[Discussions](https://github.com/RXL333/bottle-sea/discussions)
-- 🔧 代码贡献：欢迎 Pull Requests
+## 🤝 反馈与贡献
 
-## 🙏 致谢
+- 🐛 **遇到 bug？** → [提交 Issue](https://github.com/RXL333/bottle-sea/issues)
+- 💡 **有想法？** → [参与讨论](https://github.com/RXL333/bottle-sea/discussions)
+- 📝 **想贡献代码？** → Fork 后提交 PR，我们欢迎任何改进！
 
-感谢所有贡献者、测试者与玩家的支持！
+## 📄 开源协议
+
+MIT License - 自由使用与修改
+
+## 🙏 特别感谢
+
+感谢：
+- Three.js 社区的优秀库
+- Blender 强大的建模工具
+- 所有游玩、测试、提建议的玩家
+- 对独立游戏开发有热情的每个人
 
 ---
 
-**祝你在瓶中沧海中探险愉快！** 🌊✨
+**最后的话**
+
+这个项目代表了我对网页 3D 游戏开发的探索。从最初的想法到如今的完成度，经历了无数次重构、优化、测试。希望你能在这个瓶中沧海中找到乐趣，也欢迎你的想法和反馈。
+
+如果你喜欢这个项目，请给个 Star ⭐ 支持一下！
+
+**祝你探险愉快！** 🌊✨
