@@ -3,6 +3,7 @@ import { VoxelBatch, box } from '../../utils/voxel';
 import { sampleBuoyancy } from './Buoyancy';
 import { sampleShipPath } from './ShipPath';
 import type { DynamicObstacle } from '../Collision';
+import type { ShipPose } from './ShipPath';
 
 export class Ship extends Group {
   private modelLoaded=false;
@@ -28,8 +29,8 @@ export class Ship extends Group {
     this.add(this.hull);this.update(0,0);
   }
   setModel(model:Group){for(const child of this.hull.children)child.visible=false;model.scale.setScalar(.23);this.hull.add(model);this.modelLoaded=true;}
-  update(time:number,storm:number) {
-    const {x,z,yaw}=sampleShipPath(time),previousX=this.position.x,previousZ=this.position.z,previousYaw=this.rotation.y;
+  update(time:number,storm:number,pose?:ShipPose) {
+    const {x,z,yaw}=pose??sampleShipPath(time),previousX=this.position.x,previousZ=this.position.z,previousYaw=this.rotation.y;
     sampleBuoyancy(x,z,yaw,time,storm,this.floatState);
     this.position.set(x,this.floatState.height+.015,z);this.rotation.y=yaw;
     this.hull.rotation.set(this.floatState.pitch,0,this.floatState.roll);

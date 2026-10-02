@@ -17,6 +17,19 @@ export function farmHeight(x:number,z:number){
   return top;
 }
 function paint(b:VoxelBatch,color:string,rect:FarmRect,top:number){b.add(color,rect.x,(FARM_GROUND+top)/2,rect.z,rect.width,top-FARM_GROUND,rect.depth);}
+interface GroundPaint {color:string;rect:FarmRect;top:number}
+/** One top face per region, even where a road overlaps the plaza or headland. */
+export function farmGroundPatches(){
+  const paints:GroundPaint[]=[];
+  for(const f of FARM_FIELDS){for(const rect of [f.headlands.north,f.headlands.south])paints.push({color:'#8d8e56',rect,top:headlandTop});paints.push({color:'#76583e',rect:f,top:fieldTop});}
+  paints.push({color:'#ad9874',rect:farmZone('center'),top:roadTop},{color:'#a1957e',rect:farmZone('machinery-yard'),top:roadTop},...FARM_ROADS.map(rect=>({color:'#b5a075',rect,top:roadTop})));
+  const xs=[...new Set(paints.flatMap(p=>[rectBounds(p.rect).minX,rectBounds(p.rect).maxX]))].sort((a,b)=>a-b),zs=[...new Set(paints.flatMap(p=>[rectBounds(p.rect).minZ,rectBounds(p.rect).maxZ]))].sort((a,b)=>a-b),patches:GroundPaint[]=[];
+  for(let i=1;i<xs.length;i++)for(let j=1;j<zs.length;j++){
+    const x=(xs[i-1]+xs[i])/2,z=(zs[j-1]+zs[j])/2;let selected:GroundPaint|undefined;
+    for(const p of paints)if(containsRect(p.rect,x,z)&&(!selected||p.top>=selected.top))selected=p;
+    if(selected)patches.push({color:selected.color,top:selected.top,rect:{x,z,width:xs[i]-xs[i-1],depth:zs[j]-zs[j-1]}});
+  }return patches;
+}
 function outline(b:VoxelBatch,rect:FarmRect,color:string,top:number,width=.12){
   const bounds=rectBounds(rect);
   b.add(color,rect.x,top-.008,bounds.minZ,rect.width,.016,width);b.add(color,rect.x,top-.008,bounds.maxZ,rect.width,.016,width);
@@ -32,15 +45,12 @@ export class FarmTerrain extends Group {
       b.add(random()>.5?'#668b42':'#719545',x,top-.09,z,1,.18,1);
     }
     // Unplanted parcels and obstacle-free headlands are the productive footprint.
+    for(const p of farmGroundPatches())paint(b,p.color,p.rect,p.top);
     for(const f of FARM_FIELDS){
-      for(const h of [f.headlands.north,f.headlands.south])paint(b,'#8d8e56',h,headlandTop);
-      paint(b,'#76583e',f,fieldTop);outline(b,f,'#bea57a',fieldTop+.001,.14);
+      outline(b,f,'#bea57a',fieldTop+.008,.14);
       // Shallow survey marks at grid intervals, without fencing off machinery access.
       for(let i=1;i<f.grid.columns;i++)for(const z of [f.z-f.depth/2,f.z+f.depth/2])b.add('#cbb48b',f.grid.originX+i*f.grid.cellSize,fieldTop+.002,z,.055,.008,.22);
     }
-    paint(b,'#ad9874',farmZone('center'),roadTop);
-    paint(b,'#a1957e',farmZone('machinery-yard'),roadTop);
-    for(const r of FARM_ROADS)paint(b,'#b5a075',r,roadTop);
     for(const area of FARM_TURNING_AREAS){
       // Four small ground-painted corners identify the clear turning envelope.
       for(const x of [area.x-area.width/2,area.x+area.width/2])for(const z of [area.z-area.depth/2,area.z+area.depth/2]){
@@ -61,6 +71,6 @@ export class FarmTerrain extends Group {
       if(i%5===0)b.add('#8e9485',x,y+.04,z,size*1.6,.08,size*1.2);
       else {b.add('#52783a',x,y+.08,z,.04,.16,.04);b.add('#7fa34d',x+.055,y+.055,z+.035,.035,.11,.035);}
     }
-    b.build(this);this.userData.fields=FARM_FIELDS.map(f=>f.id);this.userData.layoutVersion=1;
+    const ground=b.build(this);ground.castShadow=false;this.userData.fields=FARM_FIELDS.map(f=>f.id);this.userData.layoutVersion=1;
   }
 }

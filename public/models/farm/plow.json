@@ -5,7 +5,7 @@
   "file": "plow.glb",
   "blend": "plow.blend",
   "dimensions": {
-    "width": 3.0286,
+    "width": 3.2772,
     "height": 1.5632,
     "depth": 1.31985
   },
@@ -16,7 +16,7 @@
       0.0
     ],
     "max": [
-      1.3899999856948853,
+      1.6385999917984009,
       0.6349999904632568,
       1.5631999969482422
     ]
@@ -26,14 +26,15 @@
   "units": "meters",
   "pivot": "ground",
   "parts": {
-    "depth_wheel": "plow__depth_wheel",
-    "Hitch_Front": "plow__Hitch_Front"
+    "depth_wheel_left": "plow__depth_wheel_left",
+    "depth_wheel_right": "plow__depth_wheel_right",
+    "Hitch_Front": "plow__Hitch_Front.001"
   },
-  "triangles": 1072,
-  "meshCount": 11,
-  "bytes": 65536,
+  "triangles": 1728,
+  "meshCount": 16,
+  "bytes": 98348,
   "notes": [
-    "Hitch_Front coupling anchor retained for implement attachment."
+    "Mirrored left and right depth wheels with independent semantic pivots; working shares and Hitch_Front unchanged."
   ],
   "animation": "semantic pivot nodes only; no animation clips",
   "license": "Original authored geometry; no third-party model dependencies",

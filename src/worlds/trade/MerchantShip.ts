@@ -2,9 +2,10 @@ import { Group } from 'three';
 import { box } from '../../utils/voxel';
 import type { InteractionTarget } from '../../systems/InteractionSystem';
 import type { DynamicObstacle } from '../../world/Collision';
-export const HOME_TRADE_POINT={x:.5,y:4.12,z:.72};
+import { HOME_MERCHANT_TRADE } from './MerchantRoute';
+export const HOME_TRADE_POINT=HOME_MERCHANT_TRADE;
 export const FARM_TRADE_POINT={x:-4,y:4.44,z:11.2};
-export const merchantTarget=(farm:boolean):InteractionTarget=>({id:farm?'farm_merchant':'home_merchant',name:'商船交易',action:'TRADE',...(farm?FARM_TRADE_POINT:HOME_TRADE_POINT),range:farm?1:.45,prompt:'商船交易 · 出售产品 / 购买补给 / 扩容'});
+export const merchantTarget=(farm:boolean):InteractionTarget=>({id:farm?'farm_merchant':'home_merchant',name:farm?'商船交易':'远海帆船交易',action:'TRADE',...(farm?FARM_TRADE_POINT:HOME_TRADE_POINT),range:farm?1:.55,prompt:'商船交易 · 出售产品 / 购买补给 / 扩容'});
 /** A separate moored merchant, leaving the travel boat and its boarding point intact. */
 export class MerchantShip extends Group {
   readonly collision:DynamicObstacle;

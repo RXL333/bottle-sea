@@ -4,17 +4,20 @@ import type { FarmWorld } from '../worlds/farm/FarmWorld';
 import { getImplement } from '../gameplay/vehicles/ImplementRegistry';
 import { LIVESTOCK_PENS } from '../gameplay/livestock/LivestockDefinition';
 import { HOME_TRADE_POINT,FARM_TRADE_POINT } from '../worlds/trade/MerchantShip';
+import { HOME_MERCHANT_BERTH } from '../worlds/trade/MerchantRoute';
 import { PURCHASED_COMBINE_ID } from '../gameplay/vehicles/VehicleIds';
+import { Vector3 } from 'three';
 // Development-only reproducible visual checkpoints; no extra controls in the game HUD.
 export function configurePreview(game:Game){
   const params=new URLSearchParams(location.search),hour=Number(params.get('hour'));
   if(params.has('hour')&&Number.isFinite(hour)&&hour>=0&&hour<24)game.clock.simulationTime=DAY_DURATION*(7+hour/24);
   if(params.get('weather')==='storm'){game.weather.storm=true;game.weather.intensity=1;game.hud.setActive('storm',true);}
   if(params.get('view')==='home-trade'||params.get('view')==='farm-trade'){
-    const point=game.worldManager.currentWorldId==='FARM'?FARM_TRADE_POINT:HOME_TRADE_POINT;game.overview.suspend();game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.set(point.x,point.y,point.z);game.camera.lookAt(point.x-2,point.y-.4,point.z);game.explorer.syncLook();
+    const farm=game.worldManager.currentWorldId==='FARM',point=farm?FARM_TRADE_POINT:HOME_TRADE_POINT;game.overview.suspend();game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.set(point.x,point.y,point.z);game.camera.lookAt(farm?point.x-2:HOME_MERCHANT_BERTH.x,point.y-.4,farm?point.z:HOME_MERCHANT_BERTH.z);game.explorer.syncLook();
     if(params.get('fixture')==='1'&&game.gameplay.economy.nextRequest===1&&!game.gameplay.inventory.count('crop.corn')){game.gameplay.inventory.add('crop.corn',200);game.gameplay.inventory.add('fish.tuna',10);game.gameplay.inventory.add('food.grilled_fish',3);game.gameplay.inventory.add('livestock.milk',4);}
     const controls=document.createElement('details');controls.style.cssText='position:fixed;top:140px;left:18px;z-index:20;background:#142621e6;color:#ffe4a3;padding:10px';const title=document.createElement('summary');title.textContent='开发验证 · 商船';controls.append(title);
     const button=(label:string,action:()=>void)=>{const b=document.createElement('button');b.textContent=label;b.addEventListener('click',()=>{action();controls.open=false;game.renderer.domElement.focus();});controls.append(b);};
+    if(!farm)for(const hour of [7,8,19,20,21])button(`商船时段 ${hour}:00`,()=>game.clock.simulationTime=DAY_DURATION*(Math.floor(game.clock.simulationTime/DAY_DURATION)+hour/24));
     button('查看增购收割机',()=>{const vehicle=game.worldManager.currentWorld?.vehicles?.find(v=>v.id===PURCHASED_COMBINE_ID);if(!vehicle)return;game.camera.position.copy(vehicle.entryPosition());game.camera.position.y=vehicle.root.position.y+.44;game.camera.lookAt(vehicle.seatPosition());game.explorer.syncLook();});
     if(params.get('fixture')==='1'){
       button('填满交易测试背包',()=>{const bag=game.gameplay.inventory;for(let n=0;n<bag.capacity;n++){const s=bag.getSlot(n);if(s)bag.add(s.itemId,game.gameplay.items.get(s.itemId)!.maxStack-s.quantity);}bag.add('wood',bag.emptySlots*99);});
@@ -29,6 +32,11 @@ export function configurePreview(game:Game){
     game.overview.enabled=false;game.explorer.enter(false);game.hud.setExplore(true);
     game.camera.position.set(-1.564,4.446,.72);game.camera.lookAt(-1.6,4.30,-.4);game.explorer.syncLook();
   }
+  if(game.worldManager.currentWorldId==='HOME'&&params.get('view')==='home-cottage-right'){
+    game.overview.suspend();game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.set(-.38,4.36,1.60);game.camera.lookAt(-.38,4.36,.5);game.explorer.syncLook();
+    const button=document.createElement('button');button.textContent='开发验证 · 右侧通道前进 2 秒';button.style.cssText='position:fixed;top:140px;left:18px;z-index:20';
+    button.addEventListener('click',()=>{const canvas=game.renderer.domElement;canvas.focus();canvas.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyW',key:'w',bubbles:true}));window.setTimeout(()=>canvas.dispatchEvent(new KeyboardEvent('keyup',{code:'KeyW',key:'w',bubbles:true})),2000);});document.body.append(button);
+  }
   if(game.worldManager.currentWorldId==='HOME'&&params.get('view')==='home-island'){
     game.overview.suspend();game.explorer.suspend();game.overview.target.set(-.7,4.25,0);game.overview.minDistance=2;game.camera.position.set(4,7.2,8);game.camera.lookAt(-.7,4.25,0);game.camera.fov=35;game.camera.updateProjectionMatrix();
   }
@@ -39,6 +47,16 @@ export function configurePreview(game:Game){
   }
   if(game.worldManager.currentWorldId==='FARM'){
     const world=game.worldManager.currentWorld as FarmWorld;
+    if(params.get('view')==='farm-character'){
+      game.overview.suspend();game.explorer.suspend();game.hud.setExplore(false);game.characterPreview={feet:new Vector3(0,4,3),yaw:0,pose:'IDLE'};game.camera.position.set(.68,4.50,4.17);game.camera.lookAt(0,4.28,3);game.camera.fov=40;game.camera.updateProjectionMatrix();
+      const controls=document.createElement('details');controls.open=true;controls.style.cssText='position:fixed;top:140px;left:18px;z-index:20;background:#142621e6;color:#ffe4a3;padding:10px';const title=document.createElement('summary');title.textContent='开发验证 · 主角';controls.append(title);
+      const button=(label:string,action:()=>void)=>{const b=document.createElement('button');b.textContent=label;b.addEventListener('click',()=>{action();game.renderer.domElement.focus();});controls.append(b);};
+      for(const [pose,label] of [['IDLE','站姿'],['WALK','行走'],['RUN','跑步'],['SEATED','坐姿']] as const)button(label,()=>{if(game.characterPreview)game.characterPreview.pose=pose;});
+      button('查看背包与背面',()=>{if(game.characterPreview)game.characterPreview.yaw=Math.PI;});
+      for(const vehicle of world.vehicles)button(`靠近${vehicle.name}`,()=>{game.characterPreview=undefined;game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.copy(vehicle.entryPosition());game.camera.position.y=vehicle.root.position.y+.44;game.camera.lookAt(vehicle.seatPosition());game.explorer.syncLook();controls.open=false;});
+      document.body.append(controls);
+    }
+    if(params.get('view')==='farm-character-body'){game.overview.suspend();game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.set(0,4.44,3);game.camera.lookAt(.001,3.9,3.08);game.explorer.syncLook();}
     if(params.get('view')?.startsWith('farm-livestock')){
       if(params.get('fixture')==='1'&&!game.gameplay.inventory.count('crop.wheat'))game.gameplay.inventory.add('crop.wheat',30);
       const atFeed=(kind:string)=>{const p=LIVESTOCK_PENS.find(p=>p.id===kind)!;const side=kind==='chicken'?1:-1;game.camera.position.set(p.feeder.x,4.44,p.feeder.z+side*(side===1?.85:.65));game.camera.lookAt(p.feeder.x,4.1,p.feeder.z-side*3);game.explorer.syncLook();};

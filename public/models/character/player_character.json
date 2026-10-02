@@ -1,0 +1,51 @@
+{
+  "id": "player_character",
+  "name": "瓶中沧海主角",
+  "file": "player_character.glb",
+  "units": "meters",
+  "up": "+Y",
+  "forward": "+Z",
+  "pivot": "feet",
+  "dimensions": {
+    "width": 0.6399999856948853,
+    "height": 1.5948333591222763,
+    "depth": 0.5745199918746948
+  },
+  "boundsBlender": {
+    "min": [
+      -0.3199999928474426,
+      -0.2585199773311615,
+      0
+    ],
+    "max": [
+      0.3199999928474426,
+      0.3160000145435333,
+      1.5948333591222763
+    ]
+  },
+  "triangles": 3220,
+  "meshCount": 59,
+  "parts": [
+    "Hips",
+    "Spine",
+    "Head",
+    "Hat",
+    "Backpack",
+    "Thigh_L",
+    "Shin_L",
+    "Foot_L",
+    "Arm_L",
+    "Forearm_L",
+    "Hand_L",
+    "Thigh_R",
+    "Shin_R",
+    "Foot_R",
+    "Arm_R",
+    "Forearm_R",
+    "Hand_R"
+  ],
+  "gameScale": 0.33,
+  "seatAnchor": "Hips",
+  "license": "Original authored geometry based on user supplied reference",
+  "animation": "Semantic pivot hierarchy; runtime idle / walk / run / seated poses"
+}

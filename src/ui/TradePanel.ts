@@ -12,12 +12,12 @@ export class TradePanel {
   get open(){return this.element.open;}
   show(game:GameplayServices,access:()=>TradeAccess,close:()=>void){this.game=game;this.access=access;this.onClose=close;this.message='';this.tab='buy';this.selected='buy.seed.wheat';this.quantity=1;this.render();this.element.showModal();}
   close(){if(!this.open)return;this.element.close();this.onClose();}
-  update(game:GameplayServices){this.wallet.textContent=`◈ ${game.economy.coins} 金币`;if(!this.open)return;const stamp=`${game.economy.revision}:${game.inventory.revision}`;if(stamp!==this.stamp)this.render();}
+  update(game:GameplayServices){this.wallet.textContent=`◈ ${game.economy.coins} 金币`;if(!this.open)return;const stamp=`${game.economy.revision}:${game.inventory.revision}:${this.access().available?.()??true}`;if(stamp!==this.stamp)this.render();}
   private button(text:string,action:()=>void){const b=document.createElement('button');b.type='button';b.textContent=text;b.addEventListener('click',action);return b;}
   private render(){
-    const game=this.game!;this.stamp=`${game.economy.revision}:${game.inventory.revision}`;this.element.replaceChildren();
+    const game=this.game!;this.stamp=`${game.economy.revision}:${game.inventory.revision}:${this.access().available?.()??true}`;this.element.replaceChildren();
     const header=document.createElement('header'),caption=document.createElement('small'),title=document.createElement('h2'),balance=document.createElement('strong');caption.textContent='THE HARBOUR EXCHANGE';title.textContent='商船贸易';balance.textContent=`余额 ${game.economy.coins} 金币`;const close=this.button('关闭交易 ×',()=>this.close());header.append(caption,title,balance,close);
-    const note=document.createElement('p');note.className='trade-note';note.textContent=`固定价格 · 交易使用随身背包 · 背包 ${game.inventory.occupiedSlots}/${game.inventory.capacity} 格 · 谷仓 ${game.barn.capacity} 格 · 粮仓 ${game.economy.grainCapacity} 份`;
+    const note=document.createElement('p');note.className='trade-note';note.textContent=`${this.access().label??'农场补给商船'} · 固定价格 · 交易使用随身背包 · 背包 ${game.inventory.occupiedSlots}/${game.inventory.capacity} 格 · 谷仓 ${game.barn.capacity} 格 · 粮仓 ${game.economy.grainCapacity} 份`;
     const tabs=document.createElement('nav');for(const [id,label] of [['buy','购买'],['sell','出售'],['upgrade','容量升级']] as const){const b=this.button(label,()=>{this.tab=id;this.selected=id==='sell'?Object.keys(SELL_PRICES).find(id=>game.inventory.count(id)>0)??Object.keys(SELL_PRICES)[0]:id==='upgrade'?'upgrade.barn.1':'buy.seed.wheat';this.quantity=1;this.message='';this.render();});b.setAttribute('aria-pressed',String(this.tab===id));tabs.append(b);}
     const body=document.createElement('div');body.className='trade-body';const list=document.createElement('div');list.className='trade-list';list.setAttribute('aria-label','商品列表');
     const ids=this.tab==='sell'?Object.keys(SELL_PRICES):TRADE_OFFERS.filter(p=>this.tab==='upgrade'?p.kind==='upgrade':p.kind!=='upgrade').map(p=>p.id);let selectedRow:HTMLButtonElement|undefined;

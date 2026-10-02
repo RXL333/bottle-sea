@@ -161,8 +161,9 @@ def plow():
         a.beam((side*.53,0,.82),(side*.38,-.66,.60),.095,color='red')
     a.box((0,-.35,1.47),(.18,.17,.18),'red2')
     a.cyl((-.12,-.35,1.48),(.12,-.35,1.48),.055,'steel',8)
-    a.beam((-1.15,.1,.81),(-1.47,.11,.35),.10,color='red')
-    wheel(a,-1.50,.10,.32,.32,.22,'red','depth_wheel')
+    for side,label in [(-1,'left'),(1,'right')]:
+        a.beam((side*1.15,.1,.81),(side*1.47,.11,.35),.10,color='red')
+        wheel(a,side*1.50,.10,.32,.32,.22,'red','depth_wheel_'+label)
     return a.finish()
 
 def build():return [tractor(),seeder(),combine(),trailer(),plow()]

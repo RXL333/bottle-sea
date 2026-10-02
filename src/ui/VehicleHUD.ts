@@ -17,7 +17,7 @@ export class VehicleHUD {
   }
   update(controller:VehicleController){
     this.element.hidden=!controller.active;const vehicle=controller.vehicle;if(!vehicle)return;
-    this.name.textContent=vehicle.name;this.controls.textContent=vehicle.machineControls??'W / S 前进后退　A / D 转向　Space 刹车　H 挂接　J 抬落　K 换种　E 下车';
+    this.name.textContent=vehicle.name;this.controls.textContent=(vehicle.machineControls??'W / S 前进后退　A / D 转向　Space 刹车　H 挂接　J 抬落　K 换种　E 下车')+'　鼠标左右转向 · 左键拖动观察 / 松开复位';
     this.cargo.hidden=!vehicle.cargoHint;this.cargo.textContent=vehicle.cargoHint??'';
     this.speed.textContent=`${(Math.abs(vehicle.speed)*3.6).toFixed(1)} km/h`;
     this.hitch.textContent=vehicle.hitchHint??'H 挂接 / 分离农具';

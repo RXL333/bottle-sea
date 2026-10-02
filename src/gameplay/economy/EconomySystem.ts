@@ -4,11 +4,12 @@ import type { VehiclePose,VehicleProgress } from '../vehicles/VehicleState';
 import { normalizeEconomy } from './EconomyState';
 import type { EconomySnapshot } from './EconomyState';
 import { BARN_CAPACITIES,GRAIN_CAPACITIES,MAX_COINS,MAX_TRADE_QUANTITY,SELL_PRICES,tradeOffer,validateTradeCatalog } from './TradeCatalog';
-export type TradeFailure='unknown-product'|'invalid-quantity'|'insufficient-coins'|'insufficient-items'|'full'|'already-owned'|'upgrade-order'|'delivery-blocked'|'farm-only'|'stale-request'|'balance-limit'|'transaction-failed';
+export type TradeFailure='unknown-product'|'invalid-quantity'|'insufficient-coins'|'insufficient-items'|'full'|'already-owned'|'upgrade-order'|'delivery-blocked'|'farm-only'|'stale-request'|'balance-limit'|'transaction-failed'|'merchant-away';
 export type TradeResult={ok:true;total:number;quantity:number}|{ok:false;reason:TradeFailure};
 export interface MachineDeliveryPlan {pose:VehiclePose;apply():void;rollback():void}
-export interface TradeAccess {farm:boolean;upgraded?():void;delivery?:{available():boolean;prepare():MachineDeliveryPlan|undefined}}
+export interface TradeAccess {farm:boolean;available?():boolean;label?:string;upgraded?():void;delivery?:{available():boolean;prepare():MachineDeliveryPlan|undefined}}
 export const TRADE_FAILURES:Readonly<Record<TradeFailure,string>>={
+  'merchant-away':'商船尚未靠稳或已离港，每日 08:00–20:00 可交易，金币和物品已保留。',
   'unknown-product':'商船不经营此商品。','invalid-quantity':'数量必须是 1～999 的整数；农机和升级每次一份。','insufficient-coins':'金币不足，交易未扣款。','insufficient-items':'背包中物品数量不足。','full':'背包空间不足，交易未扣款。','already-owned':'此农机已购买，原有农机也会保留。','upgrade-order':'已升级或需先购买前一级升级。','delivery-blocked':'交付停放位被占用，请移开车辆或离开停放区后重试。','farm-only':'请到农场码头购买并接收农机。','stale-request':'该交易请求已处理或已过期，没有重复扣款或发放。','balance-limit':'金币或交易记录达到上限。','transaction-failed':'交易未完成，资源已保留，请重试。',
 };
 /** Synchronous resource transactions. A persisted sequence rejects replayed purchase/sell requests. */
@@ -20,6 +21,7 @@ export class EconomySystem {
   snapshot(){return structuredClone(this.state);}
   check(mode:'buy'|'sell',id:string,quantity:number,access:TradeAccess={farm:false},request=this.nextRequest):TradeResult {
     if(request!==this.nextRequest)return {ok:false,reason:'stale-request'};
+    if(access.available&&!access.available())return {ok:false,reason:'merchant-away'};
     if(!Number.isSafeInteger(quantity)||quantity<1||quantity>MAX_TRADE_QUANTITY)return {ok:false,reason:'invalid-quantity'};
     const offer=tradeOffer(id),price=mode==='sell'?SELL_PRICES[id]:offer?.price;
     if(!price)return {ok:false,reason:'unknown-product'};

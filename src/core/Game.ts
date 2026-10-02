@@ -19,6 +19,7 @@ import { CameraTransitionSystem } from '../systems/CameraTransitionSystem';
 import { SceneFocusSystem } from '../systems/SceneFocusSystem';
 import type { FocusId } from '../systems/SceneFocusSystem';
 import { PlayerFeedback } from '../systems/PlayerFeedback';
+import { PlayerCharacter } from '../systems/PlayerCharacter';
 import { WaterEntrySystem } from '../systems/WaterEntrySystem';
 import { PerformanceMonitor } from '../utils/PerformanceMonitor';
 import { configurePreview } from './Preview';
@@ -60,6 +61,8 @@ export class Game {
   readonly hud:HUD;readonly loop:GameLoop;readonly dayNight:DayNightSystem;readonly overview:OverviewController;readonly explorer:ExploreController;
   readonly performance:PerformanceMonitor;readonly transition=new CameraTransitionSystem(this.camera);readonly focus:SceneFocusSystem;
   readonly playerFeedback=new PlayerFeedback();readonly waterEntry=new WaterEntrySystem();readonly worldManager:WorldManager;
+  readonly character=new PlayerCharacter();
+  characterPreview?:{feet:Vector3;yaw:number;pose:'IDLE'|'WALK'|'RUN'|'SEATED'};
   readonly player:PlayerState;readonly travel:TravelSystem;readonly doorTransition=new DoorTransition();
   readonly sleepTransition=new SleepTransition();
   readonly gameplay:GameplayFoundation;
@@ -82,7 +85,7 @@ export class Game {
   private readonly preview=import.meta.env.DEV&&['view','world','hour','weather','fail'].some(key=>new URLSearchParams(location.search).has(key));
   private readonly persistPreview=import.meta.env.DEV&&new URLSearchParams(location.search).get('persist')==='1';
   constructor(root:HTMLElement){
-    root.append(this.renderer.domElement);this.renderer.domElement.tabIndex=0;this.scene.background=new Color('#21343a');this.scene.add(this.weather,this.waterEntry);
+    root.append(this.renderer.domElement);this.renderer.domElement.tabIndex=0;this.scene.background=new Color('#21343a');this.scene.add(this.weather,this.waterEntry,this.character);
     this.dayNight=new DayNightSystem(this.scene);this.overview=new OverviewController(this.camera,this.renderer.domElement);this.focus=new SceneFocusSystem(this.camera,this.overview.target);
     this.explorer=new ExploreController(this.camera,this.renderer.domElement);this.hud=new HUD(root);this.panel=new DestinationPanel(root);this.homePanel=new HomePanel(root);this.sleepOverlay=new SleepOverlay(root);
     this.vehicleController=new VehicleController(this.camera,this.renderer.domElement,this.explorer);this.hud.element.append(this.vehicleHUD.element);
@@ -165,6 +168,7 @@ export class Game {
     this.cover.style.opacity='1';this.caption.hidden=false;this.caption.textContent='正在展开航海图……';
     const previewWorld=import.meta.env.DEV?new URLSearchParams(location.search).get('world'):null;
     const id=previewWorld==='home'?'HOME':previewWorld==='cottage'?'COTTAGE':previewWorld==='farm'?'FARM':previewWorld==='travel'?'TRAVEL':saved.lastSuccessfulWorld==='HOME'&&saved.player.currentSpawnId==='cottage_entry'?'COTTAGE':saved.lastSuccessfulWorld;
+    await this.character.load().catch(error=>console.warn('Player character could not be loaded',error));
     try {await this.worldManager.switchTo(id,this.clock.simulationTime,id==='HOME'&&saved.player.currentSpawnId==='home_cottage_exit'?'home_cottage_exit':undefined);this.configureEnvironment();
       if(id==='COTTAGE'){this.player.currentWorldId='HOME';this.lastSuccessfulWorld='HOME';this.player.currentSpawnId='cottage_entry';this.resumeExplore();}else if(id==='HOME'&&saved.player.currentSpawnId==='home_cottage_exit'){this.resumeExplore();}else if(id==='FARM'){this.player.currentWorldId='FARM';this.lastSuccessfulWorld='FARM';this.resumeExplore();}else if(id==='TRAVEL'){this.overview.suspend();this.camera.position.set(0,4.8,-3);this.camera.lookAt(0,3.6,1);}
       if(import.meta.env.DEV)configurePreview(this);
@@ -177,7 +181,7 @@ export class Game {
     this.weather.visible=!inside;this.waterEntry.visible=!inside;this.dayNight.sky.visible=!inside;this.dayNight.sun.visible=!inside;this.dayNight.ambient.visible=!inside;this.dayNight.hemi.visible=!inside;
     this.dayNight.sky.scale.setScalar(home?1:3);this.dayNight.sky.position.set(0,home?0:-6,0);
     this.weather.scale.set(home?1:3,home?1:2,home?1:5);this.weather.position.set(0,home?0:-3,0);
-    const shadow=this.dayNight.sun.shadow.camera;Object.assign(shadow,home?{left:-13,right:13,top:10,bottom:-10,far:35}:this.worldManager.currentWorldId==='FARM'?{left:-45,right:45,top:70,bottom:-25,far:120}:{left:-25,right:25,top:25,bottom:-25,far:90});shadow.updateProjectionMatrix();
+    this.dayNight.configureShadows(this.worldManager.currentWorldId!);
     if(this.worldManager.currentWorld?.navigation)this.explorer.setNavigation(this.worldManager.currentWorld.navigation);
   }
   private resumeExplore(){this.overview.suspend();this.focus.cancel();this.explorer.enter(false,this.spawn);this.camera.far=this.worldManager.currentWorldId==='HOME'?40:150;this.camera.updateProjectionMatrix();this.transition.state='EXPLORE';this.playerFeedback.reset();this.hud.setExplore(true);this.hud.setTransition(false);this.renderer.domElement.focus();}
@@ -269,7 +273,7 @@ export class Game {
       this.caption.textContent='暂时无法开门，已返回原处';this.hud.notify('小屋暂时无法加载，请稍后再试。');
     });
   }
-  private applyQuality(quality:Quality){this.renderer.quality=quality;this.renderer.resize();this.worldManager.applyQuality(quality);this.weather.rain.setCount(QUALITY[quality].rain);this.waterEntry.setDensity(QUALITY[quality].waterStep);this.hud.element.querySelector('.quality')!.textContent=`PIXEL / ${quality}`;}
+  private applyQuality(quality:Quality){this.renderer.quality=quality;this.renderer.resize();this.worldManager.applyQuality(quality);this.character.applyQuality(quality);this.weather.rain.setCount(QUALITY[quality].rain);this.waterEntry.setDensity(QUALITY[quality].waterStep);this.hud.element.querySelector('.quality')!.textContent=`PIXEL / ${quality}`;}
   private bindUI(){
     this.hud.element.querySelector('[data-action="inventory"]')!.addEventListener('click',()=>this.openInventory());
     this.hud.element.querySelector('[data-action="food"]')!.addEventListener('click',()=>this.openCooking('food'));
@@ -345,11 +349,16 @@ export class Game {
     this.hudTimer+=delta;if(this.hudTimer>.25){this.hudTimer=0;this.hud.updateClock(this.clock,this.weather.storm);this.hud.updateHomeStats(this.gameplay.progress,false);this.hud.updateProductionStats(this.gameplay,this.explorer.active||this.gameplayPanelOpen);this.hud.updateDepth(underwater,water-this.camera.position.y);
       if(import.meta.env.DEV){Object.assign(this.renderer.domElement.dataset,{world:this.worldManager.currentWorldId,travel:this.travel.state,door:this.doorTransition.state,sleep:this.sleepTransition.state,energy:String(this.gameplay.progress.energy),cameraMode:this.transition.state,waterEntries:String(this.waterEntry.entries),waterLeaves:String(this.waterEntry.leaves),fov:this.camera.fov.toFixed(2),gameTime:String(this.clock.simulationTime),storm:String(this.weather.storm),quality:this.renderer.quality,discoveries:this.player.discoveries.join(','),completedTrips:String(this.completedTrips),interactionCount:String(this.interactionCount),audio:JSON.stringify(this.sound.diagnostics),vehiclePhase:this.vehicleController.active?this.vehicleController.phase:'ON_FOOT',fleet:JSON.stringify(this.gameplay.vehicles.snapshot()),farmStats:JSON.stringify(this.gameplay.farm.definitions.map(f=>({id:f.id,counts:this.gameplay.farm.getField(f.id)!.stateCounts})))});}
       if(import.meta.env.DEV)this.renderer.domElement.dataset.farmEffects=JSON.stringify(this.worldManager.currentWorld?.farmPresentationDiagnostics??{});
+      if(import.meta.env.DEV){this.renderer.domElement.dataset.cameraPosition=JSON.stringify(this.camera.position.toArray());this.renderer.domElement.dataset.vehicleYaw=String(this.vehicleController.vehicle?.yaw??0);}
       if(import.meta.env.DEV)this.renderer.domElement.dataset.livestock=JSON.stringify(this.gameplay.livestock.snapshot());
       if(import.meta.env.DEV)this.renderer.domElement.dataset.economy=JSON.stringify(this.gameplay.economy.snapshot());
       if(this.explorer.active||this.vehicleController.active){const world=this.worldManager.currentWorld!,prompt=interaction?.getPrompt(this.interactionContext(world),this.interactionActions);this.hud.setInteractable(prompt?.available??false);this.hud.setInteractionPrompt(this.gameplay.fishing.state==='FIGHTING'?undefined:prompt);this.hud.setHint(this.vehicleController.active?'W/S 前进后退 · A/D 转向 · Space 刹车 · 停稳后 E 下车':world.id==='FARM'?(world.livestockFocus?'饲槽 E 补充饲料 / 小麦 / 玉米 · 动物 E 收蛋 / 挤奶 / 剪毛 · B 背包':'E 耕地 / 播种 / 收割 · 靠近车辆 E 上车 · B 拿起种子 · 1～8 换种'):world.id==='COTTAGE'?'WASD 移动 · E 使用家具 / 出屋 · B 背包 · 1～8 快捷栏 · Q 使用':this.gameplay.fishing.active?'E 提钩 · 左键控制张力 · R 切换操作 · Esc 放弃':'WASD 移动 · E 交互 · B 背包 · 1～8 快捷栏 · Q 使用');}
       else this.hud.setInteractionPrompt();
     }
+    this.character.update({delta,time,visible:(this.explorer.active||this.vehicleController.active)&&!this.travel.active&&!this.doorTransition.active&&!this.sleepTransition.active&&!this.gameplayPanelOpen&&!this.panel.open&&!this.transition.active,firstPerson:!this.vehicleController.active,eye:this.camera.position,orientation:this.camera.quaternion,eyeHeight:this.worldManager.currentWorld?.navigation?.eyeHeight,grounded:this.explorer.grounded,sprinting:this.explorer.sprinting,paused:document.visibilityState==='hidden',vehicle:this.vehicleController.phase==='DRIVING'?this.vehicleController.vehicle:undefined});
+    if(this.vehicleController.active&&this.vehicleController.phase!=='DRIVING')this.character.visible=false;
+    if(import.meta.env.DEV&&this.characterPreview)this.character.showAt(this.characterPreview.feet,this.characterPreview.yaw,this.characterPreview.pose,time*7);
+    if(import.meta.env.DEV)this.renderer.domElement.dataset.character=JSON.stringify(this.character.diagnostics);
     const bob=this.explorer.active?this.playerFeedback.offsetY+this.explorer.renderOffsetY:0;this.camera.position.y+=bob;this.fishingPresentation.update(time,storm,delta);this.renderer.render(this.scene,this.camera);this.camera.position.y-=bob;this.performance.update(performance.now()-cpuStart);
   };
 }

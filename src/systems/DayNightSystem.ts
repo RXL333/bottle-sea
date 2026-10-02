@@ -19,8 +19,8 @@ export class DayNightSystem {
   private cloudLayers:Group[]=[];
   constructor(private scene:Scene) {
     this.sun.position.set(-4,10,6);this.sun.castShadow=true;this.sun.shadow.mapSize.set(2048,2048);
-    Object.assign(this.sun.shadow.camera,{left:-13,right:13,top:10,bottom:-10,near:.5,far:35});this.sun.shadow.bias=-.00025;this.sun.shadow.normalBias=.045;
-    scene.add(this.ambient,this.sun,this.hemi,this.sky);
+    Object.assign(this.sun.shadow.camera,{left:-13,right:13,top:10,bottom:-10,near:.5,far:35});this.sun.shadow.bias=-.00002;this.sun.shadow.normalBias=.025;
+    scene.add(this.ambient,this.sun,this.sun.target,this.hemi,this.sky);
     const random=seededRandom(721),positions=[],brightness=[];
     for(let i=0;i<60;i++){positions.push(-5+random()*9.5,4.9+random()*.9,-.3-random());const value=.35+random()*.65;brightness.push(value,value,value*.9);}
     const geo=new BufferGeometry();geo.setAttribute('position',new Float32BufferAttribute(positions,3));
@@ -36,6 +36,13 @@ export class DayNightSystem {
     }
     this.sky.add(this.clouds);
   }
+  configureShadows(world:'HOME'|'FARM'|'TRAVEL'|'COTTAGE'){
+    const farm=world==='FARM',home=world==='HOME';
+    this.sun.target.position.set(0,farm?4:0,farm?-28:0);
+    this.sun.position.copy(this.sun.target.position).addScaledVector({x:-4,y:10,z:6},farm?6:home?1:3);
+    Object.assign(this.sun.shadow.camera,home?{left:-13,right:13,top:10,bottom:-10,near:.5,far:35}:farm?{left:-50,right:50,top:55,bottom:-55,near:.5,far:180}:{left:-25,right:25,top:25,bottom:-25,near:.5,far:90});
+    this.sun.shadow.camera.updateProjectionMatrix();this.sun.target.updateMatrixWorld();this.sun.updateMatrixWorld();this.sun.shadow.needsUpdate=true;
+  }
   update(dayTime:number,time:number,storm:number,flash=0) {
     const daylight=daylightAt(dayTime);this.night=1-daylight;
     const dawn=dawnWeight(dayTime),sunset=sunsetWeight(dayTime);this.phase=dayPhase(dayTime);
@@ -47,7 +54,8 @@ export class DayNightSystem {
     this.sun.intensity=Math.max(.12,.5+daylight*2.5-storm*1.8)+flash*5;
     this.sun.color.copy(this.cool).lerp(this.warm,daylight);
     this.sun.color.lerp(this.sunsetLight,sunset*.7);
-    this.sun.position.x=-4+Math.cos(dayTime*Math.PI*2)*3;
+    // Keep shadow texels anchored in world space. Daylight still changes color
+    // and intensity; a drifting light projection made voxel shadows crawl.
     (this.stars.material as PointsMaterial).opacity=this.night*(1-storm)*.8;
     this.moon.visible=this.night>.2&&storm<.7;this.solar.visible=daylight>.6&&storm<.3;
     this.cloudMaterial.color.set('#a6b8b3').lerp(this.nightColor,this.night*.45+storm*.4);

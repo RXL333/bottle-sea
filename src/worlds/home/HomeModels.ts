@@ -6,6 +6,9 @@ import { seabedCellAt } from '../../world/underwater/SeabedData';
 import { loadModel } from '../farm/FarmAssets';
 import type { ModelLoader } from '../farm/FarmAssets';
 import { disposeWorld } from '../disposeWorld';
+import { VoxelBatch } from '../../utils/voxel';
+import { HOME_MERCHANT_TRADE } from '../trade/MerchantRoute';
+import { modelColliders } from './ModelColliders';
 
 export const HOME_FILES={
   boat:'main/main_sailboat.glb',house:'main/main_cottage.glb',lighthouse:'main/main_lighthouse.glb',dock:'main/main_dock_kit.glb',fishing:'main/main_fishing_deck.glb',
@@ -70,9 +73,9 @@ export class HomeModels extends Group {
     for(const x of [-2.18,-.82])this.slab(x-.03,x+.03,3.97,4.73,.738,.798);
     for(const child of island.lighthouse.children)if(child!==island.lighthouse.light&&child!==island.lighthouse.beam)child.visible=false;
     island.lighthouse.position.x+=.65;
-    this.place('lighthouse',0,0,0,.32,0,island.lighthouse);
+    const lighthouse=this.place('lighthouse',0,0,0,.32,0,island.lighthouse);
     island.lighthouse.light.position.y=1.85;island.lighthouse.beam.position.y=1.85;
-    this.slab(.37,1.63,3.83,4.40,-.91,.35);this.slab(.78,1.22,4.40,6.08,-.50,-.06);
+    this.colliders.push(...modelColliders(lighthouse));
     const dock=this.place('dock',.65,3.68,1.24,.30);dock.scale.z=.50;
     // The berth needs a level end; the authored stairs are a separate module.
     dock.traverse(o=>{if(o.userData.part_id==='stairs')o.visible=false;});
@@ -82,6 +85,11 @@ export class HomeModels extends Group {
       if(o.userData.part_id==='platform'||pile)this.solid(o);
     });
     world.ship.setModel(this.instance('boat'));
+    // Dedicated side berth, west of the transport boat; a level walking deck.
+    const pier=new Group();pier.name='MerchantBerth';const boards=new VoxelBatch(),trade=HOME_MERCHANT_TRADE;
+    for(let i=0;i<8;i++)boards.add(i%2?'#987451':'#b28a58',trade.x,3.86,1.30+i*.1,.72,.12,.097);
+    for(const x of [trade.x-.31,trade.x+.31])for(const z of [1.35,1.96])boards.add('#58412d',x,3.48,z,.08,.88,.08);
+    boards.build(pier);this.add(pier);this.slab(trade.x-.36,trade.x+.36,3.80,3.92,1.25,2.05);
     const underwater=world.getObjectByName('UnderwaterWorld')!;
     underwater.getObjectByName('LegacyReef')!.visible=false;
     for(const [id,x,y,z,scale] of [['chest',-1.8,1.77,1.1,.43],['anchor',-3.65,1.82,.65,.43],['ruins',2.97,1.77,.4,.43]] as const){

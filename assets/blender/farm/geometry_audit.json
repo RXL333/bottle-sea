@@ -10,7 +10,7 @@
   {
     "id": "tractor",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 3308,
     "parts": 4,
     "modules": 0
@@ -18,7 +18,7 @@
   {
     "id": "seeder",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 2568,
     "parts": 8,
     "modules": 0
@@ -26,7 +26,7 @@
   {
     "id": "combine_harvester",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 4108,
     "parts": 7,
     "modules": 0
@@ -34,7 +34,7 @@
   {
     "id": "farm_trailer",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 3356,
     "parts": 4,
     "modules": 0
@@ -42,15 +42,15 @@
   {
     "id": "plow",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
-    "triangles": 1072,
-    "parts": 1,
+    "groundMinZ": 0,
+    "triangles": 1728,
+    "parts": 3,
     "modules": 0
   },
   {
     "id": "barn",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 8230,
     "parts": 2,
     "modules": 0
@@ -58,7 +58,7 @@
   {
     "id": "tool_shed",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 3304,
     "parts": 0,
     "modules": 0
@@ -66,7 +66,7 @@
   {
     "id": "farmhouse",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 4892,
     "parts": 1,
     "modules": 0
@@ -74,7 +74,7 @@
   {
     "id": "windmill",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 2868,
     "parts": 1,
     "modules": 0
@@ -82,7 +82,7 @@
   {
     "id": "water_tower",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 1560,
     "parts": 0,
     "modules": 0
@@ -90,7 +90,7 @@
   {
     "id": "fence_kit",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 628,
     "parts": 4,
     "modules": 4
@@ -114,7 +114,7 @@
   {
     "id": "bed",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 1660,
     "parts": 2,
     "modules": 2
@@ -122,7 +122,7 @@
   {
     "id": "kitchen_stove",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 1972,
     "parts": 1,
     "modules": 1
@@ -130,7 +130,7 @@
   {
     "id": "storage_set",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 1392,
     "parts": 4,
     "modules": 3
@@ -138,7 +138,7 @@
   {
     "id": "chicken",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 540,
     "parts": 6,
     "modules": 1
@@ -146,7 +146,7 @@
   {
     "id": "cow",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 944,
     "parts": 6,
     "modules": 0
@@ -154,7 +154,7 @@
   {
     "id": "sheep",
     "degenerateTriangles": 0,
-    "groundMinZ": 0.0,
+    "groundMinZ": 0,
     "triangles": 1092,
     "parts": 5,
     "modules": 0

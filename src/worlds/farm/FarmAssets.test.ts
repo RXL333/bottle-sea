@@ -20,6 +20,8 @@ it('loads the real farm GLBs, excludes main-island furniture, batches geometry, 
   const models=world.root.getObjectByName('BlenderFarmModels')!;
   expect(models.userData.assetsPlaced).toBe(FARM_PLACEMENTS.length);
   expect(models.userData.staticBatches).toBeLessThan(50);
+  const plow=world.implements.find(i=>i.id==='farm.plow')!;
+  const wheels=new Set<string>();plow.root.traverse(o=>{if(o.userData.part_id?.includes('wheel'))wheels.add(o.userData.part_id);});expect(wheels).toEqual(new Set(['depth_wheel_left','depth_wheel_right']));
   const bounds=new Box3().setFromObject(models),size=bounds.getSize(new Vector3());
   expect(size.x).toBeLessThan(72);expect(size.z).toBeLessThan(85);expect(size.y).toBeLessThan(6.2);
   const owned=models.children.find((o):o is Mesh=>o instanceof Mesh)!;

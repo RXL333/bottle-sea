@@ -29,6 +29,9 @@ it('loads every Home asset once, keeps entry and berth clear, and retains discov
   for(let t=0;t<30;t+=.5){world.prepare({time:t,storm:1,delta:1/60,dayTime:.5,night:0,flash:0,gameTime:0});expect(hitsDynamicObstacle(spawn.position[0],spawn.position[2],spawn.position[1],world.navigation.dynamicObstacles())).toBe(false);}
   for(let t=0;t<200;t+=.5){world.prepare({time:t,storm:1,delta:1/60,dayTime:.5,night:0,flash:0,gameTime:0});const ship=world.navigation.dynamicObstacles()[0];expect(TERRAIN_CELLS.some(c=>obbIntersectsAabb(ship.x,ship.z,ship.halfX,ship.halfZ,ship.yaw,c.minX,c.maxX,c.minZ,c.maxZ,.02))).toBe(false);}
   expect(world.navigation.hitsObstacle(.65,1.5,4.12)).toBe(false);
+  // The former tiny merchant mast concealed a broad collider in the front-right yard.
+  expect(world.root.getObjectByName('MerchantShip')).toBeUndefined();
+  for(const z of [.75,1,1.25,1.5]){const x=-.38,y=world.navigation.groundHeight(x,z,3.92)+.44;expect(world.navigation.hitsObstacle(x,z,y)).toBe(false);expect(hitsDynamicObstacle(x,z,y,world.navigation.dynamicObstacles())).toBe(false);}
   expect(world.navigation.resolveVertical(.65,1.24,3.2,4)).toBeLessThan(3.68);
   const house=new Box3().setFromObject(world.root.getObjectByName('Home_house')!);
   expect(house.getSize(new Vector3()).y).toBeLessThan(2);
@@ -51,4 +54,15 @@ it('cleans partially loaded Home resources when a model fails or the load is can
   const models=new HomeModels(async url=>{if(++count===2)throw new Error('missing');const model=await load(url);model.traverse(o=>{if(o instanceof Mesh){resources.add(o.geometry);o.geometry.addEventListener('dispose',()=>released.add(o.geometry));}});return model;});
   await expect(models.load()).rejects.toThrow('Home models');expect(models.children[0]).toBeUndefined();expect(released.size).toBe(resources.size);
   const cancelled=new HomeModels(load);const pending=cancelled.load();cancelled.cancel();await expect(pending).rejects.toThrow('Home models');expect(cancelled.children[0]).toBeUndefined();
+});
+it('walks through the former merchant collider beside the cottage with the actual controller',async()=>{
+  const events=new EventTarget();vi.stubGlobal('window',events);vi.stubGlobal('HTMLButtonElement',class extends EventTarget{});
+  const world=new HomeWorld(load);await world.load();
+  try{
+    const camera=new PerspectiveCamera(),controls=new ExploreController(camera,new EventTarget() as HTMLElement,undefined,world.navigation);
+    controls.enter(false,{id:'right-passage',position:[-.38,4.36,1.6],lookAt:[-.38,4.36,.5]});
+    const event=new Event('keydown');Object.defineProperties(event,{code:{value:'KeyW'},repeat:{value:false}});events.dispatchEvent(event);
+    for(let i=0;i<100;i++)controls.update(1/60,3.3);
+    expect(camera.position.z).toBeLessThan(.7);expect(camera.position.x).toBeCloseTo(-.38);
+  }finally{world.dispose();vi.unstubAllGlobals();}
 });
