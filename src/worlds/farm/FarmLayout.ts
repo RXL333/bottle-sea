@@ -3,6 +3,7 @@ import type { FarmAssetId } from './FarmAssets';
 import type { FarmRect } from './FarmMap';
 import { farmGroundHeight } from './FarmTopography';
 import { LIVESTOCK_ANIMALS,LIVESTOCK_PENS } from '../../gameplay/livestock/LivestockDefinition';
+import { FARM_TREE_PLACEMENTS,FARM_TREES,isFarmTree } from './FarmTrees';
 
 export interface FarmPlacement {id:string;asset:FarmAssetId;x:number;z:number;scale:number;y?:number;yaw?:number;solid?:boolean;animated?:boolean;independent?:boolean;zoneId?:string}
 export interface FarmObstacle {minX:number;maxX:number;minZ:number;maxZ:number;minY:number;maxY:number}
@@ -27,8 +28,7 @@ export const FARM_PLACEMENTS:FarmPlacement[]=[
   ...[12.52,10.54].map((z,i)=>({id:`dock-deck-${i}`,asset:'dock_platform' as const,x:FARM_DOCK.x,z,scale:.72,zoneId:'dock'})),
   ...[10,12.5].flatMap((z,i)=>[-4.89,-3.11].map((x,j)=>({id:`dock-post-${i}-${j}`,asset:'dock_pile' as const,x,z,scale:.72,zoneId:'dock'}))),
   ...LIVESTOCK_ANIMALS.map(a=>({id:a.id,asset:a.kind,x:a.x,z:a.z,yaw:a.yaw,scale:a.kind==='chicken'?.16:.33,independent:true,zoneId:`${a.kind}-reserve`})),
-  ...[[-33,2],[-32.5,-10],[-33,-24],[-32,-40],[-32,-55],[-28,-61],[-20,-62],[-10,-63],[0,-63],[10,-63],[25,-62],
-    [33,-5],[33,-17],[33,-30],[33,-44],[32,-54],[-12,7.8],[11.5,7.6],[31,8],[-31,7]].map(([x,z],i)=>({id:`tree-${i}`,asset:'orchard_tree' as const,x,z,scale:.72+(i%3)*.1})),
+  ...FARM_TREE_PLACEMENTS,
   ...[[24,4.5],[24.65,4.5],[24.35,4.5]].map(([x,z],i)=>({id:`hay-${i}`,asset:'hay_bale' as const,x,z,y:FARM_GROUND+(i===2?.6655*.55:0),scale:.55,solid:true,zoneId:'barn'})),
 ];
 
@@ -85,7 +85,11 @@ for(const [min,max] of [
   [[-2.31,.18,-2.05],[-2.11,3.05,2.05]],[[2.11,.18,-2.05],[2.31,3.05,2.05]],[[-2.21,.18,-2.06],[2.21,3.05,-1.90]],
   [[.76,.18,-1.52],[2.02,1.06,-.08]],[[-1.83,.18,-1.86],[-.14,1.85,-1.36]],
 ])FARM_OBSTACLES.push(placedBox(shed,min,max));
-for(const p of FARM_PLACEMENTS.filter(p=>p.asset==='orchard_tree'))FARM_OBSTACLES.push(placedBox(p,[-.18,0,-.18],[.18,2,.18]));
+for(const p of FARM_PLACEMENTS){
+  if(!isFarmTree(p.asset))continue;
+  const tree=FARM_TREES[p.asset],r=tree.trunkRadius;
+  FARM_OBSTACLES.push(placedBox(p,[-r,0,-r],[r,tree.boundsBlender.max[2],r]));
+}
 for(const z of [10,12.5,14.5-.8856,14.5+.8856])for(const x of [-4.89,-3.11])FARM_OBSTACLES.push({minX:x-.10,maxX:x+.10,minZ:z-.10,maxZ:z+.10,minY:3.1,maxY:4.43});
 const fishing=FARM_PLACEMENTS.find(p=>p.id==='fishing')!;
 for(const [min,max] of [[[-.57,0,-.58],[.02,1.2,.04]],[[.28,0,-.57],[.72,.55,-.13]]])FARM_OBSTACLES.push(placedBox(fishing,min,max));

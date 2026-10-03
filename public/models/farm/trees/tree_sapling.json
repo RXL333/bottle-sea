@@ -1,0 +1,43 @@
+{
+  "number": 64,
+  "id": "tree_sapling",
+  "label": "果树幼苗",
+  "file": "tree_sapling.glb",
+  "blend": "tree_sapling.blend",
+  "dimensions": {
+    "width": 1.43,
+    "height": 1.906,
+    "depth": 0.681
+  },
+  "boundsBlender": {
+    "min": [
+      -0.7299999594688416,
+      -0.34049999713897705,
+      0.0
+    ],
+    "max": [
+      0.699999988079071,
+      0.34049999713897705,
+      1.905971646308899
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "canopy",
+    "fruit"
+  ],
+  "triangles": 2876,
+  "meshCount": 8,
+  "bytes": 161120,
+  "notes": [
+    "Reference-inspired original geometry; decorative only, no harvesting state.",
+    "Exposed voxel canopy; shared palette; separate canopy/fruit semantic nodes.",
+    "No baked ground plate, fence, lights or collision mesh."
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies"
+}

@@ -1,0 +1,43 @@
+{
+  "number": 65,
+  "id": "tree_pine",
+  "label": "松树",
+  "file": "tree_pine.glb",
+  "blend": "tree_pine.blend",
+  "dimensions": {
+    "width": 2.768,
+    "height": 4.3253,
+    "depth": 2.6896
+  },
+  "boundsBlender": {
+    "min": [
+      -1.3280000686645508,
+      -1.3447999954223633,
+      0.0
+    ],
+    "max": [
+      1.440000057220459,
+      1.3447999954223633,
+      4.325313568115234
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "canopy",
+    "fruit"
+  ],
+  "triangles": 4140,
+  "meshCount": 6,
+  "bytes": 223060,
+  "notes": [
+    "Reference-inspired original geometry; decorative only, no harvesting state.",
+    "Exposed voxel canopy; shared palette; separate canopy/fruit semantic nodes.",
+    "No baked ground plate, fence, lights or collision mesh."
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies"
+}

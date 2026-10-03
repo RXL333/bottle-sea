@@ -1,0 +1,146 @@
+{
+  "tree_broadleaf": {
+    "label": "阔叶树",
+    "file": "trees/tree_broadleaf.glb",
+    "trunkRadius": 0.24,
+    "boundsBlender": {
+      "min": [
+        -1.6740000247955322,
+        -1.6200000047683716,
+        0.0
+      ],
+      "max": [
+        1.6200000047683716,
+        1.5129001140594482,
+        3.9790761470794678
+      ]
+    },
+    "triangles": 3184
+  },
+  "tree_poplar": {
+    "label": "杨树",
+    "file": "trees/tree_poplar.glb",
+    "trunkRadius": 0.16,
+    "boundsBlender": {
+      "min": [
+        -0.6880000233650208,
+        -0.8648000359535217,
+        0.0
+      ],
+      "max": [
+        0.800000011920929,
+        0.704800009727478,
+        4.325075149536133
+      ]
+    },
+    "triangles": 2552
+  },
+  "tree_apple": {
+    "label": "苹果树",
+    "file": "trees/tree_apple.glb",
+    "trunkRadius": 0.21,
+    "boundsBlender": {
+      "min": [
+        -1.49399995803833,
+        -1.5376251935958862,
+        0.0
+      ],
+      "max": [
+        1.440000057220459,
+        1.5123502016067505,
+        3.9717307090759277
+      ]
+    },
+    "triangles": 3488
+  },
+  "tree_pear": {
+    "label": "梨树",
+    "file": "trees/tree_pear.glb",
+    "trunkRadius": 0.21,
+    "boundsBlender": {
+      "min": [
+        -1.49399995803833,
+        -1.5376251935958862,
+        0.0
+      ],
+      "max": [
+        1.440000057220459,
+        1.5123502016067505,
+        3.9717307090759277
+      ]
+    },
+    "triangles": 3584
+  },
+  "tree_sapling": {
+    "label": "果树幼苗",
+    "file": "trees/tree_sapling.glb",
+    "trunkRadius": 0.1,
+    "boundsBlender": {
+      "min": [
+        -0.7299999594688416,
+        -0.34049999713897705,
+        0.0
+      ],
+      "max": [
+        0.699999988079071,
+        0.34049999713897705,
+        1.905971646308899
+      ]
+    },
+    "triangles": 2876
+  },
+  "tree_pine": {
+    "label": "松树",
+    "file": "trees/tree_pine.glb",
+    "trunkRadius": 0.19,
+    "boundsBlender": {
+      "min": [
+        -1.3280000686645508,
+        -1.3447999954223633,
+        0.0
+      ],
+      "max": [
+        1.440000057220459,
+        1.3447999954223633,
+        4.325313568115234
+      ]
+    },
+    "triangles": 4140
+  },
+  "tree_willow": {
+    "label": "垂柳",
+    "file": "trees/tree_willow.glb",
+    "trunkRadius": 0.25,
+    "boundsBlender": {
+      "min": [
+        -1.7510000467300415,
+        -1.7688499689102173,
+        0.0
+      ],
+      "max": [
+        1.7000000476837158,
+        1.7688499689102173,
+        3.932950019836426
+      ]
+    },
+    "triangles": 5144
+  },
+  "tree_blossom": {
+    "label": "花树",
+    "file": "trees/tree_blossom.glb",
+    "trunkRadius": 0.21,
+    "boundsBlender": {
+      "min": [
+        -1.49399995803833,
+        -1.5129001140594482,
+        0.0
+      ],
+      "max": [
+        1.440000057220459,
+        1.332900047302246,
+        3.9717307090759277
+      ]
+    },
+    "triangles": 3392
+  }
+}

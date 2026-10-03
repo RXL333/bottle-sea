@@ -1,0 +1,43 @@
+{
+  "number": 60,
+  "id": "tree_broadleaf",
+  "label": "阔叶树",
+  "file": "tree_broadleaf.glb",
+  "blend": "tree_broadleaf.blend",
+  "dimensions": {
+    "width": 3.294,
+    "height": 3.9791,
+    "depth": 3.1329
+  },
+  "boundsBlender": {
+    "min": [
+      -1.6740000247955322,
+      -1.6200000047683716,
+      0.0
+    ],
+    "max": [
+      1.6200000047683716,
+      1.5129001140594482,
+      3.9790761470794678
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "canopy",
+    "fruit"
+  ],
+  "triangles": 3184,
+  "meshCount": 7,
+  "bytes": 176308,
+  "notes": [
+    "Reference-inspired original geometry; decorative only, no harvesting state.",
+    "Exposed voxel canopy; shared palette; separate canopy/fruit semantic nodes.",
+    "No baked ground plate, fence, lights or collision mesh."
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies"
+}

@@ -1,9 +1,11 @@
 import { Group } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { disposeWorld } from '../disposeWorld';
+import { FARM_TREE_FILES } from './FarmTrees';
 
 // Kitchen and storage furniture deliberately do not belong to this island.
 export const FARM_MODEL_FILES={
+  ...FARM_TREE_FILES,
   transport_boat:'transport_boat.glb',tractor:'tractor.glb',seeder:'seeder.glb',combine_harvester:'combine_harvester.glb',farm_trailer:'farm_trailer.glb',plow:'plow.glb',
   barn:'barn.glb',tool_shed:'tool_shed.glb',farmhouse:'farmhouse.glb',windmill:'windmill.glb',water_tower:'water_tower.glb',
   fence_segment:'modules/fence_kit__fence_straight.glb',fence_gate:'modules/fence_kit__fence_gate.glb',

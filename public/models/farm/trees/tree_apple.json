@@ -1,0 +1,43 @@
+{
+  "number": 62,
+  "id": "tree_apple",
+  "label": "苹果树",
+  "file": "tree_apple.glb",
+  "blend": "tree_apple.blend",
+  "dimensions": {
+    "width": 2.934,
+    "height": 3.9717,
+    "depth": 3.05
+  },
+  "boundsBlender": {
+    "min": [
+      -1.49399995803833,
+      -1.5376251935958862,
+      0.0
+    ],
+    "max": [
+      1.440000057220459,
+      1.5123502016067505,
+      3.9717307090759277
+    ]
+  },
+  "up": "+Y",
+  "forward": "+Z",
+  "units": "meters",
+  "pivot": "ground",
+  "parts": [
+    "body",
+    "canopy",
+    "fruit"
+  ],
+  "triangles": 3488,
+  "meshCount": 11,
+  "bytes": 194368,
+  "notes": [
+    "Reference-inspired original geometry; decorative only, no harvesting state.",
+    "Exposed voxel canopy; shared palette; separate canopy/fruit semantic nodes.",
+    "No baked ground plate, fence, lights or collision mesh."
+  ],
+  "animation": "semantic pivot nodes only; no animation clips",
+  "license": "Original authored geometry; no third-party model dependencies"
+}

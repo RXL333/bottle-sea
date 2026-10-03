@@ -1,4 +1,5 @@
 import manifest from '../../../public/models/farm/manifest.json';
+import { FARM_TREES } from './FarmTrees';
 import { FARM_FIELD_DEFINITIONS,fieldCellAt,fieldCellCenter } from '../../gameplay/farm/FarmDefinition';
 import type { FarmFieldDefinition } from '../../gameplay/farm/FarmDefinition';
 
@@ -13,6 +14,7 @@ export interface FarmAssetBounds {readonly min:readonly number[];readonly max:re
 
 // Blender is Z-up; map coordinates and all footprints below use Three.js X/Z.
 export const FARM_ASSET_BOUNDS=new Map<string,FarmAssetBounds>([...manifest.assets,...manifest.additionalAssets].map(a=>[a.id,a.boundsBlender]));
+for(const [id,tree] of Object.entries(FARM_TREES))FARM_ASSET_BOUNDS.set(id,tree.boundsBlender);
 export const FARM_GROUND=4;
 export const FARM_VEHICLE_SCALE=.5;
 export const FARM_ROAD_WIDTH=5;

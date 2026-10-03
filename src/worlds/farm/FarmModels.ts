@@ -7,6 +7,7 @@ import { FARM_PLACEMENTS } from './FarmLayout';
 import { FarmWind } from './FarmWeatherResponse';
 import type { Quality } from '../../core/Renderer';
 import type { WeatherFrame } from '../../systems/WeatherState';
+import { isFarmTree } from './FarmTrees';
 
 type Batch={material:Material;geometry:BufferGeometry[]};
 function mergedMesh(name:string,batch:Batch){
@@ -40,6 +41,7 @@ export class FarmModels extends Group {
     for(const p of FARM_PLACEMENTS){
       const model=this.assets.instance(p.asset);model.name=p.id;model.userData.farmAsset=p.asset;model.userData.zoneId=p.zoneId;
       model.position.set(p.x,p.y??FARM_GROUND,p.z);model.scale.setScalar(p.scale);model.rotation.y=p.yaw??0;model.userData.foliage=p.asset==='orchard_tree';
+      if(isFarmTree(p.asset))model.traverse(part=>{if(part.userData.part_id==='canopy')part.userData.foliage=true;});
       (p.independent?this:statics).add(model);this.placements.set(p.id,model);
       if(p.asset==='farmhouse')model.traverse(o=>{if(o.userData.part_id==='front_door')o.rotation.y=-Math.PI*.55;});
       model.updateMatrixWorld(true);
