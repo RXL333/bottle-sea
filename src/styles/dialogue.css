@@ -1,0 +1,30 @@
+/* Conversations keep the world visible; navy/gold match the shared island UI. */
+.dialogue-panel{position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;background:transparent;color:var(--ui-paper-light);box-sizing:border-box;font-family:var(--ui-body);overflow:hidden}
+.dialogue-panel::backdrop{background:transparent;backdrop-filter:none}.dialogue-panel:focus{outline:none}
+.npc-dialogue .hud,.npc-dialogue .wallet-hud,body.npc-dialogue>details{visibility:hidden;pointer-events:none}
+.dialogue-close{position:absolute;top:24px;right:28px;padding:9px 15px;border:1px solid #efd9ac65;border-radius:6px;background:#163a52b8;color:var(--ui-paper-light);font:inherit;font-size:12px;cursor:pointer}
+.dialogue-close:hover{background:var(--ui-navy);border-color:var(--ui-gold)}
+.dialogue-subtitle{position:absolute;bottom:0;left:0;right:0;min-height:215px;box-sizing:border-box;padding:35px max(26px,calc((100vw - 870px)/2)) 28px;background:linear-gradient(transparent,#102b44d9 24%,#102b44ef 100%);text-align:center;cursor:pointer;text-shadow:0 2px 4px #061725}
+.dialogue-speaker{display:flex;align-items:center;justify-content:center;gap:13px;margin:0 0 16px}
+.dialogue-speaker img{width:46px;height:46px;object-fit:cover;object-position:50% 15%;border:1px solid #f4c15d88;border-radius:50%;background:var(--ui-paper)}
+.dialogue-speaker h2{font-family:var(--ui-heading);font-weight:700;font-size:23px;letter-spacing:2px;color:var(--ui-gold-light);margin:0 0 4px}
+.dialogue-speaker small{font-size:11px;color:#d1e1e8;letter-spacing:1px}
+.dialogue-line{max-width:780px;max-height:23dvh;overflow:auto;margin:0 auto 24px;font-size:18px;line-height:1.85;letter-spacing:.4px;color:#fff7e6;min-height:50px;scrollbar-width:thin;scrollbar-color:#e1c37c80 transparent}
+.dialogue-footer{display:flex;justify-content:space-between;gap:18px;margin-top:12px;color:#ccdae2;font-size:11px;line-height:1.6}
+.dialogue-note{color:#e6c88c}
+.dialogue-choices{position:absolute;right:5%;bottom:calc(245px + env(safe-area-inset-bottom));width:min(340px,45vw);max-height:46dvh;display:flex;flex-direction:column;gap:9px;overflow:auto;padding:5px;scrollbar-width:thin;scrollbar-color:#e1c37caa #102b4466}
+.dialogue-choices button{display:flex;align-items:center;gap:12px;padding:11px 15px;border:1px solid #efd9ac55;border-radius:5px;background:linear-gradient(100deg,#153953ef,#285775ef);color:#fff7e6;font:inherit;font-size:14px;text-align:left;line-height:1.5;cursor:pointer;box-shadow:0 3px 9px #071c3040}
+.dialogue-choices button:hover{background:#467894;border-color:var(--ui-gold);filter:none}
+.dialogue-choice-number{display:grid;place-items:center;flex:0 0 23px;width:23px;height:23px;background:#f4c15d22;border:1px solid #f4c15d66;border-radius:50%;color:var(--ui-gold-light);font-size:11px;font-variant-numeric:tabular-nums}
+.dialogue-choice small{margin-left:auto;color:#dfcb9f;font-size:10px;white-space:nowrap}
+.dialogue-bye{opacity:.85}
+.dialogue-panel[data-menu=false] .dialogue-choices{bottom:26px;right:5%;width:auto;max-width:45%;flex-direction:row;gap:8px;overflow:visible;padding:0}
+.dialogue-panel[data-menu=false] .dialogue-choices button{font-size:12px;padding:7px 12px;background:#234d6ddb;border-color:#efd9ac88}
+.dialogue-panel[data-menu=false] .dialogue-footer{padding-right:235px}
+.dialogue-next::after{content:'◇';color:var(--ui-gold);font-size:14px}.dialogue-back{opacity:.8}
+@media(max-width:600px){
+ .dialogue-close{top:16px;right:16px}.dialogue-subtitle{padding:28px 20px 62px;min-height:220px}.dialogue-speaker h2{font-size:20px}.dialogue-line{font-size:16px;line-height:1.75;max-height:22dvh;margin-bottom:14px}.dialogue-speaker{margin-bottom:12px}
+ .dialogue-footer{gap:8px;justify-content:center;flex-wrap:wrap;font-size:10px}.dialogue-panel[data-menu=false] .dialogue-footer{padding-right:0}
+ .dialogue-choices{right:16px;width:min(340px,calc(100vw - 32px));bottom:260px;max-height:40dvh}.dialogue-panel[data-menu=false] .dialogue-choices{bottom:14px;right:20px;max-width:calc(100vw - 40px)}.dialogue-choices button{font-size:13px;padding:9px 12px}
+}
+@media(max-height:520px){.dialogue-subtitle{min-height:160px;padding-top:18px;padding-bottom:18px}.dialogue-speaker{margin-bottom:8px}.dialogue-speaker img{display:none}.dialogue-line{min-height:25px;font-size:15px;margin-bottom:8px}.dialogue-choices{bottom:190px;max-height:50dvh}.dialogue-speaker h2{font-size:19px}}

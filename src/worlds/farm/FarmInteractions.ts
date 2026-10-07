@@ -15,6 +15,8 @@ import { merchantTarget } from '../trade/MerchantShip';
 
 /** Re-resolve the actual foot cell at every prompt and E press, including boundaries. */
 export class FarmInteractions extends InteractionSystem {
+  private npcs:readonly InteractionTarget[]=[];
+  setNpcs(targets:readonly InteractionTarget[]){this.npcs=targets;}
   private game?:GameplayServices;private manual?:ManualFarmingSystem;
   private current:FarmCellRef|null=null;
   private vehicles:readonly DriveableVehicle[]=[];
@@ -29,7 +31,7 @@ export class FarmInteractions extends InteractionSystem {
   setTrailer(trailer:TrailerVehicle){this.trailer=trailer;}
   get activeCell(){return this.nearest?.action==='FARM_WORK'?this.current:null;}
   override update(position:InteractionPosition):void {
-    const game=this.game,manual=this.manual,targets:InteractionTarget[]=[this.boat,merchantTarget(true)];this.current=null;
+    const game=this.game,manual=this.manual,targets:InteractionTarget[]=[this.boat,merchantTarget(true),...this.npcs];this.current=null;
     const driven=this.vehicles.find(v=>v.occupied);
     if(driven){
       const seat=driven.seatPosition(),hitches=this.hitches;

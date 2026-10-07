@@ -51,7 +51,7 @@ export class WheeledVehicle implements DriveableVehicle {
   get machineControls(){return this.attachmentDriver?.machineControls;}
   unload(){return this.attachmentDriver?.unload?.()??{status:'unavailable' as const,message:'请先挂接拖车，再停到谷仓卸货区。'};}
   get cameraDistance(){return this.attachmentDriver?.cameraDistance??this.definition.cameraDistance;}
-  seatPosition(){this.root.updateMatrixWorld(true);return this.seat.getWorldPosition(new Vector3());}
+  seatPosition(){return this.seat.getWorldPosition(new Vector3());}
   entryPosition(){return this.root.localToWorld(new Vector3().fromArray(this.definition.entry));}
   hitchBackTransform():Matrix4{this.root.updateMatrixWorld(true);return this.hitch.matrixWorld.clone();}
   hitchPosition(port:HitchPort,pose=this.motion.pose){

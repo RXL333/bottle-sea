@@ -12,6 +12,13 @@ export class ProgressionSystem {
     this.state=normalizeProgression(saved,clock.simulationTime,legacy,registry);this.completeDerived();
   }
   snapshot():ProgressionSnapshot {return structuredClone(this.state);}
+  rollback(saved:ProgressionSnapshot){this.state=normalizeProgression(saved,this.clock.simulationTime,false,this.registry);this.revision++;}
+  /** Explicit content reward. Does not fabricate a gameplay milestone or give resources. */
+  grant(id:string):boolean {
+    if(!this.registry.getUnlock(id)?.implemented)return false;
+    if(this.state.grants.includes(id))return true;
+    this.state.grants.push(id);this.revision++;this.onChange();return true;
+  }
   completed(id:string){return Object.hasOwn(this.state.completed,id);}
   completedAt(id:string){return this.state.completed[id];}
   isUnlocked(id:string){const d=this.registry.getUnlock(id);return !!d&&(this.state.grants.includes(id)||d.requires.every(m=>this.completed(m)));}

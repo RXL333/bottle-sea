@@ -1,0 +1,43 @@
+{
+  "id": "fisherman",
+  "name": "渔夫",
+  "blend": "assets\\blender\\npcs\\fisherman.blend",
+  "glb": "public\\models\\npcs\\fisherman.glb",
+  "units": "meters",
+  "up": "+Y",
+  "forward": "+Z",
+  "triangles": 6118,
+  "meshCount": 78,
+  "parts": [
+    "Hips",
+    "Spine",
+    "Head",
+    "Hat",
+    "Backpack",
+    "Thigh_L",
+    "Shin_L",
+    "Foot_L",
+    "Arm_L",
+    "Forearm_L",
+    "Hand_L",
+    "Thigh_R",
+    "Shin_R",
+    "Foot_R",
+    "Arm_R",
+    "Forearm_R",
+    "Hand_R",
+    "Beard",
+    "UtilityBelt",
+    "FishingApron",
+    "FishCharm",
+    "FishingNet",
+    "FishingRod"
+  ],
+  "rig": "Semantic articulated pivots, no skeletal weights or animation clips",
+  "views": {
+    "front": "artifacts\\npcs\\fisherman_front.png",
+    "back": "artifacts\\npcs\\fisherman_back.png",
+    "side": "artifacts\\npcs\\fisherman_side.png"
+  },
+  "integrated": true
+}

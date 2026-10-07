@@ -150,7 +150,7 @@ export class FarmSystem {
       const result=destination.exchange(consumed,produced);
       if(!result.ok){previous.forEach(put);return result;}
     }
-    this.onActivity(cells[0].landState==='TILLED'?'farm.till':cells[0].landState==='SEEDED'?'farm.seed':'farm.harvest');
+    this.onActivity(cells[0].landState==='TILLED'?'farm.till':cells[0].landState==='SEEDED'?'farm.seed':'farm.harvest',produced);
     this.changed();return {ok:true,changedCells:cells.length,consumed:consumed.map(s=>({...s})),produced:produced.map(s=>({...s}))};
   }
 }

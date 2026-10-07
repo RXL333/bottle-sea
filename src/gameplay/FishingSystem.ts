@@ -91,7 +91,7 @@ export class FishingSystem {
       const fish=this.hooked!;this.reset();
       const result=this.inventory.add(fish.id);
       if(!result.ok)this.pending=fish.id;
-      this.onActivity('fish.catch');this.onChange();
+      this.onActivity('fish.catch',[{itemId:fish.id,quantity:1}]);this.onChange();
       if(result.ok)this.onEvent({kind:'caught',message:`获得 ${fish.name} × 1 · 已放入背包`,fish});
       else this.onEvent({kind:'stored',message:`钓到 ${fish.name}，背包已满；已暂存，腾空后回钓鱼台领取。`,fish});
     }

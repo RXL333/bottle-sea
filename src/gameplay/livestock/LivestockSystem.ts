@@ -52,6 +52,6 @@ export class LivestockSystem {
     const produced=[{itemId,quantity}],checked=this.inventory.canExchange([],produced);if(!checked.ok)return checked;
     const before=structuredClone(this.state);animal.pending-=quantity;projectLivestock(this.state,this.clock.simulationTime);
     const result=this.inventory.exchange([],produced);if(!result.ok){this.state=before;return result;}
-    this.onActivity('livestock.collect');this.revision++;this.onChange();return {ok:true,itemId,quantity};
+    this.onActivity('livestock.collect',produced);this.revision++;this.onChange();return {ok:true,itemId,quantity};
   }
 }

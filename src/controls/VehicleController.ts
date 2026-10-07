@@ -1,3 +1,5 @@
+import { DEFAULT_SETTINGS,STEERING_LABELS } from '../state/GameSettings';
+import type { GameSettings } from '../state/GameSettings';
 import { Quaternion,Vector3 } from 'three';
 import type { PerspectiveCamera } from 'three';
 import type { ExploreController } from './ExploreController';
@@ -15,6 +17,11 @@ export class VehicleController {
   private exitSpawn?:SpawnPoint;private follow:VehicleFollowCamera;
   private mouse=new VehicleMouseSteering();private orbitPointer?:number;private lastMouse?:{x:number;y:number};
   private releaseMouse=()=>{};private drivenDistance=0;private driveReported=false;
+  private settings={...DEFAULT_SETTINGS};private inputPaused=false;private relockAfterPanel=false;
+  get steeringLabel(){return STEERING_LABELS[this.settings.vehicleSteering];}
+  configure(settings:GameSettings){this.settings={...settings};this.mouse.sensitivity=settings.vehicleSensitivity;this.mouse.reset();this.lastMouse=undefined;this.follow.configure(settings.orbitSensitivity,settings.vehicleCameraDistance);}
+  suspendForPanel(){this.relockAfterPanel=this.element.ownerDocument.pointerLockElement===this.element;this.inputPaused=true;this.keys.clear();this.mouse.reset();this.releaseMouse();this.vehicle?.stop();if(this.relockAfterPanel)this.element.ownerDocument.exitPointerLock();this.onPark();}
+  resumeFromPanel(){this.inputPaused=false;this.keys.clear();this.mouse.reset();this.lastMouse=undefined;this.element.focus();if(this.relockAfterPanel){this.relockAfterPanel=false;try{void Promise.resolve(this.element.requestPointerLock()).catch(()=>{});}catch{/* Unlocked input remains usable. */}}}
   onDrive=()=>{};
   onInteract=()=>{};onHitch=()=>{};onWork=()=>{};onDismount=(spawn:SpawnPoint)=>{void spawn;};onPark=()=>{};
   onSeed=(cropId?:string)=>{void cropId;};onMachine=()=>{};onUnload=()=>{};
@@ -26,7 +33,7 @@ export class VehicleController {
     this.follow=new VehicleFollowCamera(camera);
     window.addEventListener('keydown',event=>{
       const target=event.target as HTMLElement|null;
-      if(!this.active||target?.isContentEditable||['BUTTON','INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;
+      if(!this.active||this.inputPaused||target?.isContentEditable||['BUTTON','INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;
       if(!['KeyW','KeyS','KeyA','KeyD','Space','KeyE','KeyH','KeyJ','KeyK','KeyL','KeyU'].includes(event.code))return;
       event.preventDefault();const pressed=!this.keys.has(event.code);this.keys.add(event.code);
       if(event.code==='KeyE'&&pressed&&!event.repeat)this.onInteract();
@@ -39,16 +46,16 @@ export class VehicleController {
     window.addEventListener('keyup',event=>this.keys.delete(event.code));
     const endOrbit=()=>{if(this.orbitPointer!==undefined){const id=this.orbitPointer;this.orbitPointer=undefined;if(element.hasPointerCapture?.(id))element.releasePointerCapture(id);}this.follow.endOrbit();this.lastMouse=undefined;};
     this.releaseMouse=endOrbit;
-    element.addEventListener('pointerdown',event=>{if(!this.active||this.phase!=='DRIVING'||event.button!==0)return;event.preventDefault();this.mouse.reset();this.orbitPointer=event.pointerId;this.lastMouse={x:event.clientX,y:event.clientY};this.follow.beginOrbit();if(element.ownerDocument.pointerLockElement!==element)element.setPointerCapture?.(event.pointerId);});
-    const move=(dx:number,dy:number)=>{if(this.orbitPointer!==undefined)this.follow.dragOrbit(dx,dy);else this.mouse.move(dx);};
-    element.ownerDocument.addEventListener('mousemove',event=>{if(this.active&&this.phase==='DRIVING'&&element.ownerDocument.pointerLockElement===element)move(event.movementX,event.movementY);});
-    element.addEventListener('pointermove',event=>{if(!this.active||this.phase!=='DRIVING'||element.ownerDocument.pointerLockElement===element)return;const last=this.lastMouse;this.lastMouse={x:event.clientX,y:event.clientY};if(last)move(event.clientX-last.x,event.clientY-last.y);});
+    element.addEventListener('pointerdown',event=>{if(!this.active||this.inputPaused||this.phase!=='DRIVING'||event.button!==0)return;event.preventDefault();this.mouse.reset();this.orbitPointer=event.pointerId;this.lastMouse={x:event.clientX,y:event.clientY};this.follow.beginOrbit();if(element.ownerDocument.pointerLockElement!==element)element.setPointerCapture?.(event.pointerId);});
+    const move=(dx:number,dy:number)=>{if(this.orbitPointer!==undefined)this.follow.dragOrbit(dx,dy);else if(this.settings.vehicleSteering!=='keyboard')this.mouse.move(dx);};
+    element.ownerDocument.addEventListener('mousemove',event=>{if(this.active&&!this.inputPaused&&this.phase==='DRIVING'&&element.ownerDocument.pointerLockElement===element)move(event.movementX,event.movementY);});
+    element.addEventListener('pointermove',event=>{if(!this.active||this.inputPaused||this.phase!=='DRIVING'||element.ownerDocument.pointerLockElement===element)return;const last=this.lastMouse;this.lastMouse={x:event.clientX,y:event.clientY};if(last)move(event.clientX-last.x,event.clientY-last.y);});
     element.addEventListener('pointerleave',()=>{if(this.orbitPointer===undefined)this.lastMouse=undefined;});
     window.addEventListener('pointerup',event=>{if(event.button===0)endOrbit();});element.addEventListener('pointercancel',endOrbit);element.addEventListener('lostpointercapture',endOrbit);
     const pause=()=>{this.keys.clear();this.mouse.reset();endOrbit();this.vehicle?.stop();if(this.active)this.onPark();};
     window.addEventListener('blur',pause);document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
     element.ownerDocument.addEventListener('pointerlockchange',()=>{if(element.ownerDocument.pointerLockElement!==element)pause();});
-    element.addEventListener('dblclick',()=>{if(this.active)try{void Promise.resolve(element.requestPointerLock()).catch(()=>{});}catch{/* Keyboard driving works without lock. */}});
+    element.addEventListener('dblclick',()=>{if(this.active&&!this.inputPaused)try{void Promise.resolve(element.requestPointerLock()).catch(()=>{});}catch{/* Keyboard driving works without lock. */}});
   }
   board(vehicle:DriveableVehicle):InteractionOutcome {
     if(this.active||!this.explorer.active||vehicle.occupied)return {status:'unavailable',message:'当前无法上车。'};
@@ -56,7 +63,7 @@ export class VehicleController {
     this.explorer.suspend(true);this.vehicle=vehicle;vehicle.occupy(true);this.keys.clear();this.mouse.reset();this.lastMouse=undefined;this.keys.add('KeyE');
     this.drivenDistance=0;this.driveReported=false;this.phase='BOARDING';this.capture();this.follow.reset(vehicle);this.camera.near=.08;this.camera.far=150;this.camera.fov=68;this.camera.updateProjectionMatrix();
     document.body.classList.add('driving');this.element.focus();
-    return {status:'success',message:'已上车 · 鼠标 / A/D 转向 · 左键拖动观察，松开复位 · Space 刹车 · 停稳后 E 下车'};
+    return {status:'success',message:`已上车 · ${this.steeringLabel} · 左键拖动观察，松开复位 · Space 刹车 · 停稳后 E 下车 · O 设置`};
   }
   dismount():InteractionOutcome {
     if(!this.vehicle||this.phase!=='DRIVING')return {status:'unavailable',message:'请等待上下车完成。'};
@@ -68,11 +75,11 @@ export class VehicleController {
   }
   private capture(){this.elapsed=0;this.start.copy(this.camera.position);this.startRotation.copy(this.camera.quaternion);}
   update(delta:number){
-    const vehicle=this.vehicle;if(!vehicle)return;const dt=Math.min(.1,Math.max(0,delta));
+    const vehicle=this.vehicle;if(!vehicle||this.inputPaused)return;const dt=Math.min(.1,Math.max(0,delta));
     if(this.phase==='DRIVING'){
       const previousX=vehicle.root.position.x,previousZ=vehicle.root.position.z;
       const keyboard=Number(this.keys.has('KeyA'))-Number(this.keys.has('KeyD')),mouse=this.mouse.update(dt);
-      vehicle.advance(dt,{throttle:Number(this.keys.has('KeyW'))-Number(this.keys.has('KeyS')),steer:this.keys.has('KeyA')||this.keys.has('KeyD')?keyboard:mouse,brake:this.braking||document.hidden||!document.hasFocus()});
+      vehicle.advance(dt,{throttle:Number(this.keys.has('KeyW'))-Number(this.keys.has('KeyS')),steer:this.settings.vehicleSteering==='keyboard'?keyboard:this.settings.vehicleSteering==='mouse'?mouse:this.keys.has('KeyA')||this.keys.has('KeyD')?keyboard:mouse,brake:this.braking||document.hidden||!document.hasFocus()});
       this.drivenDistance+=Math.hypot(vehicle.root.position.x-previousX,vehicle.root.position.z-previousZ);
       if(!this.driveReported&&this.drivenDistance>=.5){this.driveReported=true;this.onDrive();}
       this.follow.update(dt,vehicle);return;

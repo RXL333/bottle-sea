@@ -16,7 +16,7 @@ export class ExploreController {
   onInteract=()=>{};onLockChange=(locked:boolean)=>{void locked;};
   onFood=()=>{};onFishingMode=()=>{};onPrimaryDown=()=>false;onPrimaryUp=()=>{};blockLook=false;
   onInventory=()=>{};onHotbarSelect=(index:number)=>{void index;};onHotbarUse=()=>{};
-  grounded=false;
+  grounded=false;lookSensitivity=1;invertLookY=false;
   get sprinting(){return this.keys.has('ShiftLeft')||this.keys.has('ShiftRight');}
   constructor(private camera:PerspectiveCamera,private element:HTMLElement,dynamicObstacles:()=>readonly DynamicObstacle[]=()=>[], private navigation:NavigationSurface=homeNavigation(dynamicObstacles)) {
     this.pointer=new PointerLockControls(camera);this.pointer.domElement=element;this.pointer.pointerSpeed=.65;
@@ -125,7 +125,7 @@ export class ExploreController {
     // during a stalled frame. Do not leave seconds of stale movement to replay.
     const queue=(pending:number,input:number)=>Math.max(-.35,Math.min(.35,
       (pending*input<0?0:pending)+input));
-    this.lookX=queue(this.lookX,movementX*sensitivity);this.lookY=queue(this.lookY,movementY*sensitivity);
+    this.lookX=queue(this.lookX,movementX*sensitivity*this.lookSensitivity);this.lookY=queue(this.lookY,movementY*sensitivity*this.lookSensitivity*(this.invertLookY?-1:1));
   }
   syncLook(){this.lookX=0;this.lookY=0;}
   private cancelLook(){this.dragging=false;this.dragId=null;this.syncLook();}

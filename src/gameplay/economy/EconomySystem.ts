@@ -25,6 +25,10 @@ export class EconomySystem {
   get barnCapacity(){return BARN_CAPACITIES[this.state.upgrades.barn];}get grainCapacity(){return GRAIN_CAPACITIES[this.state.upgrades.grain];}
   seasonReason(id:string){return offerSeasonReason(id,this.season(),this.inventory.items);}
   snapshot(){return structuredClone(this.state);}
+  rollback(saved:EconomySnapshot){this.state=normalizeEconomy(saved);this.revision++;}
+  canCredit(amount:number){return Number.isSafeInteger(amount)&&amount>=0&&this.coins+amount<=MAX_COINS;}
+  /** Reward currency uses the same balance and bounds as trade, without recording a sale. */
+  credit(amount:number){if(!this.canCredit(amount))return false;if(amount){this.state.coins+=amount;this.revision++;this.onChange();}return true;}
   check(mode:'buy'|'sell',id:string,quantity:number,access:TradeAccess={farm:false},request=this.nextRequest):TradeResult {
     if(request!==this.nextRequest)return {ok:false,reason:'stale-request'};
     if(access.available&&!access.available())return {ok:false,reason:'merchant-away'};

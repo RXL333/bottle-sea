@@ -32,6 +32,9 @@ export function compactInstance(model:Group){
   }
 }
 export class FarmModels extends Group {
+  /** Unrendered source geometry retains per-building/tree bounds for camera queries.
+   * Rendering still uses the island-wide material batches below. */
+  readonly cameraSources=new Group();
   private wind=new FarmWind();
   private rotors:Object3D[]=[];
   readonly placements=new Map<string,Group>();
@@ -61,7 +64,9 @@ export class FarmModels extends Group {
       entry.geometry.push(o.geometry.clone().applyMatrix4(o.matrixWorld));batches.set(key,entry);
     });
     for(const [key,batch] of batches){const mesh=mergedMesh(`FarmStatic_${key}`,batch);mesh.material=mesh.material.clone();if(key.endsWith(':foliage'))this.wind.install(mesh);this.add(mesh);}
-    statics.clear();this.remove(statics);
+    this.cameraSources.children.slice().forEach(o=>this.cameraSources.remove(o));
+    for(const model of [...statics.children])this.cameraSources.add(model);
+    this.cameraSources.updateMatrixWorld(true);this.remove(statics);
     this.traverse(o=>{if(o instanceof Mesh){o.castShadow=true;o.receiveShadow=true;}});
     this.userData.assetsPlaced=FARM_PLACEMENTS.length;this.userData.staticBatches=batches.size;
     this.userData.independentAssets=FARM_PLACEMENTS.filter(p=>p.independent).map(p=>p.id);

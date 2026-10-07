@@ -1,3 +1,4 @@
+import { NpcPresentation } from '../npc/NpcPresentation';
 import { SeasonalEnvironment } from '../../systems/SeasonalEnvironment';
 import { Group } from 'three';
 import { QUALITY } from '../../core/Renderer';
@@ -22,6 +23,7 @@ import { merchantTarget } from '../trade/MerchantShip';
 import { sampleMerchantRoute,MERCHANT_SCHEDULE } from '../trade/MerchantRoute';
 import type { TradeAccess } from '../../gameplay/economy/EconomySystem';
 export class HomeWorld implements GameWorld {
+  private npcs:NpcPresentation;
   private seasons=new SeasonalEnvironment();
   readonly id='HOME' as const;
   readonly boat=new PlayerTravelBoat();
@@ -39,12 +41,12 @@ export class HomeWorld implements GameWorld {
   readonly interaction=new InteractionSystem();
   private gameplay?:GameplayServices;
   private readonly fishingTarget:InteractionTarget={id:'home_fishing',name:'钓鱼台',action:'FISH',...FISHING_SPOT,unavailable:({gameplay,position})=>position.y<4?'请站到钓鱼台上再抛竿':gameplay.fishing.blockReason()};
-  readonly navigation=homeNavigation(()=>[...this.world.ship.collisionBoxes,...this.boat.collisionBoxes],()=>this.models.colliders);
-  constructor(loader?:ModelLoader){this.models=new HomeModels(loader);this.root.name='HomeWorld';this.departureSea.visible=false;this.root.add(this.departureSea);this.root.add(this.room,this.bottle,this.world,this.micro,this.boat,this.models);this.boat.anchor(.65,2.35,-Math.PI/2);this.boat.departureDistance=.8;this.merchant.unavailable=()=>this.merchantState.available?undefined:this.merchantState.prompt;this.interaction.setTargets([...discoveryTargets.map(t=>t.id==='lighthouse'?{...t,x:t.x+.65}:t),{id:'cottage_door',name:'进入小屋',action:'ENTER_COTTAGE',x:-1.564,y:4.44,z:.80,range:.70},{id:'home_boat',name:'登船',action:'TRAVEL',x:.65,y:4.12,z:1.82,range:.72},this.fishingTarget,this.merchant]);}
+  readonly navigation=homeNavigation(()=>[...this.world.ship.collisionBoxes,...this.boat.collisionBoxes,...(this.npcs?.activeCollisions??[])],()=>this.models.colliders);
+  constructor(loader?:ModelLoader){this.npcs=new NpcPresentation('HOME',loader);this.root.add(this.npcs);this.models=new HomeModels(loader);this.root.name='HomeWorld';this.departureSea.visible=false;this.root.add(this.departureSea);this.root.add(this.room,this.bottle,this.world,this.micro,this.boat,this.models);this.boat.anchor(.65,2.35,-Math.PI/2);this.boat.departureDistance=.8;this.merchant.unavailable=()=>this.merchantState.available?undefined:this.merchantState.prompt;this.interaction.setTargets([...discoveryTargets.map(t=>t.id==='lighthouse'?{...t,x:t.x+.65}:t),{id:'cottage_door',name:'进入小屋',action:'ENTER_COTTAGE',x:-1.564,y:4.44,z:.80,range:.70},{id:'home_boat',name:'登船',action:'TRAVEL',x:.65,y:4.12,z:1.82,range:.72},this.fishingTarget,...this.npcs.targets().filter(t=>t.id!=='npc:merchant_captain'),{...this.npcs.targets().find(t=>t.id==='npc:merchant_captain')!,x:this.merchant.x,y:this.merchant.y,z:this.merchant.z,unavailable:this.merchant.unavailable}]);}
   load(){return this.pending??=this.loadModels();}
-  private async loadModels(){await this.models.load();if(this.disposed)return;this.models.build(this.world);this.seasons.register(this.world.island);this.models.traverse(o=>{if(o.userData.seasonFoliage)this.seasons.register(o);});this.boat.setModel(this.models.instance('launch'));this.pulse=new DiscoveryPulse(this.world);}
+  private async loadModels(){await Promise.all([this.models.load(),this.npcs.load()]);if(this.disposed)return;this.models.build(this.world);this.seasons.register(this.world.island);this.models.traverse(o=>{if(o.userData.seasonFoliage)this.seasons.register(o);});this.boat.setModel(this.models.instance('launch'));this.pulse=new DiscoveryPulse(this.world);}
   enter({state,gameplay,gameTime}:WorldEnterContext){this.gameplay=gameplay;this.updateMerchant(gameTime,0,0);this.interaction.restore(state.discoveries);}
-  private updateMerchant(gameTime:number,time:number,storm:number){this.merchantState=sampleMerchantRoute(gameTime);this.merchant.prompt=this.merchantState.prompt;this.world.prepareShip(time,storm,this.merchantState.pose);}
+  private updateMerchant(gameTime:number,time:number,storm:number){this.merchantState=sampleMerchantRoute(gameTime);this.npcs.setMerchantAvailable(this.merchantState.available);this.merchant.prompt=this.merchantState.prompt;this.world.prepareShip(time,storm,this.merchantState.pose);}
   prepare(context:WorldUpdateContext){this.updateMerchant(context.gameTime,context.time,context.storm);this.boat.update(context.time,context.storm);}
   update(c:WorldUpdateContext){
     if(c.season)this.seasons.update(c.season);
@@ -57,9 +59,10 @@ export class HomeWorld implements GameWorld {
   }
   triggerDiscovery(id:string){this.pulse.trigger(id);}
   setTravelPresentation(active:boolean){this.departureSea.visible=active;this.world.ocean.visible=!active;this.room.visible=!active;this.bottle.visible=!active;this.micro.visible=!active;}
+  setDialoguePresentation(npcId?:string){this.npcs.setDialogueSpeaker(npcId);}
   getFocusPosition(){return this.world.ship.position;}
   leave({gameTime}:WorldLeaveContext){return {lastSimulatedGameTime:gameTime,discoveries:[...this.interaction.discovered]};}
-  dispose(){this.disposed=true;this.models.cancel();disposeWorld(this.root);}
+  dispose(){this.disposed=true;this.models.cancel();this.npcs.cancel();disposeWorld(this.root);}
   getSpawnPoint(id='home_dock_arrival'):SpawnPoint{if(id==='home_fishing')return {id,position:[FISHING_SPOT.x,FISHING_SPOT.y+.025,FISHING_SPOT.z],lookAt:[FISHING_WATER.x,3.4,FISHING_WATER.z]};if(id==='home_cottage_exit')return {id,position:[-1.564,4.36,1.18],lookAt:[-.4,4.35,1.4]};return {id,position:[.65,4.12,1.87],lookAt:[-.65,4.8,-.4]};}
-  applyQuality(quality:Quality){const settings=QUALITY[quality];this.departureSea.applyQuality(quality);this.world.ocean.create(settings.waterStep);this.world.fish.setCount(settings.fish);this.world.wake.setDensity(settings.waterStep);this.micro.setDensity(settings.waterStep);}
+  applyQuality(quality:Quality){this.npcs.applyQuality(quality);const settings=QUALITY[quality];this.departureSea.applyQuality(quality);this.world.ocean.create(settings.waterStep);this.world.fish.setCount(settings.fish);this.world.wake.setDensity(settings.waterStep);this.micro.setDensity(settings.waterStep);}
 }

@@ -1,0 +1,18 @@
+.settings-panel{width:min(920px,calc(100vw - 32px));max-height:calc(100dvh - 32px);box-sizing:border-box}
+.settings-intro{margin:0 0 18px;font-size:13px}
+.settings-sections{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.settings-section{padding:16px;background:var(--ui-paper-light)}
+.settings-section h3{margin:0 0 12px;font-size:19px;border-bottom:1px solid var(--ui-line);padding-bottom:9px}
+.settings-row{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:16px 0;font-size:14px}
+.settings-row>span{flex:1;min-width:0}.settings-row strong{display:block;color:var(--ui-ink);font-weight:600}
+.settings-row small{display:block;margin-top:5px;font-size:11px;line-height:1.6;color:var(--ui-muted)}
+.settings-row select{width:145px;max-width:45%;padding:8px 6px;background:var(--ui-paper);color:var(--ui-navy);border:1px solid var(--ui-line);border-radius:5px;font:inherit;font-size:12px}
+.settings-slider{width:140px;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.settings-slider input{width:100%;accent-color:var(--ui-ocean);cursor:pointer}.settings-slider output{font-size:12px;font-variant-numeric:tabular-nums;color:var(--ui-navy)}
+.settings-row input[type=checkbox]{width:20px;height:20px;accent-color:var(--ui-ocean);cursor:pointer;flex-shrink:0}
+.settings-footer{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:20px;padding-top:16px;border-top:1px solid var(--ui-line);color:var(--ui-muted)}
+.settings-trigger{position:absolute;top:18px;right:230px;pointer-events:auto;background:var(--ui-navy);color:var(--ui-paper-light);border:1px solid var(--ui-gold);border-radius:7px;padding:9px 14px;cursor:pointer;font:inherit;font-size:13px;box-shadow:0 3px 10px #082a4640}
+.settings-trigger:hover{background:var(--ui-ocean)}
+@media(max-width:680px){.settings-sections{grid-template-columns:1fr}.settings-footer{align-items:flex-start;flex-direction:column}.settings-trigger{right:170px;top:18px}.settings-slider{width:115px}}
+
+.settings-panel .ui-panel-header{position:sticky;top:-24px;z-index:2}

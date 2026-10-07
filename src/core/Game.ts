@@ -1,3 +1,15 @@
+import { SettingsState } from '../state/GameSettings';
+import type { GameSettings } from '../state/GameSettings';
+import { SettingsPanel } from '../ui/SettingsPanel';
+import '../styles/settings.css';
+import { CollectionPanel } from '../ui/CollectionPanel';
+import '../styles/collections.css';
+import { DialoguePanel } from '../ui/DialoguePanel';
+import { CommissionPanel } from '../ui/CommissionPanel';
+import { NPCS } from '../gameplay/npc/NpcRegistry';
+import '../styles/commissions.css';
+import { dialogueFacts } from '../gameplay/npc/DialogueFacts';
+import '../styles/dialogue.css';
 import { CalendarPanel } from '../ui/CalendarPanel';
 import { dateLabel } from '../gameplay/calendar/CalendarSystem';
 import '../styles/calendar.css';
@@ -6,7 +18,7 @@ import { ProgressionView } from '../ui/ProgressionView';
 import '../styles/progression.css';
 import { DoorTransition } from '../systems/DoorTransition';
 import { SleepTransition } from '../systems/SleepTransition';
-import { Color,FogExp2,PerspectiveCamera,Scene,Vector3 } from 'three';
+import { Color,FogExp2,PerspectiveCamera,Quaternion,Scene,Vector3 } from 'three';
 import { QUALITY,Renderer } from './Renderer';
 import type { Quality } from './Renderer';
 import { GameLoop } from './GameLoop';
@@ -77,7 +89,10 @@ export class Game {
   readonly gameplay:GameplayFoundation;
   readonly vehicleController:VehicleController;private vehicleHUD=new VehicleHUD();
   private farmHUD=new FarmHUD();
+  readonly settings:SettingsState;private settingsPanel:SettingsPanel;private soundBusy=false;private soundWanted=false;
   private tradePanel:TradePanel;
+  private dialoguePanel:DialoguePanel;private dialogueAim?:Quaternion;private dialogueReturn?:Quaternion;
+  private commissionPanel:CommissionPanel;private collectionPanel:CollectionPanel;
   private calendarPanel:CalendarPanel;private progressionPanel:ProgressionPanel;private progressionView:ProgressionView;
   private interactionActions=new InteractionActions();
   private save:SaveSystem;private states=new WorldStateRegistry();private lastSuccessfulWorld:PlayableWorldId='HOME';
@@ -94,6 +109,7 @@ export class Game {
   private dock=new Vector3();private previousTravelState='IDLE';private hudTimer=0;private ready=false;
   private readonly preview=import.meta.env.DEV&&['view','world','hour','day','weather','fail'].some(key=>new URLSearchParams(location.search).has(key));
   private readonly persistPreview=import.meta.env.DEV&&new URLSearchParams(location.search).get('persist')==='1';
+  private readonly diagnostics=import.meta.env.DEV&&(this.preview||new URLSearchParams(location.search).get('debug')==='1');
   constructor(root:HTMLElement){
     root.append(this.renderer.domElement);this.renderer.domElement.tabIndex=0;this.scene.background=new Color('#21343a');this.scene.add(this.weather,this.waterEntry,this.character);
     this.dayNight=new DayNightSystem(this.scene);this.overview=new OverviewController(this.camera,this.renderer.domElement);this.focus=new SceneFocusSystem(this.camera,this.overview.target);
@@ -110,12 +126,15 @@ export class Game {
     this.vehicleController.onPark=()=>this.persist(true);
     this.cookingPanel=new CookingPanel(root);
     this.inventoryPanel=new InventoryPanel(root);
-    this.calendarPanel=new CalendarPanel(root);this.tradePanel=new TradePanel(root);this.progressionPanel=new ProgressionPanel(root);this.progressionView=new ProgressionView(this.hud.element,()=>this.openProgression());
+    this.settingsPanel=new SettingsPanel(root);
+    this.collectionPanel=new CollectionPanel(root);this.commissionPanel=new CommissionPanel(root);this.dialoguePanel=new DialoguePanel(root);this.calendarPanel=new CalendarPanel(root);this.tradePanel=new TradePanel(root);this.progressionPanel=new ProgressionPanel(root);this.progressionView=new ProgressionView(this.hud.element,()=>this.openProgression());
     this.cover.className='travel-cover';this.caption.className='travel-caption';this.caption.hidden=true;root.append(this.cover);this.hud.element.append(this.caption);
     // Access to localStorage itself can throw in restricted embeds.
     this.save=new SaveSystem({getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)});
     const saved=this.preview&&!this.persistPreview?defaultSave():this.save.load();this.player=saved.player;this.lastSuccessfulWorld=saved.lastSuccessfulWorld;this.clock.restore(saved.gameTime);this.states.restore(saved.worlds);
+    this.settings=new SettingsState(saved.settings,settings=>{this.applySettings(settings);this.persist();});
     this.gameplay=new GameplayFoundation(this.clock,saved,undefined,immediate=>this.persist(immediate));
+    this.gameplay.collections.onDiscover=entry=>{this.hud.notify(`航海手记新增 · ${entry.name}`);};
     this.gameplay.calendar.onSeasonChange=date=>{this.hud.notify(`${dateLabel(date)} · 季节悄然更替，已有作物继续生长。`);this.sound.play('ui-discover');};
     this.gameplay.progression.onComplete=completion=>{this.progressionView.completed(completion,this.gameplay.progression);this.sound.play('ui-discover');};
     this.vehicleController.onDrive=()=>{this.gameplay.progression.record('vehicle.drive');};
@@ -140,7 +159,7 @@ export class Game {
     this.interactionActions.register('TRAVEL',()=>{
       this.explorer.suspendForPanel();this.hud.setInteractionPrompt();this.panel.show(this.player,id=>{this.explorer.beginTransitionFromPanel();this.persist(true);this.travel.begin(id);},()=>{this.explorer.resumeFromPanel();});
       return {status:'success'};
-    }).register('ENTER_COTTAGE',()=>({status:this.useCottageDoor(true)?'success':'unavailable'}))
+    }).register('NPC_DIALOGUE',(_context,target)=>({status:this.openDialogue(target.id.replace('npc:',''))?'success':'unavailable',message:this.gameplay.fishing.active?'请先收起鱼竿，再与岛民交谈。':undefined})).register('ENTER_COTTAGE',()=>({status:this.useCottageDoor(true)?'success':'unavailable'}))
       .register('EXIT_COTTAGE',()=>({status:this.useCottageDoor(false)?'success':'unavailable'}))
       .register('HOME_SLEEP',()=>{
         this.explorer.suspendForPanel();this.hud.closeDiscovery();this.hud.setInteractionPrompt();
@@ -170,7 +189,7 @@ export class Game {
     this.explorer.onInventory=()=>this.openInventory();this.explorer.onHotbarSelect=index=>this.gameplay.hotbar.select(index);this.explorer.onHotbarUse=()=>this.useHotbar();
     this.explorer.onPrimaryDown=()=>this.gameplay.fishing.press();this.explorer.onPrimaryUp=()=>this.gameplay.fishing.release();
     this.explorer.onInteract=()=>{void this.interact();};this.explorer.onLockChange=locked=>{if(this.explorer.active)this.hud.setHint(locked?'WASD 移动 · Space 上升 · C 下潜 · E 交互':'拖动观察 · WASD 移动 · 双击画面锁定鼠标');};
-    this.performance=new PerformanceMonitor(this.renderer,this.hud.element.querySelector<HTMLElement>('#fps')!,this.camera);this.bindUI();this.applyQuality(saved.global.quality);
+    this.performance=new PerformanceMonitor(this.renderer,this.hud.element.querySelector<HTMLElement>('#fps')!,this.camera);this.bindUI();this.applyQuality(saved.global.quality);this.applySettings(this.settings.snapshot());
     window.addEventListener('resize',()=>{this.camera.aspect=innerWidth/innerHeight;this.camera.updateProjectionMatrix();this.renderer.resize();this.overview.fit(this.worldManager.currentWorldId==='HOME'&&this.transition.state==='OVERVIEW'&&!this.focus.active&&this.focus.selected==='overview');});
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){this.gameplay.fishing.cancel('钓鱼已暂停，本次鱼竿已收起。');this.persist(true);}});window.addEventListener('beforeunload',()=>this.persist(true));
     window.addEventListener('pagehide',()=>this.persist(true));
@@ -184,8 +203,8 @@ export class Game {
     await this.character.load().catch(error=>console.warn('Player character could not be loaded',error));
     try {await this.worldManager.switchTo(id,this.clock.simulationTime,id==='HOME'&&saved.player.currentSpawnId==='home_cottage_exit'?'home_cottage_exit':undefined);this.configureEnvironment();
       if(id==='COTTAGE'){this.player.currentWorldId='HOME';this.lastSuccessfulWorld='HOME';this.player.currentSpawnId='cottage_entry';this.resumeExplore();}else if(id==='HOME'&&saved.player.currentSpawnId==='home_cottage_exit'){this.resumeExplore();}else if(id==='FARM'){this.player.currentWorldId='FARM';this.lastSuccessfulWorld='FARM';this.resumeExplore();}else if(id==='TRAVEL'){this.overview.suspend();this.camera.position.set(0,4.8,-3);this.camera.lookAt(0,3.6,1);}
-      if(import.meta.env.DEV)configurePreview(this);
-      if(this.explorer.active)this.transition.state='EXPLORE';this.ready=true;this.cover.style.opacity='0';this.caption.hidden=true;this.hud.setSpeed(this.clock.timeScale,this.clock.paused);this.hud.setWeather(this.weather.kind);this.hud.updateQuests(new Set(this.player.discoveries));
+      if(this.diagnostics)configurePreview(this);
+      if(this.explorer.active)this.transition.state='EXPLORE';this.ready=true;this.recordArrival(id);this.cover.style.opacity='0';this.caption.hidden=true;this.hud.setSpeed(this.clock.timeScale,this.clock.paused);this.hud.setWeather(this.weather.kind);this.hud.updateQuests(new Set(this.player.discoveries));
     }catch(error){try{this.hud.notify('航线暂时无法抵达，正在返回家园岛……');await this.worldManager.switchTo('HOME',this.clock.simulationTime);this.ready=true;this.finishArrival('HOME');}catch(fatal){this.showFatal(fatal??error);}}
   }
   private showFatal(error:unknown){console.error(error);this.ready=false;this.explorer.suspend();this.cover.style.opacity='0';this.caption.hidden=false;this.caption.textContent='加载失败，请刷新页面重试。';document.body.classList.remove('traveling');}
@@ -200,7 +219,37 @@ export class Game {
   }
   private resumeExplore(){this.overview.suspend();this.focus.cancel();this.explorer.enter(false,this.spawn);this.camera.far=this.worldManager.currentWorldId==='HOME'?40:150;this.camera.updateProjectionMatrix();this.transition.state='EXPLORE';this.playerFeedback.reset();this.hud.setExplore(true);this.hud.setTransition(false);this.renderer.domElement.focus();}
   private resumeFurnitureExplore(){this.explorer.resumeFromPanel();this.hud.setTransition(false);}
-  private get gameplayPanelOpen(){return this.calendarPanel.open||this.homePanel.open||this.cookingPanel.open||this.inventoryPanel.open||this.tradePanel.open||this.progressionPanel.open;}
+  private get gameplayPanelOpen(){return this.settingsPanel.open||this.collectionPanel.open||this.commissionPanel.open||this.dialoguePanel.open||this.calendarPanel.open||this.homePanel.open||this.cookingPanel.open||this.inventoryPanel.open||this.tradePanel.open||this.progressionPanel.open;}
+  private openDialogue(npcId:string){
+    if(!this.ready||!this.explorer.active||this.vehicleController.active||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen||this.gameplay.fishing.active)return false;
+    const definition=this.gameplay.dialogue.registry.get(npcId);if(!definition||this.gameplay.dialogue.registry.npc(npcId)?.worldId!==this.worldManager.currentWorldId)return false;
+    const facts=()=>dialogueFacts(this.gameplay,this.weather.kind);
+    if(!this.gameplay.dialogue.begin(npcId,facts()))return false;
+    this.explorer.suspendForPanel();this.hud.closeDiscovery();this.hud.setInteractionPrompt();
+    const npc=this.gameplay.dialogue.registry.npc(npcId)!;
+    // Turn toward the speaker without moving the player or creating a second controller.
+    this.dialogueReturn=this.camera.quaternion.clone();this.destinationCamera.position.copy(this.camera.position);
+    const face=new Vector3(npc.position[0],npc.position[1]+npc.scale*1.5,npc.position[2]),right=new Vector3(1,0,0).applyQuaternion(this.camera.quaternion);face.addScaledVector(right,this.camera.position.distanceTo(face)*.28);this.destinationCamera.lookAt(face);this.dialogueAim=this.destinationCamera.quaternion.clone();this.worldManager.currentWorld?.setDialoguePresentation?.(npcId);
+    this.dialoguePanel.show(this.gameplay.dialogue,facts,()=>{if(this.dialogueReturn)this.camera.quaternion.copy(this.dialogueReturn);this.dialogueAim=this.dialogueReturn=undefined;this.worldManager.currentWorld?.setDialoguePresentation?.();this.explorer.syncLook();this.resumeFurnitureExplore();},action=>{if(action==='trade')this.openTrade();else if(action==='progression')this.openProgression();else if(action==='collections')this.openCollections();else if(action==='commissions')this.openCommissions(npcId);else this.openCalendar();});return true;
+  }
+  private commissionAccess(npcId:string){
+    const n=NPCS.get(npcId);return !!n&&n.worldId===this.worldManager.currentWorldId&&Math.hypot(this.camera.position.x-n.position[0],this.camera.position.z-n.position[2])<=n.range&&Math.abs(this.camera.position.y-n.position[1])<1.2&&(npcId!=='merchant_captain'||this.worldManager.currentWorld?.tradeAccess?.available?.()===true);
+  }
+  private openCommissions(npcId?:string){
+    if(!this.ready||this.vehicleController.active||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen||this.gameplay.fishing.active||npcId&&!this.commissionAccess(npcId))return;
+    const exploring=this.explorer.active,overviewEnabled=this.overview.enabled;if(exploring)this.explorer.suspendForPanel();else this.overview.suspend();this.hud.closeDiscovery();this.hud.setInteractionPrompt();
+    this.commissionPanel.show(this.gameplay,npcId,()=>this.player.discoveries,()=>!npcId||this.commissionAccess(npcId),()=>{if(exploring)this.resumeFurnitureExplore();else{this.overview.enabled=overviewEnabled;this.renderer.domElement.focus();}},message=>{this.hud.notify(message);this.sound.play('ui-discover');});
+  }
+  private openCollections(){
+    if(!this.ready||this.vehicleController.active||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen||this.gameplay.fishing.active)return;
+    const exploring=this.explorer.active,overviewEnabled=this.overview.enabled;if(exploring)this.explorer.suspendForPanel();else this.overview.suspend();this.hud.closeDiscovery();this.hud.setInteractionPrompt();
+    this.recordVisibleAnimals();this.collectionPanel.show(this.gameplay,()=>{if(exploring)this.resumeFurnitureExplore();else{this.overview.enabled=overviewEnabled;this.renderer.domElement.focus();}});
+  }
+  private recordVisibleAnimals(){if(this.worldManager.currentWorldId==='FARM'&&!this.travel.active&&Math.abs(this.camera.position.y-4)<1.5)this.gameplay.collections.observeAnimals(this.gameplay.livestock.getAnimals(),this.camera.position);}
+  private recordArrival(id:string){
+    this.gameplay.collections.arrive(id);
+    this.gameplay.collections.syncDiscoveries(this.player.discoveries);
+  }
   private openCalendar(){
     if(!this.ready||this.vehicleController.active||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen||this.gameplay.fishing.active)return;
     const exploring=this.explorer.active,overviewEnabled=this.overview.enabled;if(exploring)this.explorer.suspendForPanel();else this.overview.suspend();
@@ -258,11 +307,11 @@ export class Game {
   private finishArrival(id:PlayableWorldId){
     const world=this.worldManager.currentWorld!;world.setTravelPresentation?.(false);world.boat?.reset();this.configureEnvironment();this.spawn=world.getSpawnPoint(destination(id).arrivalSpawnId);this.resumeExplore();
     if(id==='HOME'&&world.interaction)this.player.discoveries=[...world.interaction.discovered];
-    this.lastSuccessfulWorld=id;this.player.currentWorldId=id;this.player.currentSpawnId=this.spawn.id;this.cover.style.opacity='0';this.caption.hidden=true;document.body.classList.remove('traveling');this.hud.updateQuests(new Set(this.player.discoveries));this.persist(true);
+    this.lastSuccessfulWorld=id;this.player.currentWorldId=id;this.player.currentSpawnId=this.spawn.id;this.recordArrival(id);this.cover.style.opacity='0';this.caption.hidden=true;document.body.classList.remove('traveling');this.hud.updateQuests(new Set(this.player.discoveries));this.persist(true);
   }
   private captureSave():SaveData {
     const world=this.worldManager.currentWorld;if(world?.id==='HOME'&&world.interaction){this.player.discoveries=[...world.interaction.discovered];this.states.set('HOME',{lastSimulatedGameTime:this.clock.simulationTime,discoveries:this.player.discoveries});}
-    return {version:2,...this.gameplay.snapshot(),gameTime:this.clock.snapshot(),player:structuredClone(this.player),worlds:this.states.snapshot(),lastSuccessfulWorld:this.lastSuccessfulWorld,global:{storm:this.weather.storm,intensity:this.weather.intensity,quality:this.renderer.quality,weather:this.weather.snapshot()}};
+    return {version:2,settings:this.settings.snapshot(),...this.gameplay.snapshot(),gameTime:this.clock.snapshot(),player:structuredClone(this.player),worlds:this.states.snapshot(),lastSuccessfulWorld:this.lastSuccessfulWorld,global:{storm:this.weather.storm,intensity:this.weather.intensity,quality:this.renderer.quality,weather:this.weather.snapshot()}};
   }
   private persist(immediate=false){if(!this.ready||(this.preview&&!this.persistPreview))return;if(immediate)this.save.flush(()=>this.captureSave());else this.save.schedule(()=>this.captureSave());}
   private interactionContext(world:GameWorld):InteractionContext {
@@ -277,7 +326,7 @@ export class Game {
     if(this.worldManager.currentWorld!==world)return;
     if(result.status==='error')console.warn('Interaction failed',result.error);
     if(result.discovery){
-      this.player.discoveries=[...interaction.discovered];this.hud.updateQuests(interaction.discovered);
+      this.player.discoveries=[...interaction.discovered];this.gameplay.collections.record({kind:'discovery',id:result.discovery.id},'discovered');this.hud.updateQuests(interaction.discovered);
       this.hud.showDiscovery(result.discovery.id,result.discovery.count);world.triggerDiscovery?.(result.discovery.id);this.sound.play('ui-discover');
     }else if(result.message)this.hud.notify(result.message);
     if(result.changed)this.persist();
@@ -292,7 +341,7 @@ export class Game {
       await this.worldManager.switchTo(id,this.clock.simulationTime,entering?'cottage_entry':'home_cottage_exit',prepared);
       this.configureEnvironment();this.camera.position.fromArray(this.spawn.position);this.camera.lookAt(...this.spawn.lookAt);this.camera.fov=68;this.camera.updateProjectionMatrix();
       this.player.currentWorldId='HOME';this.lastSuccessfulWorld='HOME';this.player.currentSpawnId=entering?'cottage_entry':'home_cottage_exit';
-      if(entering)this.gameplay.progression.record('home.enter');
+      if(entering){this.gameplay.progression.record('home.enter');this.recordArrival('COTTAGE');}
     },()=>{
       this.resumeExplore();this.cover.style.opacity='0';this.caption.hidden=true;document.body.classList.remove('door-transition');this.renderer.domElement.focus();this.persist(true);
     },error=>{
@@ -301,10 +350,39 @@ export class Game {
     });
   }
   private applyQuality(quality:Quality){this.renderer.quality=quality;this.renderer.resize();this.worldManager.applyQuality(quality);this.character.applyQuality(quality);this.dayNight.applyQuality(quality);this.weather.rain.setCount(QUALITY[quality].rain);this.waterEntry.setDensity(QUALITY[quality].waterStep);this.hud.element.querySelector('.quality')!.textContent=`PIXEL / ${quality}`;}
+  private applySettings(s:GameSettings){
+    this.explorer.lookSensitivity=s.lookSensitivity;this.explorer.invertLookY=s.invertLookY;
+    this.vehicleController.configure(s);this.sound.setVolume(s.volume);
+    if(this.renderer.renderScale!==s.renderScale){this.renderer.renderScale=s.renderScale;this.renderer.resize();}
+    this.hud.element.querySelector<HTMLElement>('#fps')!.hidden=!s.showFps;
+    this.hud.setActive('sound',s.soundEnabled);
+    if(!s.soundEnabled&&this.sound.enabled)void this.sound.setEnabled(false);
+  }
+  private async setSound(enabled:boolean){
+    this.soundWanted=enabled;if(this.soundBusy)return this.sound.enabled;this.soundBusy=true;
+    try{while(this.sound.enabled!==this.soundWanted)await this.sound.setEnabled(this.soundWanted);this.settings.set({soundEnabled:this.sound.enabled});this.hud.setActive('sound',this.sound.enabled);}
+    catch{this.hud.notify('声音暂时无法启用，请再次点击重试。');this.settings.set({soundEnabled:false});}
+    finally{this.soundBusy=false;}return this.sound.enabled;
+  }
+  private openSettings(){
+    if(!this.ready||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen||this.gameplay.fishing.active||this.vehicleController.active&&this.vehicleController.phase!=='DRIVING')return;
+    const driving=this.vehicleController.active,exploring=this.explorer.active,overviewEnabled=this.overview.enabled;
+    if(driving)this.vehicleController.suspendForPanel();else if(exploring)this.explorer.suspendForPanel();else this.overview.suspend();this.hud.closeDiscovery();this.hud.setInteractionPrompt();
+    this.settingsPanel.show({state:this.settings,quality:()=>this.renderer.quality,setQuality:quality=>{this.applyQuality(quality);this.persist(true);},fishingMode:()=>this.gameplay.fishing.inputMode,setFishingMode:mode=>{this.gameplay.fishing.setInputMode(mode);this.persist(true);},setSound:enabled=>this.setSound(enabled),reset:()=>{this.settings.reset();this.applyQuality('MEDIUM');this.gameplay.fishing.setInputMode('hold');void this.setSound(false);this.persist(true);}},()=>{this.persist(true);if(driving)this.vehicleController.resumeFromPanel();else if(exploring)this.resumeFurnitureExplore();else{this.overview.enabled=overviewEnabled;this.renderer.domElement.focus();}});
+  }
   private bindUI(){
+    this.hud.element.querySelector('[data-action="settings"]')!.addEventListener('click',()=>this.openSettings());
+    window.addEventListener('keydown',event=>{const target=event.target as HTMLElement|null;if(event.code!=='KeyO'||event.repeat||target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;event.preventDefault();this.openSettings();});
+    // Browsers require a real gesture to start saved audio preferences.
+    const restoreAudio=()=>{if(this.settings.snapshot().soundEnabled&&!this.sound.enabled&&!this.soundBusy)void this.setSound(true);};
+    this.renderer.domElement.addEventListener('pointerdown',restoreAudio);this.renderer.domElement.addEventListener('keydown',restoreAudio);
+    this.hud.element.querySelector('[data-action="collections"]')!.addEventListener('click',()=>this.openCollections());
+    window.addEventListener('keydown',event=>{const target=event.target as HTMLElement|null;if(event.code!=='KeyN'||event.repeat||target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;event.preventDefault();this.openCollections();});
     this.hud.element.querySelector('[data-action="calendar"]')!.addEventListener('click',()=>this.openCalendar());
     window.addEventListener('keydown',event=>{const target=event.target as HTMLElement|null;if(event.code!=='KeyL'||event.repeat||target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;event.preventDefault();this.openCalendar();});
     this.hud.element.querySelector('[data-action="progression"]')!.addEventListener('click',()=>this.openProgression());
+    this.hud.element.querySelector('[data-action="commissions"]')!.addEventListener('click',()=>this.openCommissions());
+    window.addEventListener('keydown',event=>{const target=event.target as HTMLElement|null;if(event.code!=='KeyJ'||event.repeat||target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;event.preventDefault();this.openCommissions();});
     window.addEventListener('keydown',event=>{const target=event.target as HTMLElement|null;if(event.code!=='KeyP'||event.repeat||target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;event.preventDefault();this.openProgression();});
     this.hud.element.querySelector('[data-action="inventory"]')!.addEventListener('click',()=>this.openInventory());
     this.hud.element.querySelector('[data-action="food"]')!.addEventListener('click',()=>this.openCooking('food'));
@@ -320,7 +398,7 @@ export class Game {
       this.transition.start(entering?'EXPLORE':'OVERVIEW',this.destinationCamera.position,this.destinationCamera.quaternion,entering?68:34);this.hud.setTransition(true);(document.activeElement as HTMLElement)?.blur();
     });
     this.hud.element.querySelectorAll<HTMLButtonElement>('[data-focus]').forEach(button=>button.addEventListener('click',()=>{if(this.transition.state!=='OVERVIEW'||this.worldManager.currentWorldId!=='HOME'||this.travel.active)return;this.overview.suspend();this.focus.start(button.dataset.focus as FocusId,this.worldManager.currentWorld!.getFocusPosition!(),this.overview.position0,this.overview.target0);this.hud.element.querySelectorAll('[data-focus]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));}));
-    const soundButton=this.hud.element.querySelector<HTMLButtonElement>('[data-action="sound"]')!;soundButton.addEventListener('click',()=>{soundButton.disabled=true;void this.sound.toggle().then(enabled=>this.hud.setActive('sound',enabled)).catch(()=>this.hud.notify('声音暂时无法启用，请再次点击重试。')).finally(()=>soundButton.disabled=false);});
+    const soundButton=this.hud.element.querySelector<HTMLButtonElement>('[data-action="sound"]')!;soundButton.addEventListener('click',()=>{soundButton.disabled=true;void this.setSound(!this.settings.snapshot().soundEnabled).finally(()=>soundButton.disabled=false);});
     this.hud.element.querySelector('.quality')!.addEventListener('click',()=>{const options:Quality[]=['LOW','MEDIUM','HIGH'];this.applyQuality(options[(options.indexOf(this.renderer.quality)+1)%3]);this.persist();});
   }
   private animateTravel(delta:number,time:number,storm:number){
@@ -359,6 +437,7 @@ export class Game {
       else if(this.explorer.active)this.explorer.update(delta,water);
       else if(home){if(this.focus.active){if(this.focus.update(delta)){this.overview.minDistance=this.focus.selected==='overview'?12:2;this.overview.enabled=true;this.overview.update();}}else this.overview.update();}
     }
+    if(this.dialoguePanel.open&&this.dialogueAim)this.camera.quaternion.slerp(this.dialogueAim,1-Math.exp(-Math.min(.1,delta)*8));
     if(this.gameplay.fishing.active){
       const distance=Math.hypot(this.camera.position.x-FISHING_SPOT.x,this.camera.position.y-FISHING_SPOT.y,this.camera.position.z-FISHING_SPOT.z);
       if(!home||!this.explorer.active||this.explorer.swimming||distance>=FISHING_SPOT.range)this.gameplay.fishing.cancel('已离开钓鱼台，鱼竿已收起。');
@@ -381,22 +460,26 @@ export class Game {
     if(this.sleepTransition.active){this.sleepTransition.update(delta);if(this.sleepTransition.active)this.sleepOverlay.render(this.sleepTransition.progress);}
     this.sound.update(time,storm,inside?'INDOOR':underwater?'UNDERWATER':this.explorer.active||this.vehicleController.active||this.travel.active?'ISLAND':'OVERVIEW',this.weather.lightning.flash,this.weather.frame);
     const interaction=this.worldManager.currentWorld?.interaction;if(this.explorer.active||this.vehicleController.active)interaction?.update(this.vehicleController.position??this.camera.position);
-    this.hudTimer+=delta;if(this.hudTimer>.25){this.hudTimer=0;this.hud.updateClock(this.clock,this.weather.kind,this.gameplay.calendar.date);this.hud.updateHomeStats(this.gameplay.progress,false);this.hud.updateProductionStats(this.gameplay,this.explorer.active||this.gameplayPanelOpen);this.hud.updateDepth(underwater,water-this.camera.position.y);
-      if(import.meta.env.DEV){Object.assign(this.renderer.domElement.dataset,{world:this.worldManager.currentWorldId,travel:this.travel.state,door:this.doorTransition.state,sleep:this.sleepTransition.state,energy:String(this.gameplay.progress.energy),cameraMode:this.transition.state,waterEntries:String(this.waterEntry.entries),waterLeaves:String(this.waterEntry.leaves),fov:this.camera.fov.toFixed(2),gameTime:String(this.clock.simulationTime),storm:String(this.weather.storm),quality:this.renderer.quality,discoveries:this.player.discoveries.join(','),completedTrips:String(this.completedTrips),interactionCount:String(this.interactionCount),audio:JSON.stringify(this.sound.diagnostics),vehiclePhase:this.vehicleController.active?this.vehicleController.phase:'ON_FOOT',fleet:JSON.stringify(this.gameplay.vehicles.snapshot()),farmStats:JSON.stringify(this.gameplay.farm.definitions.map(f=>({id:f.id,counts:this.gameplay.farm.getField(f.id)!.stateCounts})))});}
-      if(import.meta.env.DEV)this.renderer.domElement.dataset.farmEffects=JSON.stringify(this.worldManager.currentWorld?.farmPresentationDiagnostics??{});
-      if(import.meta.env.DEV){this.renderer.domElement.dataset.cameraPosition=JSON.stringify(this.camera.position.toArray());this.renderer.domElement.dataset.vehicleYaw=String(this.vehicleController.vehicle?.yaw??0);}
-      if(import.meta.env.DEV)this.renderer.domElement.dataset.livestock=JSON.stringify(this.gameplay.livestock.snapshot());
-      if(import.meta.env.DEV)this.renderer.domElement.dataset.calendar=JSON.stringify({...this.gameplay.calendar.date,visual:season,lightDayTime,weatherTarget:this.weather.kind,fishPool:this.gameplay.fishing.seasonalPool.map(f=>f.id)});
-      if(import.meta.env.DEV)this.renderer.domElement.dataset.progression=JSON.stringify(this.gameplay.progression.snapshot());
-      if(import.meta.env.DEV)this.renderer.domElement.dataset.economy=JSON.stringify(this.gameplay.economy.snapshot());
-      if(import.meta.env.DEV)this.renderer.domElement.dataset.weather=JSON.stringify({kind:this.weather.kind,...this.weather.frame,rainVisible:this.weather.rain.visible,precipitation:this.weather.rain.diagnostics,sheltered:inside,atmosphere:this.dayNight.farm.visible?this.dayNight.farm.diagnostics:null,drawCalls:this.renderer.info.render.calls,triangles:this.renderer.info.render.triangles});
+    this.hudTimer+=delta;if(this.hudTimer>.25){this.hudTimer=0;this.collectionPanel.refresh();this.commissionPanel.refresh();this.hud.updateCollections(this.gameplay.collections);
+      if(this.explorer.active&&!this.gameplayPanelOpen)this.recordVisibleAnimals();this.hud.updateClock(this.clock,this.weather.kind,this.gameplay.calendar.date);this.hud.updateHomeStats(this.gameplay.progress,false);this.hud.updateProductionStats(this.gameplay,this.explorer.active||this.gameplayPanelOpen);this.hud.updateDepth(underwater,water-this.camera.position.y);
+      if(this.diagnostics){Object.assign(this.renderer.domElement.dataset,{world:this.worldManager.currentWorldId,travel:this.travel.state,door:this.doorTransition.state,sleep:this.sleepTransition.state,energy:String(this.gameplay.progress.energy),cameraMode:this.transition.state,waterEntries:String(this.waterEntry.entries),waterLeaves:String(this.waterEntry.leaves),fov:this.camera.fov.toFixed(2),gameTime:String(this.clock.simulationTime),storm:String(this.weather.storm),quality:this.renderer.quality,discoveries:this.player.discoveries.join(','),completedTrips:String(this.completedTrips),interactionCount:String(this.interactionCount),audio:JSON.stringify(this.sound.diagnostics),vehiclePhase:this.vehicleController.active?this.vehicleController.phase:'ON_FOOT',fleet:JSON.stringify(this.gameplay.vehicles.snapshot()),farmStats:JSON.stringify(this.gameplay.farm.definitions.map(f=>({id:f.id,counts:this.gameplay.farm.getField(f.id)!.stateCounts})))});}
+      if(this.diagnostics)this.renderer.domElement.dataset.collections=JSON.stringify({open:this.collectionPanel.open,...this.gameplay.collections.snapshot()});
+      if(this.diagnostics)this.renderer.domElement.dataset.commissions=JSON.stringify({open:this.commissionPanel.open,...this.gameplay.commissions.snapshot()});
+      if(this.diagnostics)this.renderer.domElement.dataset.dialogue=JSON.stringify({open:this.dialoguePanel.open,npcId:this.gameplay.dialogue.current?.npc.id,history:this.gameplay.dialogue.snapshot()});
+      if(this.diagnostics)this.renderer.domElement.dataset.farmEffects=JSON.stringify(this.worldManager.currentWorld?.farmPresentationDiagnostics??{});
+      if(this.diagnostics){this.renderer.domElement.dataset.cameraPosition=JSON.stringify(this.camera.position.toArray());this.renderer.domElement.dataset.vehicleYaw=String(this.vehicleController.vehicle?.yaw??0);}
+      if(this.diagnostics)this.renderer.domElement.dataset.livestock=JSON.stringify(this.gameplay.livestock.snapshot());
+      if(this.diagnostics)this.renderer.domElement.dataset.calendar=JSON.stringify({...this.gameplay.calendar.date,visual:season,lightDayTime,weatherTarget:this.weather.kind,fishPool:this.gameplay.fishing.seasonalPool.map(f=>f.id)});
+      if(this.diagnostics)this.renderer.domElement.dataset.progression=JSON.stringify(this.gameplay.progression.snapshot());
+      if(this.diagnostics)this.renderer.domElement.dataset.economy=JSON.stringify(this.gameplay.economy.snapshot());
+      if(this.diagnostics)this.renderer.domElement.dataset.weather=JSON.stringify({kind:this.weather.kind,...this.weather.frame,rainVisible:this.weather.rain.visible,precipitation:this.weather.rain.diagnostics,sheltered:inside,atmosphere:this.dayNight.farm.visible?this.dayNight.farm.diagnostics:null,drawCalls:this.renderer.info.render.calls,triangles:this.renderer.info.render.triangles});
       if(this.explorer.active||this.vehicleController.active){const world=this.worldManager.currentWorld!,prompt=interaction?.getPrompt(this.interactionContext(world),this.interactionActions);this.hud.setInteractable(prompt?.available??false);this.hud.setInteractionPrompt(this.gameplay.fishing.state==='FIGHTING'?undefined:prompt);this.hud.setHint(this.vehicleController.active?'W/S 前进后退 · A/D 转向 · Space 刹车 · 停稳后 E 下车':world.id==='FARM'?(world.livestockFocus?'饲槽 E 补充饲料 / 小麦 / 玉米 · 动物 E 收蛋 / 挤奶 / 剪毛 · B 背包':'E 耕地 / 播种 / 收割 · 靠近车辆 E 上车 · B 拿起种子 · 1～8 换种'):world.id==='COTTAGE'?'WASD 移动 · E 使用家具 / 出屋 · B 背包 · 1～8 快捷栏 · Q 使用':this.gameplay.fishing.active?'E 提钩 · 左键控制张力 · R 切换操作 · Esc 放弃':'WASD 移动 · E 交互 · B 背包 · 1～8 快捷栏 · Q 使用');}
       else this.hud.setInteractionPrompt();
     }
     this.character.update({delta,time,visible:(this.explorer.active||this.vehicleController.active)&&!this.travel.active&&!this.doorTransition.active&&!this.sleepTransition.active&&!this.gameplayPanelOpen&&!this.panel.open&&!this.transition.active,firstPerson:!this.vehicleController.active,eye:this.camera.position,orientation:this.camera.quaternion,eyeHeight:this.worldManager.currentWorld?.navigation?.eyeHeight,grounded:this.explorer.grounded,sprinting:this.explorer.sprinting,paused:document.visibilityState==='hidden',vehicle:this.vehicleController.phase==='DRIVING'?this.vehicleController.vehicle:undefined});
     if(this.vehicleController.active&&this.vehicleController.phase!=='DRIVING')this.character.visible=false;
     if(import.meta.env.DEV&&this.characterPreview)this.character.showAt(this.characterPreview.feet,this.characterPreview.yaw,this.characterPreview.pose,time*7);
-    if(import.meta.env.DEV)this.renderer.domElement.dataset.character=JSON.stringify(this.character.diagnostics);
+    if(this.diagnostics)this.renderer.domElement.dataset.character=JSON.stringify(this.character.diagnostics);
     const bob=this.explorer.active?this.playerFeedback.offsetY+this.explorer.renderOffsetY:0;this.camera.position.y+=bob;this.fishingPresentation.update(time,storm,delta);this.renderer.render(this.scene,this.camera);this.camera.position.y-=bob;this.performance.update(performance.now()-cpuStart);
   };
 }

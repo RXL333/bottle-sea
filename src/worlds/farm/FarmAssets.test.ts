@@ -14,7 +14,7 @@ const fileLoader=async(url:string)=>{
 
 it('loads the real farm GLBs, excludes main-island furniture, batches geometry, and releases owned resources',async()=>{
   const loader=vi.fn(fileLoader),world=new FarmWorld(loader);await Promise.all([world.load(),world.load()]);
-  expect(loader).toHaveBeenCalledTimes(Object.keys(FARM_MODEL_FILES).length);
+  expect(loader).toHaveBeenCalledTimes(Object.keys(FARM_MODEL_FILES).length+1);
   expect(loader.mock.calls.every(([url])=>!url.includes('storage')&&!url.includes('kitchen'))).toBe(true);
   expect(world.root.userData.modelsReady).toBe(true);
   const models=world.root.getObjectByName('BlenderFarmModels')!;

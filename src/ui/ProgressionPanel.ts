@@ -36,7 +36,7 @@ export class ProgressionPanel {
       const ready=progress.isUnlocked(d.id),name=document.createElement('strong');name.textContent=d.name;
       const state=document.createElement('small');state.className=ready?'ready':'';state.textContent=d.implemented?(ready?'已解锁':'待解锁'):(ready?'接入条件已达成 · 后续内容':'后续内容预留');
       const description=document.createElement('p');description.textContent=d.description;
-      const requirements=document.createElement('p');requirements.className='unlock-requirements';requirements.textContent=ready?(grants.has(d.id)?'保留旧存档原有访问权限。':'对应里程碑已完成。'):`需要：${d.requires.filter(id=>!progress.completed(id)).map(id=>progress.registry.getMilestone(id)!.name).join('、')}`;
+      const requirements=document.createElement('p');requirements.className='unlock-requirements';requirements.textContent=ready?(grants.has(d.id)?'已获得内容访问权限（委托奖励 / 旧存档保留）。':'对应里程碑已完成。'):`需要：${d.requires.filter(id=>!progress.completed(id)).map(id=>progress.registry.getMilestone(id)!.name).join('、')}`;
       card.append(name,state,description,requirements);content.append(card);
     }
     body.append(route,content);this.element.append(header,intro,objective,counts,progressMeter(progress.completedCount,progress.registry.listMilestones().length,'里程碑完成进度'),body);this.element.showModal();back.focus();

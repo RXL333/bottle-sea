@@ -1,3 +1,4 @@
+import { configureNpcPreview } from './NpcPreview';
 import { configureSeasonPreview } from './SeasonPreview';
 import { configureFarmTreePreview } from './FarmTreePreview';
 import type { Game } from './Game';
@@ -17,6 +18,7 @@ export function configurePreview(game:Game){
   if(params.has('hour')&&Number.isFinite(hour)&&hour>=0&&hour<24)game.clock.simulationTime=DAY_DURATION*(Math.floor(game.clock.simulationTime/DAY_DURATION)+hour/24);
   const previewDay=Number(params.get('day'));if(params.has('day')&&Number.isSafeInteger(previewDay)&&previewDay>=1&&previewDay<=100000)game.clock.simulationTime=DAY_DURATION*(previewDay-1+game.clock.normalizedDayTime);
   const weather=params.get('weather')?.toUpperCase();if(isWeatherKind(weather))game.weather.restore({kind:weather,...WEATHER_PROFILES[weather],wetness:WEATHER_PROFILES[weather].rain,windPhase:game.clock.elapsed*.6},false,0,game.gameplay.calendar.date.dayIndex);
+  configureNpcPreview(game,params);
   configureSeasonPreview(game,params);
   configureFarmTreePreview(game,params);
   if(params.get('view')==='farm-weather'){
@@ -179,6 +181,14 @@ export function configurePreview(game:Game){
       const canvas=game.renderer.domElement,held=new Set<string>();let stopTimer=0;
       const key=(code:string,down:boolean)=>canvas.dispatchEvent(new KeyboardEvent(down?'keydown':'keyup',{code,key:code==='Space'?' ':code.replace('Key','').toLowerCase(),bubbles:true}));
       const drive=(codes:readonly string[])=>{window.clearTimeout(stopTimer);canvas.focus();for(const code of held)key(code,false);held.clear();for(const code of codes){key(code,true);held.add(code);}controls.open=false;};
+      if(params.get('fixture')==='1')for(const [label,dx] of [['鼠标向左 80px',-80],['鼠标向右 80px',80]] as const){
+        const button=document.createElement('button');button.textContent=label;button.addEventListener('click',()=>{
+          controls.open=false;canvas.focus();
+          // Explicit synthetic displacement exercises the real unlocked handler.
+          canvas.dispatchEvent(new PointerEvent('pointermove',{clientX:400,clientY:300,pointerId:2}));
+          canvas.dispatchEvent(new PointerEvent('pointermove',{clientX:400+dx,clientY:300,pointerId:2}));
+        });controls.append(button);
+      }
       for(const [label,codes] of [['持续前进',['KeyW']],['持续前进左转',['KeyW','KeyA']],['持续倒车',['KeyS']],['持续倒车右转',['KeyS','KeyD']],['停车',['Space']]] as const){
         const button=document.createElement('button');button.textContent=label;button.style.margin='6px';button.addEventListener('click',()=>drive(codes));controls.append(button);
       }

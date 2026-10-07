@@ -12,7 +12,7 @@ import { TERRAIN_CELLS } from '../../world/island/TerrainData';
 const load=async(url:string)=>{const bytes=await readFile(new URL('../../../public'+url,import.meta.url));return (await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'' )).scene;};
 it('loads every Home asset once, keeps entry and berth clear, and retains discovery targets',async()=>{
   const loader=vi.fn(load),world=new HomeWorld(loader);await Promise.all([world.load(),world.load()]);
-  expect(loader).toHaveBeenCalledTimes(Object.keys(HOME_FILES).length);
+  expect(loader).toHaveBeenCalledTimes(Object.keys(HOME_FILES).length+3);
   expect(world.root.getObjectByName('BlenderHomeModels')!.userData.ready).toBe(true);
   for(const id of ['house','dock','fishing','chest','anchor','ruins','bed','stove','storage'])expect(world.root.getObjectByName('Home_'+id)).toBeDefined();
   expect(world.navigation.hitsObstacle(-1.564,.75,4.446)).toBe(false);

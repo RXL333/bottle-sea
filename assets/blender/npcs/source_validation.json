@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "characters": [
+    {
+      "id": "lighthouse_keeper",
+      "meshes": 89,
+      "parts": 24,
+      "editable": true,
+      "camera": true
+    },
+    {
+      "id": "merchant_captain",
+      "meshes": 82,
+      "parts": 24,
+      "editable": true,
+      "camera": true
+    },
+    {
+      "id": "fisherman",
+      "meshes": 78,
+      "parts": 23,
+      "editable": true,
+      "camera": true
+    },
+    {
+      "id": "farm_steward",
+      "meshes": 74,
+      "parts": 22,
+      "editable": true,
+      "camera": true
+    }
+  ]
+}

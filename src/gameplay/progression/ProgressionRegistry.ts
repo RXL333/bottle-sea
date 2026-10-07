@@ -1,5 +1,5 @@
 export type ProgressionActivity='home.enter'|'fish.catch'|'cook.complete'|'home.sleep'|'farm.visit'|'farm.till'|'farm.seed'|'farm.harvest'|'vehicle.drive'|'livestock.feed'|'livestock.collect'|'trade.sell'|'trade.buy';
-export type ActivitySink=(activity:ProgressionActivity)=>void;
+export type ActivitySink=(activity:ProgressionActivity,produced?:readonly {itemId:string;quantity:number}[])=>void;
 export interface MilestoneDefinition {
   readonly id:string;readonly name:string;readonly description:string;readonly hint:string;
   readonly activity?:ProgressionActivity;readonly requires?:readonly string[];
@@ -49,7 +49,7 @@ export const PROGRESSION=new ProgressionRegistry()
   .registerUnlock({id:'recipe.soup',name:'海鲜汤食谱',description:'小屋炉灶可用两条鱼制作暖汤。',requires:['first_cook'],implemented:true,legacyAccess:true})
   .registerUnlock({id:'recipe.smoke',name:'烟熏鱼食谱',description:'小屋炉灶可用鲜鱼与木材制作烟熏鱼。',requires:['first_cook'],implemented:true,legacyAccess:true})
   .registerUnlock({id:'capacity.upgrades',name:'仓库与粮仓扩容',description:'商船开放容量升级商品；仍需支付金币并按级购买。',requires:['first_sale'],implemented:true,legacyAccess:true})
-  .registerUnlock({id:'foundation.requests',name:'NPC 与委托接入基础',description:'后续系统预留；当前没有 NPC 委托玩法。',requires:['home_cycle'],implemented:false})
-  .registerUnlock({id:'foundation.collections',name:'图鉴接入基础',description:'后续系统预留；当前没有图鉴收集界面。',requires:['first_fish','first_harvest','first_product'],implemented:false})
+  .registerUnlock({id:'foundation.requests',name:'商船大宗委托',description:'完成海岛生活循环后开放大宗订单；四位岛民的基础委托可随时接取。',requires:['home_cycle'],implemented:true})
+  .registerUnlock({id:'foundation.collections',name:'航海手记',description:'按 N 查看已经获得、制作、观察和到达的内容，让日子留下收集记录。',requires:[],implemented:true})
   .registerUnlock({id:'foundation.seasons',name:'季节接入基础',description:'后续系统预留；当前不改变作物规则。',requires:['production_cycle'],implemented:false})
   .registerUnlock({id:'foundation.expeditions',name:'深海与遗迹接入基础',description:'后续系统预留；当前不开放新的旅行目的地。',requires:['home_cycle','production_cycle'],implemented:false});

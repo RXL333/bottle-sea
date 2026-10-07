@@ -15,7 +15,7 @@ it('records out-of-order actions once, derives cycles, and never gives items or 
   expect(result.milestones.map(m=>m.id)).toEqual(['first_fish','home_cycle']);
   expect(p.completedAt('home_cycle')).toBe(clock.simulationTime);expect(p.currentObjective?.id).toBe('first_home');
   const state=p.snapshot();p.record('fish.catch');p.record('home.sleep');expect(p.snapshot()).toEqual(state);expect(changed).toHaveBeenCalledTimes(3);expect(notify).toHaveBeenCalledTimes(3);
-  expect(p.isUnlocked('foundation.requests')).toBe(true);expect(p.canAccess('foundation.requests')).toBe(false);expect(p.isUnlocked('missing')).toBe(false);
+  expect(p.isUnlocked('foundation.requests')).toBe(true);expect(p.canAccess('foundation.requests')).toBe(true);expect(p.isUnlocked('missing')).toBe(false);
   const restored=new ProgressionSystem(clock,state,changed);restored.onComplete=notify;restored.record('cook.complete');expect(changed).toHaveBeenCalledTimes(3);expect(restored.snapshot()).toEqual(state);
 });
 

@@ -37,6 +37,7 @@ export interface GameWorld {
   triggerDiscovery?(id:string):void;
   getFocusPosition?():Vector3;
   setTravelPresentation?(active:boolean):void;
+  setDialoguePresentation?(npcId?:string):void;
   load(context: WorldLoadContext): void | Promise<void>;
   enter(context: WorldEnterContext): void;
   update(context: WorldUpdateContext): void;

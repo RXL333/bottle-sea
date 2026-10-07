@@ -9,6 +9,7 @@ export type Quality = keyof typeof QUALITY;
 
 export class Renderer extends WebGLRenderer {
   quality: Quality = 'MEDIUM';
+  renderScale=1;
   constructor() {
     super({ antialias: false, alpha: false, powerPreference: 'high-performance' });
     this.toneMapping = ACESFilmicToneMapping;
@@ -19,7 +20,7 @@ export class Renderer extends WebGLRenderer {
     this.resize();
   }
   resize() {
-    this.setPixelRatio(Math.min(window.devicePixelRatio, QUALITY[this.quality].ratio));
+    this.setPixelRatio(Math.min(window.devicePixelRatio, QUALITY[this.quality].ratio*this.renderScale));
     this.setSize(window.innerWidth, window.innerHeight);
   }
 }

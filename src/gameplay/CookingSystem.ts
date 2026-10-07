@@ -41,7 +41,7 @@ export class CookingSystem {
     if(!checked.ok||!checked.recipe){this.onResult({ok:false,kind:'failed',message:checked.reason??'暂时无法制作。'});return;}
     const recipe=checked.recipe,result=this.inventory.exchange(checked.ingredients,[{itemId:recipe.outputId,quantity:1}]);
     if(!result.ok){this.onResult({ok:false,kind:'failed',message:'材料或背包空间已变化，本次没有扣除材料。'});return;}
-    this.progress.spendEnergy(recipe.energyCost);this.onActivity('cook.complete');
+    this.progress.spendEnergy(recipe.energyCost);this.onActivity('cook.complete',[{itemId:recipe.outputId,quantity:1}]);
     this.onResult({ok:true,kind:'cooked',message:`做好了 ${recipe.name} × 1 · 已放入背包`});
   }
   cancel(){this.job=undefined;}

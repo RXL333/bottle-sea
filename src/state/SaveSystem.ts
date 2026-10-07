@@ -1,3 +1,9 @@
+import { normalizeSettings } from './GameSettings';
+import type { GameSettings } from './GameSettings';
+import { CollectionSystem,normalizeCollections } from '../gameplay/collections/CollectionSystem';
+import { createCollectionRegistry } from '../gameplay/collections/CollectionRegistry';
+import { normalizeDialogue } from '../gameplay/npc/DialogueSystem';
+import { normalizeCommissions } from '../gameplay/commissions/CommissionState';
 import { normalizeCalendar } from '../gameplay/calendar/CalendarSystem';
 import { defaultProgression,normalizeProgression } from '../gameplay/progression/ProgressionState';
 import { GameClock } from '../core/GameClock';
@@ -27,6 +33,7 @@ import type { WeatherSnapshot } from '../systems/WeatherState';
 export const SAVE_KEY='bottle-sea.save.v2';
 export const LEGACY_SAVE_KEY='bottle-sea.save.v1';
 export interface SaveData extends GameplaySnapshot {
+  settings:GameSettings;
   version: 2; gameTime: ClockSnapshot; player: PlayerState; worlds: WorldStates;
   lastSuccessfulWorld: PlayableWorldId;
   global: {storm: boolean; intensity: number; quality: Quality;weather?:WeatherSnapshot};
@@ -34,7 +41,7 @@ export interface SaveData extends GameplaySnapshot {
 export interface SaveStorage { getItem(key: string): string | null; setItem(key: string, value: string): void }
 export function defaultSave(items:ItemRegistry=ITEMS): SaveData {
   const gameTime=new GameClock().snapshot();
-  return {version:2,calendar:normalizeCalendar(undefined,gameTime.simulationTime),gameTime,player:defaultPlayerState(),worlds:new WorldStateRegistry().snapshot(),lastSuccessfulWorld:'HOME',global:{storm:false,intensity:0,quality:'MEDIUM'},inventory:new Inventory(items).snapshot(),barn:new Inventory(items,BARN_CAPACITY).snapshot(),progress:defaultPlayerProgressState(),home:normalizeHome(undefined,items),fishing:normalizeFishing(undefined,items),hotbar:normalizeHotbar(undefined,items),farm:normalizeFarm(undefined,getCropRegistry(items),gameTime.simulationTime),vehicles:normalizeVehicles(undefined),livestock:normalizeLivestock(undefined,gameTime.simulationTime),economy:normalizeEconomy(undefined),progression:defaultProgression()};
+  return {version:2,settings:normalizeSettings(undefined),collections:{version:1,records:[]},commissions:normalizeCommissions(undefined,gameTime.simulationTime),dialogue:normalizeDialogue(undefined,gameTime.simulationTime),calendar:normalizeCalendar(undefined,gameTime.simulationTime),gameTime,player:defaultPlayerState(),worlds:new WorldStateRegistry().snapshot(),lastSuccessfulWorld:'HOME',global:{storm:false,intensity:0,quality:'MEDIUM'},inventory:new Inventory(items).snapshot(),barn:new Inventory(items,BARN_CAPACITY).snapshot(),progress:defaultPlayerProgressState(),home:normalizeHome(undefined,items),fishing:normalizeFishing(undefined,items),hotbar:normalizeHotbar(undefined,items),farm:normalizeFarm(undefined,getCropRegistry(items),gameTime.simulationTime),vehicles:normalizeVehicles(undefined),livestock:normalizeLivestock(undefined,gameTime.simulationTime),economy:normalizeEconomy(undefined),progression:defaultProgression()};
 }
 const record=(value: unknown): Record<string,unknown> => value!==null && typeof value==='object' && !Array.isArray(value) ? value as Record<string,unknown> : {};
 // Version routing is intentionally small; unknown future schemas are not guessed.
@@ -42,6 +49,9 @@ export function migrateSave(value: unknown,items:ItemRegistry=ITEMS): SaveData {
   const raw=record(value);
   if(raw.version!==1&&raw.version!==2)throw new Error('Unsupported save version');
   const result=defaultSave(items),clock=new GameClock();clock.restore(record(raw.gameTime));result.gameTime=clock.snapshot();
+  result.settings=normalizeSettings(raw.settings);
+  result.dialogue=normalizeDialogue(raw.version===2?raw.dialogue:undefined,clock.simulationTime);
+  result.commissions=normalizeCommissions(raw.version===2?raw.commissions:undefined,clock.simulationTime);
   result.calendar=normalizeCalendar(raw.version===2?raw.calendar:undefined,clock.simulationTime);
   result.economy=normalizeEconomy(raw.version===2?raw.economy:undefined);
   result.progression=normalizeProgression(raw.version===2?raw.progression:undefined,clock.simulationTime,raw.version===1||raw.progression===undefined);
@@ -69,6 +79,13 @@ export function migrateSave(value: unknown,items:ItemRegistry=ITEMS): SaveData {
   result.global.intensity=typeof global.intensity==='number'&&Number.isFinite(global.intensity)?Math.max(0,Math.min(1,global.intensity)):0;
   if(global.weather!==undefined)result.global.weather=normalizeWeather(global.weather,result.global.storm,result.global.intensity);
   if(global.quality==='LOW'||global.quality==='MEDIUM'||global.quality==='HIGH')result.global.quality=global.quality;
+  const collections=new CollectionSystem(()=>clock.simulationTime,normalizeCollections(raw.collections,clock.simulationTime,createCollectionRegistry(items)),undefined,createCollectionRegistry(items));
+  if(raw.collections===undefined)collections.importEvidence(result);
+  // Reconcile the journal's known landmarks with the existing Discovery owner on load.
+  result.player.discoveries=discoveryIds([...result.player.discoveries,...collections.snapshot().records.flatMap(r=>{const ref=collections.registry.get(r.id)!.reference;return ref.kind==='discovery'?[ref.id]:[];})]);
+  result.worlds.HOME.discoveries=[...result.player.discoveries];
+  for(const id of result.player.discoveries)if(!collections.has(`discovery:${id}`))collections.record({kind:'discovery',id},'legacy',true);
+  result.collections=collections.snapshot();
   return result;
 }
 export class SaveSystem {

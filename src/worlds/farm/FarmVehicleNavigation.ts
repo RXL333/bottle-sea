@@ -1,5 +1,5 @@
-import { Mesh,Raycaster,Vector3 } from 'three';
-import type { Object3D } from 'three';
+import { Box3,Mesh,Raycaster,Vector3 } from 'three';
+import type { Intersection,Object3D } from 'three';
 import type { MotionPose } from '../../gameplay/vehicles/VehicleMotion';
 import { TRACTOR_HULL } from '../../gameplay/vehicles/VehicleMotion';
 import type { DrivingHull } from '../../gameplay/vehicles/VehicleDefinition';
@@ -16,11 +16,19 @@ import { hullsOverlap } from '../../gameplay/vehicles/HitchMath';
 type Rect=VehicleHull;
 export class FarmVehicleNavigation implements VehicleNavigation {
   private ray=new Raycaster();private direction=new Vector3();
-  private cameraMeshes:Object3D[]=[];
+  private cameraGroups:{root:Object3D;meshes:Object3D[];bounds:Box3;fixed:boolean}[]=[];
+  private right=new Vector3();private up=new Vector3();private origin=new Vector3();private point=new Vector3();
+  private hits:Intersection[]=[];
   constructor(private navigation:NavigationSurface,private dynamic:()=>readonly DynamicObstacle[],private models:Object3D,private tractor:Object3D,private exitObstacles:()=>readonly DynamicObstacle[]=dynamic,private dimensions:DrivingHull=TRACTOR_HULL){this.refreshCameraObstacles();}
   refreshCameraObstacles(){
-    this.cameraMeshes=[];
-    this.models.traverse(o=>{if(!(o instanceof Mesh))return;for(let p:Object3D|null=o;p;p=p.parent)if(p===this.tractor)return;this.cameraMeshes.push(o);});
+    this.cameraGroups=[];
+    const sources=(this.models as Object3D&{cameraSources?:Object3D}).cameraSources;
+    const add=(root:Object3D,fixed:boolean)=>{
+      const meshes:Object3D[]=[];root.traverse(o=>{if(!(o instanceof Mesh))return;for(let p:Object3D|null=o;p;p=p.parent)if(p===this.tractor)return;meshes.push(o);});
+      if(meshes.length)this.cameraGroups.push({root,meshes,bounds:new Box3().setFromObject(root).expandByScalar(.08),fixed});
+    };
+    if(sources)for(const root of sources.children)add(root,true);
+    for(const root of this.models.children)if(!sources||!root.name.startsWith('FarmStatic_'))add(root,false);
   }
   hull(p:MotionPose):Rect{const d=this.dimensions;return {x:p.x+Math.cos(p.yaw)*(d.centerX??0)+Math.sin(p.yaw)*d.centerZ,z:p.z-Math.sin(p.yaw)*(d.centerX??0)+Math.cos(p.yaw)*d.centerZ,...d,yaw:p.yaw};}
   ground(p:MotionPose):number|undefined {
@@ -69,15 +77,23 @@ export class FarmVehicleNavigation implements VehicleNavigation {
     this.direction.subVectors(to,from);const length=this.direction.length();if(length<1e-6)return to.clone();this.direction.divideScalar(length);
     let distance=length;
     // Five rays protect the near plane as well as the optical centre.
-    const right=new Vector3(this.direction.z,0,-this.direction.x).normalize(),up=new Vector3().crossVectors(this.direction,right).normalize();
+    const right=this.right.set(this.direction.z,0,-this.direction.x).normalize(),up=this.up.crossVectors(this.direction,right).normalize();
+    // Refresh only movable assets. Static bounds survive rendering compaction,
+    // so distant island-wide batches never trigger expensive triangle scans.
+    for(const group of this.cameraGroups)if(!group.fixed){group.root.updateWorldMatrix(true,true);group.bounds.setFromObject(group.root).expandByScalar(.08);}
     for(const offset of [[0,0],[.16,0],[-.16,0],[0,.16],[0,-.16]]){
-      this.ray.set(from.clone().addScaledVector(right,offset[0]).addScaledVector(up,offset[1]),this.direction);this.ray.far=length+.2;
-      const hit=this.ray.intersectObjects(this.cameraMeshes,false)[0];if(hit)distance=Math.min(distance,Math.max(0,hit.distance-.24));
+      this.ray.set(this.origin.copy(from).addScaledVector(right,offset[0]).addScaledVector(up,offset[1]),this.direction);this.ray.far=length+.2;
+      for(const group of this.cameraGroups){
+        const entry=this.ray.ray.intersectBox(group.bounds,this.point);
+        if(!entry||!group.bounds.containsPoint(this.origin)&&entry.distanceToSquared(this.origin)>this.ray.far*this.ray.far)continue;
+        this.hits.length=0;this.ray.intersectObjects(group.meshes,false,this.hits);
+        const hit=this.hits[0];if(hit)distance=Math.min(distance,Math.max(0,hit.distance-.24));
+      }
     }
     // Query the same terrain height data instead of raycasting thousands of
     // voxel cubes twice per frame. Obstacles above ground use actual GLB meshes.
     for(let step=.1;step<=distance;step+=.1){
-      const point=from.clone().addScaledVector(this.direction,step);
+      const point=this.point.copy(from).addScaledVector(this.direction,step);
       if(farmLand(point.x,point.z)&&point.y<farmHeight(point.x,point.z)+.3){distance=Math.max(0,step-.15);break;}
     }
     const result=from.clone().addScaledVector(this.direction,distance);

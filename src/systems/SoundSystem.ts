@@ -9,7 +9,9 @@ import type { WeatherFrame } from './WeatherState';
 
 type Layer={source:AudioBufferSourceNode;filter:BiquadFilterNode;gain:GainNode};
 export class SoundSystem {
-  private transientNodes=0;
+  private transientNodes=0;private volume=.65;
+  setVolume(value:number){if(!Number.isFinite(value))return;this.volume=Math.max(0,Math.min(1,value));if(this.context&&this.master)this.master.gain.setTargetAtTime(this.enabled?this.volume:0,this.context.currentTime,.12);}
+  async setEnabled(enabled:boolean){if(this.enabled!==enabled)await this.toggle();return this.enabled;}
   get diagnostics(){return {enabled:this.enabled,state:this.context?.state??'uninitialized',mode:this.mode,mix:{...this.mix},layers:this.layers.length,nodes:this.layers.length*3+(this.master?1:0)+(this.lowpass?1:0)+this.transientNodes+(this.farm?.diagnostics.nodes??0),farm:this.farm?.diagnostics??{voices:0,working:0,nodes:0,cues:0}};}
   private mode:AudioMode='OVERVIEW';
   private farm?:FarmAudio;
@@ -31,7 +33,7 @@ export class SoundSystem {
         filter.type=i===1?'bandpass':'lowpass';filter.frequency.value=frequencies[i];gain.gain.value=0;source.connect(filter);filter.connect(gain);gain.connect(this.lowpass);source.start();this.layers.push({source,filter,gain});
       }
     }
-    await this.context.resume();this.enabled=!this.enabled;this.master!.gain.setTargetAtTime(this.enabled?.65:0,this.context.currentTime,.12);return this.enabled;
+    await this.context.resume();this.enabled=!this.enabled;this.master!.gain.setTargetAtTime(this.enabled?this.volume:0,this.context.currentTime,.12);return this.enabled;
   }
   update(time:number,storm:number,mode:AudioMode='OVERVIEW',flash=0,weather?:WeatherFrame){
     this.mode=mode;if(!this.context||!this.enabled)return;const now=this.context.currentTime;

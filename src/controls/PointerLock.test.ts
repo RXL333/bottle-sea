@@ -1,5 +1,5 @@
 import { afterEach,expect,it,vi } from 'vitest';
-import { PerspectiveCamera } from 'three';
+import { PerspectiveCamera,Vector3 } from 'three';
 import { ExploreController } from './ExploreController';
 
 class FakeDocument extends EventTarget {
@@ -15,6 +15,13 @@ class FakeElement extends EventTarget {
 function setup(allowed:boolean){const doc=new FakeDocument();vi.stubGlobal('document',doc);vi.stubGlobal('window',new EventTarget());const element=new FakeElement(doc,allowed),camera=new PerspectiveCamera(),controller=new ExploreController(camera,element as unknown as HTMLElement);return {doc,element,camera,controller};}
 function movement(type:string,x:number,y:number,clientX=x,clientY=y){const event=new Event(type);Object.defineProperties(event,{movementX:{value:x},movementY:{value:y},clientX:{value:clientX},clientY:{value:clientY},button:{value:0},pointerId:{value:1}});return event;}
 afterEach(()=>vi.unstubAllGlobals());
+it.each([[true,false],[true,true],[false,false],[false,true]])('applies saved look sensitivity and inversion (locked=%s inverted=%s)',async(locked,inverted)=>{
+  const s=setup(locked);s.controller.lookSensitivity=.5;s.controller.invertLookY=inverted;s.controller.enter();await Promise.resolve();await Promise.resolve();
+  const before=s.camera.quaternion.clone(),height=s.camera.getWorldDirection(new Vector3()).y;
+  if(locked)s.doc.dispatchEvent(movement('mousemove',0,40));else{s.element.dispatchEvent(movement('pointerdown',0,0));s.element.dispatchEvent(movement('pointermove',0,40));}
+  for(let i=0;i<30;i++)s.controller.update(1/60);
+  expect(before.angleTo(s.camera.quaternion)).toBeCloseTo(.026,6);const next=s.camera.getWorldDirection(new Vector3()).y;expect(inverted?next>height:next<height).toBe(true);
+});
 it('suspends pointer input during camera transitions',async()=>{
   const {doc,camera,controller}=setup(true);controller.enter();await Promise.resolve();controller.suspend();const before=camera.quaternion.clone();doc.dispatchEvent(movement('mousemove',40,20));controller.update(1);expect(camera.quaternion.equals(before)).toBe(true);expect(controller.active).toBe(false);expect(doc.pointerLockElement).toBe(null);
 });

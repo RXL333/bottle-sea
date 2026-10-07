@@ -1,3 +1,4 @@
+import { NpcPresentation } from '../npc/NpcPresentation';
 import { SeasonalEnvironment } from '../../systems/SeasonalEnvironment';
 import { Group } from 'three';
 import type { Quality } from '../../core/Renderer';
@@ -44,9 +45,11 @@ import { box } from '../../utils/voxel';
 import { MerchantShip } from '../trade/MerchantShip';
 import { FarmWarmLights,FarmWetness,farmSheltered } from './FarmWeatherResponse';
 export class FarmWorld implements GameWorld {
+  private npcs:NpcPresentation;
   private seasons=new SeasonalEnvironment();
   private wetness=new FarmWetness();private warmLights=new FarmWarmLights();
   sheltered(position:import('three').Vector3){return farmSheltered(position);}
+  setDialoguePresentation(npcId?:string){this.npcs.setDialogueSpeaker(npcId);}
   readonly id='FARM' as const;readonly root=new Group();readonly boat=new PlayerTravelBoat();
   readonly map=FARM_MAP;
   private merchant=new MerchantShip(true);
@@ -71,11 +74,11 @@ export class FarmWorld implements GameWorld {
     hitsObstacle:(x,z,y)=>FARM_OBSTACLES.some(b=>y+PLAYER_HEAD_OFFSET>b.minY&&y-PLAYER_FOOT_OFFSET<b.maxY&&Math.hypot(Math.max(b.minX-x,0,x-b.maxX),Math.max(b.minZ-z,0,z-b.maxZ))<PLAYER_RADIUS),
     resolveVertical:(x,z,from,to)=>this.resolveVertical(x,z,from,to),isInside:(x,_y,z)=>x>=FARM_NAVIGATION_BOUNDS.minX&&x<=FARM_NAVIGATION_BOUNDS.maxX&&z>=FARM_NAVIGATION_BOUNDS.minZ&&z<=FARM_NAVIGATION_BOUNDS.maxZ,
     constrain:p=>{const b=FARM_NAVIGATION_BOUNDS;p.x=Math.max(b.minX,Math.min(b.maxX,p.x));p.z=Math.max(b.minZ,Math.min(b.maxZ,p.z));p.y=Math.max(.94,p.y);},
-    waterLevel:waveHeight,dynamicObstacles:()=>[...this.boat.collisionBoxes,this.merchant.collision,...this.vehicles.map(v=>v.collision),...this.implements.map(i=>i.collision),...(this.livestock?.collisions??[])],
+    waterLevel:waveHeight,dynamicObstacles:()=>[...this.boat.collisionBoxes,this.merchant.collision,...this.npcs.activeCollisions,...this.vehicles.map(v=>v.collision),...this.implements.map(i=>i.collision),...(this.livestock?.collisions??[])],
   };
-  constructor(loader?:ModelLoader){this.assets=new FarmAssets(loader);this.models=new FarmModels(this.assets);this.crops=new FarmCropPresentation(id=>Object.hasOwn(FARM_MODEL_FILES,id)?this.assets.instance(id as FarmAssetId):undefined);this.root.name='FarmWorld';this.root.userData.mapVersion=this.map.version;this.boat.anchor(FARM_BOAT.x,FARM_BOAT.z);this.root.add(this.ocean,this.terrain,new FarmWayfinding(),this.models,this.assets.sources,this.boat,this.crops,this.effects,this.merchant);}
+  constructor(loader?:ModelLoader){this.npcs=new NpcPresentation('FARM',loader);this.root.add(this.npcs);this.interaction.setNpcs(this.npcs.targets());this.assets=new FarmAssets(loader);this.models=new FarmModels(this.assets);this.crops=new FarmCropPresentation(id=>Object.hasOwn(FARM_MODEL_FILES,id)?this.assets.instance(id as FarmAssetId):undefined);this.root.name='FarmWorld';this.root.userData.mapVersion=this.map.version;this.boat.anchor(FARM_BOAT.x,FARM_BOAT.z);this.root.add(this.ocean,this.terrain,new FarmWayfinding(),this.models,this.assets.sources,this.boat,this.crops,this.effects,this.merchant);}
   load(){return this.loading??=this.loadModels();}
-  private async loadModels(){await this.assets.load();if(this.disposed)return;this.models.build();this.livestock=new LivestockPresentation(this.models.placements);this.root.add(this.livestock);this.boat.setModel(this.assets.instance('transport_boat'));
+  private async loadModels(){await Promise.all([this.assets.load(),this.npcs.load()]);if(this.disposed)return;this.models.build();this.livestock=new LivestockPresentation(this.models.placements);this.root.add(this.livestock);this.boat.setModel(this.assets.instance('transport_boat'));
     const model=this.models.placements.get('yard-tractor')!;
     const navigation=new FarmVehicleNavigation(this.navigation,()=>[...this.boat.collisionBoxes,...this.vehicleObstacles('farm.tractor'),...this.implements.filter(i=>!this.hitches?.isAttached(i.id)).map(i=>i.collision)],this.models,model,()=>[...this.boat.collisionBoxes,...this.vehicleObstacles('farm.tractor'),...this.implements.map(i=>i.collision)]);
     const tractor=new TractorVehicle(model,navigation);this.vehicles.push(tractor);this.vehicleNavigations.set(tractor.id,navigation);
@@ -109,7 +112,7 @@ export class FarmWorld implements GameWorld {
     const pose=this.deliveryPose();if(!pose)return;const vehicle=this.buildPurchased(pose);
     return {pose,apply:()=>this.installPurchased(vehicle),rollback:()=>{this.models.remove(vehicle.root);const index=this.vehicles.indexOf(vehicle);if(index>=0)this.vehicles.splice(index,1);this.vehicleNavigations.delete(vehicle.id);for(const navigation of this.vehicleNavigations.values())navigation.refreshCameraObstacles();}};
   }
-  private vehicleObstacles(exclude:string){return this.restoringVehicles?[]:[...this.vehicles.filter(v=>v.id!==exclude).map(v=>v.collision),...(this.livestock?.collisions??[])];}
+  private vehicleObstacles(exclude:string){return this.restoringVehicles?[]:[...this.vehicles.filter(v=>v.id!==exclude).map(v=>v.collision),...(this.livestock?.collisions??[]),...this.npcs.activeCollisions];}
   enter({gameplay}:WorldEnterContext){
     this.effects.reset();this.farmSound=undefined;
     this.root.add(this.merchant);this.gameplay=gameplay;this.hitches?.setWork(new PlowingSystem(gameplay.farm),new SeedingSystem(gameplay.farm,gameplay.inventory));
@@ -136,9 +139,9 @@ export class FarmWorld implements GameWorld {
     }
   }
   leave({gameTime}:WorldLeaveContext){this.effects.reset();this.farmSound=undefined;return {lastSimulatedGameTime:gameTime,discoveries:[]};}
-  dispose(){this.disposed=true;this.assets.cancel();disposeWorld(this.root);}
+  dispose(){this.disposed=true;this.assets.cancel();this.npcs.cancel();disposeWorld(this.root);}
   getSpawnPoint(id=FARM_ARRIVAL.id):SpawnPoint{return {id,position:[...FARM_ARRIVAL.position],lookAt:[...FARM_ARRIVAL.lookAt]};}
-  applyQuality(quality:Quality){this.ocean.applyQuality(quality);this.crops.applyQuality(quality);this.effects.applyQuality(quality);this.livestock?.applyQuality(quality);this.terrain.applyQuality(quality);this.models.applyQuality(quality);this.warmLights.applyQuality(quality);}
+  applyQuality(quality:Quality){this.npcs.applyQuality(quality);this.ocean.applyQuality(quality);this.crops.applyQuality(quality);this.effects.applyQuality(quality);this.livestock?.applyQuality(quality);this.terrain.applyQuality(quality);this.models.applyQuality(quality);this.warmLights.applyQuality(quality);}
   private resolveVertical(x:number,z:number,from:number,to:number){
     let result=to;
     const clip=(min:number,max:number)=>{if(to>from&&from+PLAYER_HEAD_OFFSET<=min&&to+PLAYER_HEAD_OFFSET>min)result=Math.min(result,min-PLAYER_HEAD_OFFSET);if(to<from&&from-PLAYER_FOOT_OFFSET>=max&&to-PLAYER_FOOT_OFFSET<max)result=Math.max(result,max+PLAYER_FOOT_OFFSET);};
