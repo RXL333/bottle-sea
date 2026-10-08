@@ -47,6 +47,9 @@ import type { GameWorld,SpawnPoint,WorldUpdateContext,WorldStorageContainer } fr
 import { WorldStateRegistry } from '../state/WorldStateRegistry';
 import { SaveSystem,defaultSave } from '../state/SaveSystem';
 import type { SaveData } from '../state/SaveSystem';
+import { sessionStorageForTrailer,trailerEnabled } from './capture/TrailerIsolation';
+import type { TrailerCaptureMode } from './capture/TrailerCaptureMode';
+import type { CaptureWorld } from './capture/TrailerShots';
 import type { PlayerState,PlayableWorldId } from '../state/PlayerState';
 import { DestinationPanel } from '../ui/DestinationPanel';
 import { HomePanel } from '../ui/HomePanel';
@@ -77,6 +80,8 @@ import '../styles/ui-theme.css';
 import '../styles/ui-screens.css';
 
 export class Game {
+  readonly captureEnabled=trailerEnabled(import.meta.env.DEV,new URLSearchParams(location.search));
+  private trailer?:TrailerCaptureMode;
   readonly renderer=new Renderer();readonly scene=new Scene();readonly camera=new PerspectiveCamera(34,innerWidth/innerHeight,.12,200);
   readonly clock=new GameClock();readonly weather=new WeatherSystem();readonly sound=new SoundSystem();
   readonly hud:HUD;readonly loop:GameLoop;readonly dayNight:DayNightSystem;readonly overview:OverviewController;readonly explorer:ExploreController;
@@ -130,7 +135,7 @@ export class Game {
     this.collectionPanel=new CollectionPanel(root);this.commissionPanel=new CommissionPanel(root);this.dialoguePanel=new DialoguePanel(root);this.calendarPanel=new CalendarPanel(root);this.tradePanel=new TradePanel(root);this.progressionPanel=new ProgressionPanel(root);this.progressionView=new ProgressionView(this.hud.element,()=>this.openProgression());
     this.cover.className='travel-cover';this.caption.className='travel-caption';this.caption.hidden=true;root.append(this.cover);this.hud.element.append(this.caption);
     // Access to localStorage itself can throw in restricted embeds.
-    this.save=new SaveSystem({getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)});
+    this.save=new SaveSystem(sessionStorageForTrailer(this.captureEnabled,()=>({getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)})));
     const saved=this.preview&&!this.persistPreview?defaultSave():this.save.load();this.player=saved.player;this.lastSuccessfulWorld=saved.lastSuccessfulWorld;this.clock.restore(saved.gameTime);this.states.restore(saved.worlds);
     this.settings=new SettingsState(saved.settings,settings=>{this.applySettings(settings);this.persist();});
     this.gameplay=new GameplayFoundation(this.clock,saved,undefined,immediate=>this.persist(immediate));
@@ -190,7 +195,7 @@ export class Game {
     this.explorer.onPrimaryDown=()=>this.gameplay.fishing.press();this.explorer.onPrimaryUp=()=>this.gameplay.fishing.release();
     this.explorer.onInteract=()=>{void this.interact();};this.explorer.onLockChange=locked=>{if(this.explorer.active)this.hud.setHint(locked?'WASD 移动 · Space 上升 · C 下潜 · E 交互':'拖动观察 · WASD 移动 · 双击画面锁定鼠标');};
     this.performance=new PerformanceMonitor(this.renderer,this.hud.element.querySelector<HTMLElement>('#fps')!,this.camera);this.bindUI();this.applyQuality(saved.global.quality);this.applySettings(this.settings.snapshot());
-    window.addEventListener('resize',()=>{this.camera.aspect=innerWidth/innerHeight;this.camera.updateProjectionMatrix();this.renderer.resize();this.overview.fit(this.worldManager.currentWorldId==='HOME'&&this.transition.state==='OVERVIEW'&&!this.focus.active&&this.focus.selected==='overview');});
+    window.addEventListener('resize',()=>{this.camera.aspect=innerWidth/innerHeight;this.camera.updateProjectionMatrix();this.renderer.resize();if(!this.captureEnabled)this.overview.fit(this.worldManager.currentWorldId==='HOME'&&this.transition.state==='OVERVIEW'&&!this.focus.active&&this.focus.selected==='overview');});
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){this.gameplay.fishing.cancel('钓鱼已暂停，本次鱼竿已收起。');this.persist(true);}});window.addEventListener('beforeunload',()=>this.persist(true));
     window.addEventListener('pagehide',()=>this.persist(true));
     window.addEventListener('keydown',event=>{if(event.code==='Escape'&&this.gameplay.fishing.active)this.gameplay.fishing.cancel();});
@@ -199,15 +204,19 @@ export class Game {
   private async initialize(saved:SaveData){
     this.cover.style.opacity='1';this.caption.hidden=false;this.caption.textContent='正在展开航海图……';
     const previewWorld=import.meta.env.DEV?new URLSearchParams(location.search).get('world'):null;
-    const id=previewWorld==='home'?'HOME':previewWorld==='cottage'?'COTTAGE':previewWorld==='farm'?'FARM':previewWorld==='travel'?'TRAVEL':saved.lastSuccessfulWorld==='HOME'&&saved.player.currentSpawnId==='cottage_entry'?'COTTAGE':saved.lastSuccessfulWorld;
+    const id=this.captureEnabled?'HOME':previewWorld==='home'?'HOME':previewWorld==='cottage'?'COTTAGE':previewWorld==='farm'?'FARM':previewWorld==='travel'?'TRAVEL':saved.lastSuccessfulWorld==='HOME'&&saved.player.currentSpawnId==='cottage_entry'?'COTTAGE':saved.lastSuccessfulWorld;
     await this.character.load().catch(error=>console.warn('Player character could not be loaded',error));
     try {await this.worldManager.switchTo(id,this.clock.simulationTime,id==='HOME'&&saved.player.currentSpawnId==='home_cottage_exit'?'home_cottage_exit':undefined);this.configureEnvironment();
       if(id==='COTTAGE'){this.player.currentWorldId='HOME';this.lastSuccessfulWorld='HOME';this.player.currentSpawnId='cottage_entry';this.resumeExplore();}else if(id==='HOME'&&saved.player.currentSpawnId==='home_cottage_exit'){this.resumeExplore();}else if(id==='FARM'){this.player.currentWorldId='FARM';this.lastSuccessfulWorld='FARM';this.resumeExplore();}else if(id==='TRAVEL'){this.overview.suspend();this.camera.position.set(0,4.8,-3);this.camera.lookAt(0,3.6,1);}
-      if(this.diagnostics)configurePreview(this);
+      if(this.diagnostics&&!this.captureEnabled)configurePreview(this);
       if(this.explorer.active)this.transition.state='EXPLORE';this.ready=true;this.recordArrival(id);this.cover.style.opacity='0';this.caption.hidden=true;this.hud.setSpeed(this.clock.timeScale,this.clock.paused);this.hud.setWeather(this.weather.kind);this.hud.updateQuests(new Set(this.player.discoveries));
+      if(import.meta.env.DEV&&this.captureEnabled){const {TrailerCaptureMode}=await import('./capture/TrailerCaptureMode');this.trailer=new TrailerCaptureMode(this);await this.trailer.initialize();}
     }catch(error){try{this.hud.notify('航线暂时无法抵达，正在返回家园岛……');await this.worldManager.switchTo('HOME',this.clock.simulationTime);this.ready=true;this.finishArrival('HOME');}catch(fatal){this.showFatal(fatal??error);}}
   }
   private showFatal(error:unknown){console.error(error);this.ready=false;this.explorer.suspend();this.cover.style.opacity='0';this.caption.hidden=false;this.caption.textContent='加载失败，请刷新页面重试。';document.body.classList.remove('traveling');}
+  /** Called only by the DEV capture session; normal travel orchestration remains unchanged. */
+  async switchCaptureWorld(id:CaptureWorld){if(!this.captureEnabled)throw new Error('Capture mode is unavailable');await this.worldManager.switchTo(id,this.clock.simulationTime);this.configureEnvironment();this.explorer.exit();this.overview.suspend();this.focus.cancel();}
+  captureQuality(quality:Quality){if(this.captureEnabled)this.applyQuality(quality);}
   private configureEnvironment(){
     const home=this.worldManager.currentWorldId==='HOME',inside=this.worldManager.currentWorldId==='COTTAGE';document.body.classList.toggle('farm-world',!home);document.body.classList.toggle('cottage-world',inside);
     this.weather.visible=!inside;this.waterEntry.visible=!inside;this.dayNight.sky.visible=!inside;this.dayNight.sun.visible=!inside;this.dayNight.ambient.visible=!inside;this.dayNight.hemi.visible=!inside;
@@ -313,7 +322,7 @@ export class Game {
     const world=this.worldManager.currentWorld;if(world?.id==='HOME'&&world.interaction){this.player.discoveries=[...world.interaction.discovered];this.states.set('HOME',{lastSimulatedGameTime:this.clock.simulationTime,discoveries:this.player.discoveries});}
     return {version:2,settings:this.settings.snapshot(),...this.gameplay.snapshot(),gameTime:this.clock.snapshot(),player:structuredClone(this.player),worlds:this.states.snapshot(),lastSuccessfulWorld:this.lastSuccessfulWorld,global:{storm:this.weather.storm,intensity:this.weather.intensity,quality:this.renderer.quality,weather:this.weather.snapshot()}};
   }
-  private persist(immediate=false){if(!this.ready||(this.preview&&!this.persistPreview))return;if(immediate)this.save.flush(()=>this.captureSave());else this.save.schedule(()=>this.captureSave());}
+  private persist(immediate=false){if(this.captureEnabled||!this.ready||(this.preview&&!this.persistPreview))return;if(immediate)this.save.flush(()=>this.captureSave());else this.save.schedule(()=>this.captureSave());}
   private interactionContext(world:GameWorld):InteractionContext {
     const position=this.vehicleController.position??this.camera.position;
     return {worldId:world.id,position:{x:position.x,y:position.y,z:position.z},gameplay:this.gameplay};
@@ -371,6 +380,7 @@ export class Game {
     this.settingsPanel.show({state:this.settings,quality:()=>this.renderer.quality,setQuality:quality=>{this.applyQuality(quality);this.persist(true);},fishingMode:()=>this.gameplay.fishing.inputMode,setFishingMode:mode=>{this.gameplay.fishing.setInputMode(mode);this.persist(true);},setSound:enabled=>this.setSound(enabled),reset:()=>{this.settings.reset();this.applyQuality('MEDIUM');this.gameplay.fishing.setInputMode('hold');void this.setSound(false);this.persist(true);}},()=>{this.persist(true);if(driving)this.vehicleController.resumeFromPanel();else if(exploring)this.resumeFurnitureExplore();else{this.overview.enabled=overviewEnabled;this.renderer.domElement.focus();}});
   }
   private bindUI(){
+    if(this.captureEnabled)return;
     this.hud.element.querySelector('[data-action="settings"]')!.addEventListener('click',()=>this.openSettings());
     window.addEventListener('keydown',event=>{const target=event.target as HTMLElement|null;if(event.code!=='KeyO'||event.repeat||target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;event.preventDefault();this.openSettings();});
     // Browsers require a real gesture to start saved audio preferences.
@@ -416,6 +426,7 @@ export class Game {
   }
   private update=(delta:number)=>{
     const cpuStart=performance.now();if(!this.ready){this.renderer.render(this.scene,this.camera);return;}
+    if(this.captureEnabled){if(this.trailer)this.updateCapture(delta);else this.renderer.render(this.scene,this.camera);return;}
     if(this.travel.active||this.doorTransition.active||this.sleepTransition.active||this.gameplayPanelOpen)this.clock.updateAnimation(delta);else this.clock.update(delta);
     this.weather.synchronizeCalendar(this.gameplay.calendar.date);this.gameplay.calendar.synchronize();this.gameplay.calendar.updatePresentation(delta);
     const lightDayTime=this.gameplay.calendar.lightDayTime,season=this.gameplay.calendar.visual;
@@ -482,4 +493,26 @@ export class Game {
     if(this.diagnostics)this.renderer.domElement.dataset.character=JSON.stringify(this.character.diagnostics);
     const bob=this.explorer.active?this.playerFeedback.offsetY+this.explorer.renderOffsetY:0;this.camera.position.y+=bob;this.fishingPresentation.update(time,storm,delta);this.renderer.render(this.scene,this.camera);this.camera.position.y-=bob;this.performance.update(performance.now()-cpuStart);
   };
+  /** Fixed-step frame export remains inside the isolated DEV capture session. */
+  renderCaptureFrame(delta:number){if(!this.captureEnabled||!this.trailer)throw new Error('Capture mode is unavailable');this.updateCapture(delta,true);}
+  private updateCapture(delta:number,exporting=false){
+    const capture=this.trailer!,dt=document.hidden&&!exporting?0:Math.max(0,Math.min(.1,delta));capture.update(dt);
+    const worldDelta=capture.worldPaused||capture.busy?0:dt,snap=capture.snapLighting;capture.snapLighting=false;
+    this.clock.updateAnimation(worldDelta);this.gameplay.calendar.updatePresentation(snap?1000:worldDelta*4);
+    const season=this.gameplay.calendar.visual,dayTime=this.gameplay.calendar.lightDayTime,time=this.clock.elapsed;
+    const farm=this.worldManager.currentWorldId==='FARM',home=this.worldManager.currentWorldId==='HOME';
+    const bottle=home&&capture.shot?.bottle===true;this.dayNight.farm.visible=!bottle;this.dayNight.sky.visible=bottle;
+    if(farm){this.weather.position.x=this.camera.position.x;this.weather.position.z=this.camera.position.z;}
+    this.weather.shelter(false);this.weather.update(worldDelta,time,season);
+    const context:WorldUpdateContext={delta:worldDelta,time,gameTime:this.clock.simulationTime,storm:this.weather.intensity,weather:this.weather.frame,dayTime,season,night:1-daylightAt(dayTime),flash:this.weather.lightning.flash,listener:this.camera.position,presentationPaused:false};
+    this.scene.fog=home?null:farm?this.dayNight.farm.fog:this.seaFog;
+    this.dayNight.update(dayTime,time,this.weather.intensity,this.weather.lightning.flash,this.weather.frame,this.camera.position,snap?1000:worldDelta,season);
+    if(farm){const fog=this.dayNight.farm.fog,altitude=Math.max(0,this.camera.position.y-12)*1.6;capture.fog.color.copy(fog.color);capture.fog.near=fog.near+altitude;capture.fog.far=fog.far+altitude;this.scene.fog=capture.fog;}
+    if(this.scene.fog===this.seaFog)this.seaFog.color.copy(this.scene.background as Color);
+    this.worldManager.currentWorld?.prepare?.(context);this.worldManager.update(context);
+    capture.scene.showPlayer(capture.shot,capture.hidePlayer,time,worldDelta);
+    const sound=this.worldManager.currentWorld?.farmSound;this.sound.updateFarm(sound?{...sound,paused:capture.worldPaused}:undefined);this.sound.update(time,this.weather.intensity,'ISLAND',this.weather.lightning.flash,this.weather.frame);
+    if(!capture.hideHud)this.hud.updateClock(this.clock,this.weather.kind,this.gameplay.calendar.date);
+    capture.render();
+  }
 }

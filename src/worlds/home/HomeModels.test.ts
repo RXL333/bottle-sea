@@ -8,8 +8,18 @@ import { hitsDynamicObstacle } from '../../world/Collision';
 import { ExploreController } from '../../controls/ExploreController';
 import { obbIntersectsAabb } from '../../world/ship/ShipPath';
 import { TERRAIN_CELLS } from '../../world/island/TerrainData';
+import { separateModelSurfaces } from '../../utils/modelSurfaces';
 
-const load=async(url:string)=>{const bytes=await readFile(new URL('../../../public'+url,import.meta.url));return (await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'' )).scene;};
+const load=async(url:string)=>{const bytes=await readFile(new URL('../../../public'+url,import.meta.url));const model=(await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'' )).scene;separateModelSurfaces(model);return model;};
+it('keeps pier tops above every touching terrain tile and the fishing approach free of NPCs',async()=>{
+  const world=new HomeWorld(load);await world.load();
+  for(const deck of [{minX:-1.96,maxX:-1.24,minZ:1.25,maxZ:2.05,bottom:3.80},{minX:-3.525,maxX:-2.775,minZ:.325,maxZ:.975,bottom:3.55}]){
+    const cells=TERRAIN_CELLS.filter(c=>c.maxX>deck.minX&&c.minX<deck.maxX&&c.maxZ>deck.minZ&&c.minZ<deck.maxZ);expect(cells.length).toBeGreaterThan(0);
+    for(const cell of cells)expect(cell.top).toBeLessThan(deck.bottom);
+  }
+  for(let x=-2.4;x>=-3.16;x-=.025){const y=world.navigation.groundHeight(x,.65,3.92)+.44;expect(world.navigation.hitsObstacle(x,.65,y)).toBe(false);expect(hitsDynamicObstacle(x,.65,y,world.navigation.dynamicObstacles())).toBe(false);}
+  world.interaction.update({x:-3.15,y:4.12,z:.65});expect(world.interaction.nearest?.id).toBe('home_fishing');world.dispose();
+});
 it('loads every Home asset once, keeps entry and berth clear, and retains discovery targets',async()=>{
   const loader=vi.fn(load),world=new HomeWorld(loader);await Promise.all([world.load(),world.load()]);
   expect(loader).toHaveBeenCalledTimes(Object.keys(HOME_FILES).length+3);

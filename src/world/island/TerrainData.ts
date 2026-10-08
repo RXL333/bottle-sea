@@ -8,6 +8,10 @@ const START_X=-3.06,START_Z=-1.7,STEP=.21,SIZE=.209,HALF=SIZE/2;
 
 function analyticHeight(x:number,z:number){
   const d=((x+.85)/2.05)**2+((z-.12)/1.8)**2;
+  // Lower every tile touching the merchant pier or fishing deck, including
+  // edge tiles. Their deck tops used to coincide with the 3.92 grass surface.
+  if((x+HALF>-1.96&&x-HALF<-1.24&&z+HALF>1.25&&z-HALF<2.05)||
+     (x+HALF>-3.525&&x-HALF<-2.775&&z+HALF>.325&&z-HALF<.975))return d<1.08?3.46:0;
   // Keep the wooden berth above the shoreline, never coplanar with grass.
   if(x>.10&&x<1.20&&z>.65)return d<1.08?3.46:0;
   if(x>.3&&x<1.6&&z>-.9&&z<.4)return 3.83;

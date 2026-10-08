@@ -3,6 +3,9 @@ dist/
 *.log
 .playwright-cli/
 
+# Local rendered promotional videos and capture intermediates
+artifacts/trailer-samples/
+
 # Blender and Python generated files
 *.blend1
 __pycache__/

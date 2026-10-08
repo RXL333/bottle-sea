@@ -2,7 +2,8 @@ import { Box3,Group,Mesh,Vector3 } from 'three';
 import type { Object3D } from 'three';
 import type { Quality } from '../../core/Renderer';
 import type { GameplayServices } from '../../gameplay/GameplayFoundation';
-import { LIVESTOCK_PENS } from '../../gameplay/livestock/LivestockDefinition';
+import { LIVESTOCK_PENS,penDefinition } from '../../gameplay/livestock/LivestockDefinition';
+import type { AnimalBehavior } from '../../gameplay/livestock/LivestockDefinition';
 import type { AnimalSnapshot } from '../../gameplay/livestock/LivestockState';
 import type { DynamicObstacle } from '../../world/Collision';
 import { box } from '../../utils/voxel';
@@ -10,6 +11,8 @@ import { farmHeight } from './FarmTerrain';
 interface AnimalVisual {model:Group;scale:number;parts:{pivot:Group;kind:'head'|'leg'|'wing';phase:number}[];collision:DynamicObstacle;ready:Group;feed:Group}
 /** Only eight shared-model actors. State, feeding and production stay in gameplay. */
 export class LivestockPresentation extends Group {
+  /** Optional isolated presentation override; never changes livestock ownership/production. */
+  captureBehavior?:AnimalBehavior;
   private animals=new Map<string,AnimalVisual>();private feedLevels=new Map<string,Group>();private quality:Quality='MEDIUM';
   constructor(models:ReadonlyMap<string,Group>){
     super();this.name='LivestockPresentation';
@@ -38,7 +41,10 @@ export class LivestockPresentation extends Group {
   get collisions(){return [...this.animals.values()].map(a=>a.collision);}
   applyQuality(quality:Quality){this.quality=quality;for(const visual of this.animals.values())visual.model.traverse(o=>{if(o instanceof Mesh)o.castShadow=quality!=='LOW';});}
   update(game:GameplayServices,time:number){
-    for(const animal of game.livestock.getAnimals())this.updateAnimal(animal,time);
+    for(const [index,animal] of game.livestock.getAnimals().entries()){
+      if(this.captureBehavior){animal.behavior=this.captureBehavior;if(animal.behavior==='WALKING'){const b=penDefinition(animal.penId)!.bounds,phase=time*.13+index*1.7;animal.x=Math.max(b.minX,Math.min(b.maxX,animal.x+Math.sin(phase)*.35));animal.z=Math.max(b.minZ,Math.min(b.maxZ,animal.z+Math.cos(phase)*.35));animal.yaw=phase+Math.PI/2;}}
+      this.updateAnimal(animal,time);
+    }
     for(const p of LIVESTOCK_PENS)this.feedLevels.get(p.id)!.visible=(game.livestock.getPen(p.id)?.feed??0)>0;
   }
   private updateAnimal(animal:AnimalSnapshot,time:number){

@@ -6,10 +6,11 @@ import { FARM_MODEL_FILES,FarmAssets } from './FarmAssets';
 import { FarmWorld } from './FarmWorld';
 import { COTTAGE,FARM_OBSTACLES,FARM_PLACEMENTS } from './FarmLayout';
 import { PLAYER_FOOT_OFFSET,PLAYER_RADIUS,hitsDynamicObstacle } from '../../world/Collision';
+import { separateModelSurfaces } from '../../utils/modelSurfaces';
 
 const fileLoader=async(url:string)=>{
   const bytes=await readFile(new URL('../../../public'+url,import.meta.url));
-  return (await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'' )).scene;
+  const model=(await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'' )).scene;separateModelSurfaces(model);return model;
 };
 
 it('loads the real farm GLBs, excludes main-island furniture, batches geometry, and releases owned resources',async()=>{

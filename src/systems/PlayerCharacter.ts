@@ -6,6 +6,7 @@ import type { Quality } from '../core/Renderer';
 import type { DriveableVehicle } from './vehicles/Vehicle';
 import { PLAYER_FOOT_OFFSET } from '../world/Collision';
 import { disposeWorld } from '../worlds/disposeWorld';
+import { separateModelSurfaces } from '../utils/modelSurfaces';
 
 export const CHARACTER_MODEL_URL=`${import.meta.env.BASE_URL}models/character/player_character.glb`;
 export const CHARACTER_SCALE=.33;
@@ -33,6 +34,7 @@ export class PlayerCharacter extends Group {
   private async loadModel(){
     const model=await this.loader(CHARACTER_MODEL_URL);
     if(this.disposed){disposeWorld(model);return;}
+    separateModelSurfaces(model);
     model.traverse(o=>{const id=o.userData.part_id;if(JOINTS.includes(id as Joint))this.parts.set(id as Joint,o);});
     if(JOINTS.some(id=>!this.parts.has(id))){this.parts.clear();disposeWorld(model);throw new Error('Character model is missing required pose joints');}
     try{this.batchPalette(model);}catch(error){this.parts.clear();disposeWorld(model);throw error;}
@@ -46,10 +48,10 @@ export class PlayerCharacter extends Group {
     const batches:{part:Object3D;meshes:Mesh[];geometry:BufferGeometry}[]=[];
     try{for(const part of this.parts.values()){
       const meshes=part.children.filter((o):o is Mesh=>o instanceof Mesh);if(!meshes.length)continue;
-      const copies:BufferGeometry[]=[];
+      const copies:BufferGeometry[]=[],unindexed=meshes.some(mesh=>!mesh.geometry.index);
       try{for(const mesh of meshes){
         const material=mesh.material;if(!(material instanceof MeshStandardMaterial))throw new Error('Character palette requires plain PBR materials');
-        const geometry=mesh.geometry.clone();copies.push(geometry);mesh.updateMatrix();geometry.applyMatrix4(mesh.matrix);
+        const geometry=unindexed&&mesh.geometry.index?mesh.geometry.toNonIndexed():mesh.geometry.clone();copies.push(geometry);mesh.updateMatrix();geometry.applyMatrix4(mesh.matrix);
         const count=geometry.getAttribute('position').count,colors=new Float32Array(count*3);for(let i=0;i<count;i++)material.color.toArray(colors,i*3);geometry.setAttribute('color',new Float32BufferAttribute(colors,3));geometries.add(mesh.geometry);materials.add(material);
       }
         const geometry=mergeGeometries(copies,false);if(!geometry)throw new Error('Character palette could not be batched');batches.push({part,meshes,geometry});

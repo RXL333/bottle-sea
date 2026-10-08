@@ -1,0 +1,425 @@
+[
+  {
+    "file": "public/models/main/main_cottage.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 2,
+    "examples": [
+      {
+        "a": "body__stone",
+        "b": "body__wood2",
+        "plane": "0:1:190000",
+        "area": 0.02025000295043
+      },
+      {
+        "a": "body__stone",
+        "b": "body__wood2",
+        "plane": "0:-1:-190000",
+        "area": 0.02025000295043
+      }
+    ]
+  },
+  {
+    "file": "public/models/main/main_sailboat.glb",
+    "duplicateTriangles": 4,
+    "overlappingFaces": 2,
+    "examples": [
+      {
+        "a": "body__red2004",
+        "b": "body__red004",
+        "plane": "0:1:2000",
+        "area": 0.005249981641782142
+      },
+      {
+        "a": "body__red2004",
+        "b": "body__red004",
+        "plane": "0:-1:-2000",
+        "area": 0.005249981641782142
+      }
+    ]
+  },
+  {
+    "file": "public/models/main/treasure_chest.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 2,
+    "examples": [
+      {
+        "a": "body__ocean008",
+        "b": "body__wood_dark012",
+        "plane": "0:1:72500",
+        "area": 0.13905001701116504
+      },
+      {
+        "a": "body__ocean008",
+        "b": "body__wood_dark012",
+        "plane": "0:-1:-72500",
+        "area": 0.13905001701116504
+      }
+    ]
+  },
+  {
+    "file": "public/models/farm/barn.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 4,
+    "examples": [
+      {
+        "a": "door_left__cream",
+        "b": "door_right__cream",
+        "plane": "1:-1:22000",
+        "area": 0.0018000013351411326
+      },
+      {
+        "a": "door_left__cream",
+        "b": "door_right__cream",
+        "plane": "1:1:32000",
+        "area": 0.0018000013351411326
+      },
+      {
+        "a": "door_left__cream",
+        "b": "door_right__cream",
+        "plane": "1:-1:231000",
+        "area": 0.0018000013351411326
+      },
+      {
+        "a": "door_left__cream",
+        "b": "door_right__cream",
+        "plane": "1:1:241000",
+        "area": 0.0018000013351411326
+      }
+    ]
+  },
+  {
+    "file": "public/models/farm/chicken.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 2,
+    "examples": [
+      {
+        "a": "wing_left__white",
+        "b": "wing_left__wool",
+        "plane": "1:-1:39450",
+        "area": 0.010874999076127878
+      },
+      {
+        "a": "wing_right__white",
+        "b": "wing_right__wool",
+        "plane": "1:-1:39450",
+        "area": 0.010874999076127878
+      }
+    ]
+  },
+  {
+    "file": "public/models/farm/farmhouse.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 2,
+    "examples": [
+      {
+        "a": "body__stone",
+        "b": "front_door__wood_dark",
+        "plane": "2:1:186500",
+        "area": 0.08200001883506758
+      },
+      {
+        "a": "body__wood2",
+        "b": "front_door__wood_dark",
+        "plane": "2:-1:173500",
+        "area": 0.04510000547170634
+      }
+    ]
+  },
+  {
+    "file": "public/models/farm/sheep.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 4,
+    "examples": [
+      {
+        "a": "leg_front_1__black",
+        "b": "leg_front_1__dark",
+        "plane": "2:-1:19500",
+        "area": 0.011049998071789524
+      },
+      {
+        "a": "leg_front_-1__black",
+        "b": "leg_front_-1__dark",
+        "plane": "2:-1:19500",
+        "area": 0.011049998071789524
+      },
+      {
+        "a": "leg_rear_1__black",
+        "b": "leg_rear_1__dark",
+        "plane": "2:-1:-54500",
+        "area": 0.011049998071789524
+      },
+      {
+        "a": "leg_rear_-1__black",
+        "b": "leg_rear_-1__dark",
+        "plane": "2:-1:-54500",
+        "area": 0.011049998071789524
+      }
+    ]
+  },
+  {
+    "file": "public/models/farm/tool_shed.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 1,
+    "examples": [
+      {
+        "a": "body__stone_dark001",
+        "b": "body__wood002",
+        "plane": "1:-1:0",
+        "area": 0.10175009083747
+      }
+    ]
+  },
+  {
+    "file": "public/models/farm/transport_boat.glb",
+    "duplicateTriangles": 3,
+    "overlappingFaces": 16,
+    "examples": [
+      {
+        "a": "deck_fittings__cream",
+        "b": "deck_fittings__dark",
+        "plane": "0:-1:-67250",
+        "area": 0.0009499993801114215
+      },
+      {
+        "a": "deck_fittings__cream",
+        "b": "deck_fittings__dark",
+        "plane": "2:1:-165250",
+        "area": 0.013449987459182466
+      },
+      {
+        "a": "deck_fittings__cream",
+        "b": "deck_fittings__dark",
+        "plane": "0:1:67250",
+        "area": 0.0009499993801114215
+      },
+      {
+        "a": "deck_fittings__cream",
+        "b": "deck_fittings__dark",
+        "plane": "2:-1:-174750",
+        "area": 0.013449987459182466
+      },
+      {
+        "a": "deck_fittings__cream",
+        "b": "deck_fittings__dark",
+        "plane": "0:-1:81250",
+        "area": 0.021249979734420776
+      },
+      {
+        "a": "deck_fittings__cream",
+        "b": "deck_fittings__dark",
+        "plane": "0:1:90750",
+        "area": 0.021249979734420776
+      },
+      {
+        "a": "deck_fittings__cream",
+        "b": "deck_fittings__dark",
+        "plane": "0:1:-81250",
+        "area": 0.021249979734420776
+      },
+      {
+        "a": "deck_fittings__cream",
+        "b": "deck_fittings__dark",
+        "plane": "0:-1:-90750",
+        "area": 0.021249979734420776
+      }
+    ]
+  },
+  {
+    "file": "public/models/farm/trees\\tree_broadleaf.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 8,
+    "examples": [
+      {
+        "a": "canopy__tree_leaf_light026",
+        "b": "canopy__tree_leaf_mid026",
+        "plane": "1:-1:293148",
+        "area": 0.016523996699810084
+      },
+      {
+        "a": "canopy__tree_leaf_light026",
+        "b": "canopy__tree_leaf_mid026",
+        "plane": "1:1:307548",
+        "area": 0.016523996699810084
+      },
+      {
+        "a": "canopy__tree_leaf_light026",
+        "b": "canopy__tree_leaf_mid026",
+        "plane": "2:1:97290",
+        "area": 0.01555200295257464
+      },
+      {
+        "a": "canopy__tree_leaf_light026",
+        "b": "canopy__tree_leaf_mid026",
+        "plane": "2:-1:81990",
+        "area": 0.01555200295257464
+      },
+      {
+        "a": "canopy__tree_leaf_mid026",
+        "b": "canopy__tree_leaf_sun026",
+        "plane": "1:-1:293148",
+        "area": 0.016523996699810084
+      },
+      {
+        "a": "canopy__tree_leaf_mid026",
+        "b": "canopy__tree_leaf_sun026",
+        "plane": "1:1:307548",
+        "area": 0.016523996699810084
+      },
+      {
+        "a": "canopy__tree_leaf_mid026",
+        "b": "canopy__tree_leaf_sun026",
+        "plane": "2:1:97290",
+        "area": 0.01555200295257464
+      },
+      {
+        "a": "canopy__tree_leaf_mid026",
+        "b": "canopy__tree_leaf_sun026",
+        "plane": "2:-1:81990",
+        "area": 0.01555200295257464
+      }
+    ]
+  },
+  {
+    "file": "public/models/farm/trees\\tree_poplar.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 4,
+    "examples": [
+      {
+        "a": "canopy__tree_leaf_light027",
+        "b": "canopy__tree_leaf_mid027",
+        "plane": "1:-1:227387",
+        "area": 0.013056005710602392
+      },
+      {
+        "a": "canopy__tree_leaf_light027",
+        "b": "canopy__tree_leaf_mid027",
+        "plane": "1:1:240187",
+        "area": 0.013056005710602392
+      },
+      {
+        "a": "canopy__tree_leaf_mid027",
+        "b": "canopy__tree_leaf_sun027",
+        "plane": "1:-1:371387",
+        "area": 0.013055999988555556
+      },
+      {
+        "a": "canopy__tree_leaf_mid027",
+        "b": "canopy__tree_leaf_sun027",
+        "plane": "1:1:384187",
+        "area": 0.013055999988555556
+      }
+    ]
+  },
+  {
+    "file": "public/models/farm/crops\\crop_corn_mature.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 2,
+    "examples": [
+      {
+        "a": "body__leaf003",
+        "b": "body__yellow",
+        "plane": "1:1:65850",
+        "area": 0.000719999610185651
+      },
+      {
+        "a": "body__leaf003",
+        "b": "body__yellow",
+        "plane": "1:1:68050",
+        "area": 0.0007200005936622844
+      }
+    ]
+  },
+  {
+    "file": "public/models/npcs/fisherman.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 2,
+    "examples": [
+      {
+        "a": "fisherman__Spine_fisherman_teal",
+        "b": "fisherman__UtilityBelt_fisherman_leather_light",
+        "plane": "0:1:-14224",
+        "area": 0.0004285715029634929
+      },
+      {
+        "a": "fisherman__Spine_fisherman_teal",
+        "b": "fisherman__UtilityBelt_fisherman_leather_light",
+        "plane": "0:-1:14224",
+        "area": 0.0004285715029634929
+      }
+    ]
+  },
+  {
+    "file": "public/models/npcs/lighthouse_keeper.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 8,
+    "examples": [
+      {
+        "a": "lighthouse_keeper__Backpack_lighthouse_keeper_cream",
+        "b": "lighthouse_keeper__Backpack_lighthouse_keeper_navy",
+        "plane": "2:1:-36685",
+        "area": 0.0009304640055503022
+      },
+      {
+        "a": "lighthouse_keeper__Backpack_lighthouse_keeper_cream",
+        "b": "lighthouse_keeper__Backpack_lighthouse_keeper_navy",
+        "plane": "2:-1:-37675",
+        "area": 0.0009304640055503022
+      },
+      {
+        "a": "lighthouse_keeper__Coat_lighthouse_keeper_cream",
+        "b": "lighthouse_keeper__Coat_lighthouse_keeper_navy",
+        "plane": "2:1:-15675",
+        "area": 0.001206866494243286
+      },
+      {
+        "a": "lighthouse_keeper__Coat_lighthouse_keeper_cream",
+        "b": "lighthouse_keeper__Coat_lighthouse_keeper_navy",
+        "plane": "2:-1:-16665",
+        "area": 0.001206866494243286
+      },
+      {
+        "a": "lighthouse_keeper__Hat_lighthouse_keeper_cream",
+        "b": "lighthouse_keeper__Hat_lighthouse_keeper_navy",
+        "plane": "2:1:29822",
+        "area": 0.00038955573103338637
+      },
+      {
+        "a": "lighthouse_keeper__Hat_lighthouse_keeper_cream",
+        "b": "lighthouse_keeper__Hat_lighthouse_keeper_navy",
+        "plane": "2:-1:28706",
+        "area": 0.00038955573103338637
+      },
+      {
+        "a": "lighthouse_keeper__Journal_lighthouse_keeper_cream",
+        "b": "lighthouse_keeper__Journal_lighthouse_keeper_navy",
+        "plane": "2:1:-1925",
+        "area": 0.0002814636024295325
+      },
+      {
+        "a": "lighthouse_keeper__Journal_lighthouse_keeper_cream",
+        "b": "lighthouse_keeper__Journal_lighthouse_keeper_navy",
+        "plane": "2:-1:-2915",
+        "area": 0.0002814636024295325
+      }
+    ]
+  },
+  {
+    "file": "public/models/interior/ceramic_fern.glb",
+    "duplicateTriangles": 0,
+    "overlappingFaces": 2,
+    "examples": [
+      {
+        "a": "ceramic_fern__body__green",
+        "b": "ceramic_fern__body__green2",
+        "plane": "0:-1:-19963",
+        "area": 0.0009421527673203478
+      },
+      {
+        "a": "ceramic_fern__body__green",
+        "b": "ceramic_fern__body__green2",
+        "plane": "0:1:-1963",
+        "area": 0.0009421527673203478
+      }
+    ]
+  }
+]

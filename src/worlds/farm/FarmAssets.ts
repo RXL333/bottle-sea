@@ -2,6 +2,7 @@ import { Group } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { disposeWorld } from '../disposeWorld';
 import { FARM_TREE_FILES } from './FarmTrees';
+import { separateModelSurfaces } from '../../utils/modelSurfaces';
 
 // Kitchen and storage furniture deliberately do not belong to this island.
 export const FARM_MODEL_FILES={
@@ -21,7 +22,7 @@ export const FARM_MODEL_FILES={
 } as const;
 export type FarmAssetId=keyof typeof FARM_MODEL_FILES;
 export type ModelLoader=(url:string)=>Promise<Group>;
-export const loadModel:ModelLoader=async url=>(await new GLTFLoader().loadAsync(url)).scene;
+export const loadModel:ModelLoader=async url=>{const model=(await new GLTFLoader().loadAsync(url)).scene;separateModelSurfaces(model);return model;};
 export const farmModelUrl=(file:string)=>`${import.meta.env.BASE_URL}models/farm/${file}`;
 
 /** Sources remain hidden under their owning world, so shared instance resources

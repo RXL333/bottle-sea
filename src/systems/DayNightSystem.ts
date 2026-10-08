@@ -29,7 +29,7 @@ export class DayNightSystem {
   private cloudLayers:Group[]=[];
   constructor(private scene:Scene) {
     this.sun.position.set(-4,10,6);this.sun.castShadow=true;this.sun.shadow.mapSize.set(2048,2048);
-    Object.assign(this.sun.shadow.camera,{left:-13,right:13,top:10,bottom:-10,near:.5,far:35});this.sun.shadow.bias=-.00002;this.sun.shadow.normalBias=.025;
+    Object.assign(this.sun.shadow.camera,{left:-13,right:13,top:10,bottom:-10,near:.5,far:35});this.sun.shadow.bias=-.00025;this.sun.shadow.normalBias=.025;
     scene.add(this.ambient,this.sun,this.sun.target,this.hemi,this.sky,this.farm);this.farm.visible=false;
     const random=seededRandom(721),positions=[],brightness=[];
     for(let i=0;i<60;i++){positions.push(-5+random()*9.5,4.9+random()*.9,-.3-random());const value=.35+random()*.65;brightness.push(value,value,value*.9);}
@@ -53,6 +53,9 @@ export class DayNightSystem {
     this.sun.target.position.set(0,farm?4:0,farm?-28:0);
     this.sun.position.copy(this.sun.target.position).addScaledVector({x:-4,y:10,z:6},farm?6:home?1:3);
     Object.assign(this.sun.shadow.camera,home?{left:-13,right:13,top:10,bottom:-10,near:.5,far:35}:farm?{left:-50,right:50,top:55,bottom:-55,near:.5,far:180}:{left:-25,right:25,top:25,bottom:-25,near:.5,far:90});
+    // Roughly two shadow texels of normal clearance, scaled to each world's
+    // projection, avoids grazing-angle self-shadow stripes on voxel faces.
+    this.sun.shadow.bias=home?-.00025:-.00015;this.sun.shadow.normalBias=home?.025:farm?.10:.05;
     this.sun.shadow.camera.updateProjectionMatrix();this.sun.target.updateMatrixWorld();this.sun.updateMatrixWorld();this.sun.shadow.needsUpdate=true;
   }
   update(dayTime:number,time:number,storm:number,flash=0,weather?:WeatherFrame,camera=new Vector3(),delta=1/60,season?:SeasonVisual) {

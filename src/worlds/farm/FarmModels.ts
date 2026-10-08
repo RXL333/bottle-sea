@@ -11,6 +11,9 @@ import { isFarmTree } from './FarmTrees';
 
 type Batch={material:Material;geometry:BufferGeometry[]};
 function mergedMesh(name:string,batch:Batch){
+  // Surface separation expands only touched meshes. Normalize a mixed batch
+  // before merging, while keeping fully indexed batches compact.
+  if(batch.geometry.some(g=>g.index)&&batch.geometry.some(g=>!g.index))batch.geometry=batch.geometry.map(g=>{if(!g.index)return g;const expanded=g.toNonIndexed();g.dispose();return expanded;});
   const merged=mergeGeometries(batch.geometry,false);for(const g of batch.geometry)g.dispose();
   if(!merged)throw new Error(`Farm geometry could not be batched: ${name}`);
   const mesh=new Mesh(merged,batch.material);mesh.name=name;mesh.castShadow=true;mesh.receiveShadow=true;return mesh;

@@ -1,4 +1,5 @@
 import { ACESFilmicToneMapping, PCFShadowMap, WebGLRenderer } from 'three';
+import { installStableShadowSampling } from './StableShadows';
 
 export const QUALITY = {
   LOW: { ratio: 0.65, waterStep: 0.25, fish: 20, rain: 250 },
@@ -11,6 +12,7 @@ export class Renderer extends WebGLRenderer {
   quality: Quality = 'MEDIUM';
   renderScale=1;
   constructor() {
+    installStableShadowSampling();
     super({ antialias: false, alpha: false, powerPreference: 'high-performance' });
     this.toneMapping = ACESFilmicToneMapping;
     this.toneMappingExposure = 1.3;
