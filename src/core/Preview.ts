@@ -1,4 +1,5 @@
 import { configureNpcPreview } from './NpcPreview';
+import { configureHudPreview } from './HudPreview';
 import { configureShadowPreview } from './ShadowPreview';
 import { configureSeasonPreview } from './SeasonPreview';
 import { configureFarmTreePreview } from './FarmTreePreview';
@@ -23,6 +24,7 @@ export function configurePreview(game:Game){
   configureSeasonPreview(game,params);
   configureFarmTreePreview(game,params);
   configureShadowPreview(game,params);
+  configureHudPreview(game,params);
   if(params.get('view')==='farm-weather'){
     game.overview.suspend();game.explorer.enter(false);game.hud.setExplore(true);game.camera.position.set(-7.3,4.44,-8);game.camera.lookAt(0,5,-25);game.explorer.syncLook();
     const controls=document.createElement('details');controls.style.cssText='position:fixed;top:112px;left:18px;z-index:20;background:#142621d9;color:#ffe4a3;padding:10px;max-width:480px';const title=document.createElement('summary');title.textContent='开发验证 · 天气与昼夜';controls.append(title);

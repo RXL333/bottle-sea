@@ -17,6 +17,6 @@ export class NpcRegistry {
 const resource=(id:string)=>({model:`models/npcs/${id}.glb`,portrait:`images/npcs/${id}.png`});
 export const NPCS=new NpcRegistry()
   .register({id:'lighthouse_keeper',name:'灯塔老人',role:'守望灯火 · 航海往事',...resource('lighthouse_keeper'),worldId:'HOME',position:[0,3.92,-.90],scale:.27,yaw:0,range:.65})
-  .register({id:'merchant_captain',name:'商船老板',role:'远海贸易 · 补给与金币',...resource('merchant_captain'),worldId:'HOME',position:[-1.60,3.92,1.94],scale:.28,yaw:Math.PI,range:.58})
-  .register({id:'fisherman',name:'渔夫',role:'钓鱼台的邻居 · 海洋生活',...resource('fisherman'),worldId:'HOME',position:[-2.40,3.92,1.32],scale:.27,yaw:Math.PI/2,range:.65})
+  .register({id:'merchant_captain',name:'商船老板',role:'远海贸易 · 补给与金币',...resource('merchant_captain'),worldId:'HOME',position:[-1.60,3.94,1.94],scale:.28,yaw:Math.PI,range:.58})
+  .register({id:'fisherman',name:'渔夫',role:'钓鱼台的邻居 · 海洋生活',...resource('fisherman'),worldId:'HOME',position:[-2.53,3.74,-.22],scale:.27,yaw:0,range:.65})
   .register({id:'farm_steward',name:'农场管理员',role:'田野与牧场 · 农场生活',...resource('farm_steward'),worldId:'FARM',position:[-8.5,4,5.4],scale:.33,yaw:Math.PI/3,range:1.2});

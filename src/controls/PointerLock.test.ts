@@ -15,6 +15,12 @@ class FakeElement extends EventTarget {
 function setup(allowed:boolean){const doc=new FakeDocument();vi.stubGlobal('document',doc);vi.stubGlobal('window',new EventTarget());const element=new FakeElement(doc,allowed),camera=new PerspectiveCamera(),controller=new ExploreController(camera,element as unknown as HTMLElement);return {doc,element,camera,controller};}
 function movement(type:string,x:number,y:number,clientX=x,clientY=y){const event=new Event(type);Object.defineProperties(event,{movementX:{value:x},movementY:{value:y},clientX:{value:clientX},clientY:{value:clientY},button:{value:0},pointerId:{value:1}});return event;}
 afterEach(()=>vi.unstubAllGlobals());
+it('preserves pointer lock intent across toolbox to inventory without relocking between panels',async()=>{
+  const s=setup(true);Object.assign(s.element,{focus(){}});const lock=vi.spyOn(s.element,'requestPointerLock');
+  s.controller.enter();await Promise.resolve();await Promise.resolve();expect(s.doc.pointerLockElement).toBe(s.element);lock.mockClear();
+  s.controller.suspendForPanel();s.controller.resumeFromPanel(true);expect(lock).not.toHaveBeenCalled();
+  s.controller.suspendForPanel();expect(s.doc.pointerLockElement).toBe(null);s.controller.resumeFromPanel();await Promise.resolve();expect(lock).toHaveBeenCalledOnce();expect(s.doc.pointerLockElement).toBe(s.element);
+});
 it.each([[true,false],[true,true],[false,false],[false,true]])('applies saved look sensitivity and inversion (locked=%s inverted=%s)',async(locked,inverted)=>{
   const s=setup(locked);s.controller.lookSensitivity=.5;s.controller.invertLookY=inverted;s.controller.enter();await Promise.resolve();await Promise.resolve();
   const before=s.camera.quaternion.clone(),height=s.camera.getWorldDirection(new Vector3()).y;

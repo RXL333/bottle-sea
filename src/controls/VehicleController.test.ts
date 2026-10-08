@@ -13,6 +13,10 @@ function setup(locked=false){
   const camera=new PerspectiveCamera(),controller=new VehicleController(camera,element as unknown as HTMLElement,{active:true,suspend(){}} as unknown as ExploreController);controller.vehicle=vehicle;controller.phase='DRIVING';return {doc,win,element,vehicle,controller,advance,camera};
 }
 afterEach(()=>vi.unstubAllGlobals());
+it('preserves the driving lock through toolbox to settings and only restores it at the final close',()=>{
+  const s=setup(true);Object.assign(s.doc,{exitPointerLock:()=>{s.doc.pointerLockElement=null;}});const request=vi.fn(()=>{s.doc.pointerLockElement=s.element;return Promise.resolve();});Object.assign(s.element,{requestPointerLock:request});
+  s.controller.suspendForPanel();s.controller.resumeFromPanel(true);expect(request).not.toHaveBeenCalled();s.controller.suspendForPanel();s.controller.resumeFromPanel();expect(request).toHaveBeenCalledOnce();expect(s.doc.pointerLockElement).toBe(s.element);
+});
 it.each(['combined','keyboard','mouse'] as const)('respects the %s steering mode and retains throttle/brake',mode=>{
   const s=setup(true);s.controller.configure({...DEFAULT_SETTINGS,vehicleSteering:mode});
   s.doc.dispatchEvent(event('mousemove',{movementX:-100,movementY:0}));s.win.dispatchEvent(event('keydown',{code:'KeyW'}));s.controller.update(1/60);

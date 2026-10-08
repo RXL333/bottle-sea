@@ -4,7 +4,7 @@ export class ProgressionView {
   private revision=-1;private elapsed=0;private queue:string[]=[];
   constructor(root:HTMLElement,onOpen:()=>void){
     this.element.className='progression-objective';this.element.setAttribute('aria-label','查看成长手记');this.element.addEventListener('click',onOpen);
-    this.element.innerHTML='<small>当前目标 · P 成长手记</small><strong></strong><span></span>';
+    this.element.innerHTML='<small>当前目标 <kbd>P</kbd></small><strong></strong><span></span>';
     this.notice.className='progression-notice';this.notice.hidden=true;this.notice.setAttribute('role','status');this.notice.setAttribute('aria-live','polite');root.append(this.element,this.notice);
   }
   completed(completion:ProgressionCompletion,progress:ProgressionSystem){

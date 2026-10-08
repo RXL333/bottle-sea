@@ -13,8 +13,8 @@ export class FarmHUD {
     this.plot.className='farm-plot-info';this.plot.setAttribute('role','status');this.element.append(title,legend,this.plot);
   }
   update(game:GameplayServices,ref:FarmCellRef|null|undefined,visible:boolean,penId?:string){
-    this.element.hidden=!visible;if(!visible)return;const cell=ref?game.farm.getCell(ref):null,crop=cell?.crop?game.crops.registry.get(cell.crop.cropId):undefined;
-    const pen=LIVESTOCK_PENS.find(p=>p.id===penId);this.legend.hidden=!!pen;this.title.textContent=pen?`牧场手记 · ${pen.name}`:'农田手记';
+    this.element.hidden=!visible||(!ref&&!penId);if(this.element.hidden)return;const cell=ref?game.farm.getCell(ref):null,crop=cell?.crop?game.crops.registry.get(cell.crop.cropId):undefined;
+    const pen=LIVESTOCK_PENS.find(p=>p.id===penId);this.legend.hidden=true;this.title.textContent=pen?`牧场 · ${pen.name}`:'农田';
     const animals=pen?game.livestock.getAnimals().filter(a=>a.penId===pen.id):[];
     const description=pen?`饲料储备 ${game.livestock.getPen(pen.id)!.feed} / ${PEN_FEED_CAPACITY}\n待领${game.items.get(LIVESTOCK_SPECIES[pen.id].productItemId)?.name} ${animals.reduce((n,a)=>n+a.pending,0)} 份 · 喂养中 ${animals.filter(a=>a.nextProductAtGameTime!==null).length} 只\n${animals.map((a,i)=>`${LIVESTOCK_SPECIES[a.kind].name}${i+1} ${BEHAVIOR_NAMES[a.behavior]}`).join(' · ')}\n饲槽 E 补粮 · 动物 E 领取`:
       cell?`${game.farm.definitions.find(f=>f.id===cell.fieldId)?.name} · ${cell.column+1}, ${cell.row+1}\n${LAND_APPEARANCE[cell.landState].name}${crop?` · ${crop.name} · ${cell.growth?.stage.name}`:''}`:'步入主田查看地块 · E 手工作业';

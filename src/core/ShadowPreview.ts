@@ -22,6 +22,8 @@ export function configureShadowPreview(game:Game,params:URLSearchParams){
     '小屋台阶':{position:[-1.55,4.18,1.3],target:[-1.55,3.98,.70]},
     '交通船':{position:[1.4,4.8,3.1],target:[.65,3.9,2.35]},
     '商船':{position:[-2.5,5,2.8],target:[-1.6,3.9,2.8]},
+    '商船平台近景':{position:[-1.05,4.45,.96],target:[-1.60,3.94,1.65]},
+    '渔夫与小树':{position:[-2.7,4.4,.90],target:[-2.55,4,-.38]},
   };
   const panel=document.createElement('details');panel.open=true;panel.style.cssText='position:fixed;left:12px;top:12px;z-index:1000;background:#fff3d6;color:#183b52;padding:8px;max-width:310px;font:12px sans-serif';
   const title=document.createElement('summary');title.textContent='开发验证 · 表面与阴影';panel.append(title);

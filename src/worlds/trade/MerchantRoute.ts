@@ -1,7 +1,8 @@
 import { DAY_DURATION } from '../../core/GameClock';
 import type { ShipPose } from '../../world/ship/ShipPath';
 export const HOME_MERCHANT_BERTH={x:-1.6,z:2.38,yaw:Math.PI/2};
-export const HOME_MERCHANT_TRADE={x:-1.6,y:4.36,z:1.80};
+export const HOME_MERCHANT_DECK_TOP=3.94;
+export const HOME_MERCHANT_TRADE={x:-1.6,y:HOME_MERCHANT_DECK_TOP+.44,z:1.80};
 export const MERCHANT_SCHEDULE='每日 08:00–20:00 靠岸';
 type Phase='ARRIVING'|'DOCKED'|'DEPARTING'|'SAILING';
 const route:readonly ShipPose[]=[

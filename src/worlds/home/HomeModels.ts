@@ -7,7 +7,7 @@ import { loadModel } from '../farm/FarmAssets';
 import type { ModelLoader } from '../farm/FarmAssets';
 import { disposeWorld } from '../disposeWorld';
 import { VoxelBatch } from '../../utils/voxel';
-import { HOME_MERCHANT_TRADE } from '../trade/MerchantRoute';
+import { HOME_MERCHANT_DECK_TOP,HOME_MERCHANT_TRADE } from '../trade/MerchantRoute';
 import { modelColliders } from './ModelColliders';
 
 export const HOME_FILES={
@@ -87,9 +87,11 @@ export class HomeModels extends Group {
     world.ship.setModel(this.instance('boat'));
     // Dedicated side berth, west of the transport boat; a level walking deck.
     const pier=new Group();pier.name='MerchantBerth';const boards=new VoxelBatch(),trade=HOME_MERCHANT_TRADE;
-    for(let i=0;i<8;i++)boards.add(i%2?'#987451':'#b28a58',trade.x,3.86,1.30+i*.1,.72,.12,.097);
-    for(const x of [trade.x-.31,trade.x+.31])for(const z of [1.35,1.96])boards.add('#58412d',x,3.48,z,.08,.88,.08);
-    boards.build(pier);this.add(pier);this.slab(trade.x-.36,trade.x+.36,3.80,3.92,1.25,2.05);
+    for(let i=0;i<8;i++)boards.add(i%2?'#987451':'#b28a58',trade.x,HOME_MERCHANT_DECK_TOP-.06,1.30+i*.1,.72,.12,.097);
+    // Posts end below the boards: their old 3.92 top faces were coplanar with
+    // the deck and made the four dark corner patches flicker with camera angle.
+    for(const x of [trade.x-.31,trade.x+.31])for(const z of [1.35,1.96])boards.add('#58412d',x,3.44,z,.08,.80,.08);
+    boards.build(pier);this.add(pier);this.slab(trade.x-.36,trade.x+.36,HOME_MERCHANT_DECK_TOP-.12,HOME_MERCHANT_DECK_TOP,1.25,2.05);
     const underwater=world.getObjectByName('UnderwaterWorld')!;
     underwater.getObjectByName('LegacyReef')!.visible=false;
     for(const [id,x,y,z,scale] of [['chest',-1.8,1.77,1.1,.43],['anchor',-3.65,1.82,.65,.43],['ruins',2.97,1.77,.4,.43]] as const){

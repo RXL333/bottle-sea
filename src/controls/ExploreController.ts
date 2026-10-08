@@ -64,9 +64,9 @@ export class ExploreController {
   exit(){this.active=false;this.holdPointerLock=false;this.relockAfterPanel=false;this.releaseLock();this.keys.clear();this.camera.near=.12;this.camera.far=200;this.camera.fov=34;this.camera.updateProjectionMatrix();this.swimming=false;this.underwater=false;this.renderOffsetY=0;this.headInitialized=false;}
   /** Cutscenes stop input without leaving the browser's existing pointer lock. */
   suspend(preservePointerLock=false){this.active=false;this.holdPointerLock=preservePointerLock;this.keys.clear();this.cancelLook();if(!preservePointerLock)this.releaseLock();}
-  suspendForPanel(){this.relockAfterPanel=this.element.ownerDocument?.pointerLockElement===this.element;this.suspend();}
+  suspendForPanel(){this.relockAfterPanel||=this.element.ownerDocument?.pointerLockElement===this.element;this.suspend();}
   resume(){this.active=true;this.holdPointerLock=false;this.keys.clear();this.cancelLook();this.element.focus();}
-  resumeFromPanel(){const relock=this.relockAfterPanel;this.relockAfterPanel=false;this.resume();if(relock)this.lock();}
+  resumeFromPanel(transfer=false){if(transfer){this.resume();return;}const relock=this.relockAfterPanel;this.relockAfterPanel=false;this.resume();if(relock)this.lock();}
   /** Called in the panel's click event, while browser user activation is still valid. */
   beginTransitionFromPanel(){const relock=this.relockAfterPanel;this.relockAfterPanel=false;this.suspend(true);if(relock)this.lock();}
   private releaseLock(){const doc=this.element.ownerDocument;if(doc?.pointerLockElement===this.element)doc.exitPointerLock();else this.pointer.isLocked=false;}

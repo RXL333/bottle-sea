@@ -20,8 +20,8 @@ export class VehicleController {
   private settings={...DEFAULT_SETTINGS};private inputPaused=false;private relockAfterPanel=false;
   get steeringLabel(){return STEERING_LABELS[this.settings.vehicleSteering];}
   configure(settings:GameSettings){this.settings={...settings};this.mouse.sensitivity=settings.vehicleSensitivity;this.mouse.reset();this.lastMouse=undefined;this.follow.configure(settings.orbitSensitivity,settings.vehicleCameraDistance);}
-  suspendForPanel(){this.relockAfterPanel=this.element.ownerDocument.pointerLockElement===this.element;this.inputPaused=true;this.keys.clear();this.mouse.reset();this.releaseMouse();this.vehicle?.stop();if(this.relockAfterPanel)this.element.ownerDocument.exitPointerLock();this.onPark();}
-  resumeFromPanel(){this.inputPaused=false;this.keys.clear();this.mouse.reset();this.lastMouse=undefined;this.element.focus();if(this.relockAfterPanel){this.relockAfterPanel=false;try{void Promise.resolve(this.element.requestPointerLock()).catch(()=>{});}catch{/* Unlocked input remains usable. */}}}
+  suspendForPanel(){const locked=this.element.ownerDocument.pointerLockElement===this.element;this.relockAfterPanel||=locked;this.inputPaused=true;this.keys.clear();this.mouse.reset();this.releaseMouse();this.vehicle?.stop();if(locked)this.element.ownerDocument.exitPointerLock();this.onPark();}
+  resumeFromPanel(transfer=false){this.inputPaused=false;this.keys.clear();this.mouse.reset();this.lastMouse=undefined;this.element.focus();if(this.relockAfterPanel&&!transfer){this.relockAfterPanel=false;try{void Promise.resolve(this.element.requestPointerLock()).catch(()=>{});}catch{/* Unlocked input remains usable. */}}}
   onDrive=()=>{};
   onInteract=()=>{};onHitch=()=>{};onWork=()=>{};onDismount=(spawn:SpawnPoint)=>{void spawn;};onPark=()=>{};
   onSeed=(cropId?:string)=>{void cropId;};onMachine=()=>{};onUnload=()=>{};

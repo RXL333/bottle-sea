@@ -13,7 +13,8 @@ export class VehicleHUD {
     this.hitch.className='vehicle-hitch-hint';this.hitch.setAttribute('role','status');
     this.work.className='vehicle-work-hint';this.work.setAttribute('role','status');this.work.setAttribute('aria-live','polite');
     this.seeds.className='vehicle-seed-choices';this.seeds.setAttribute('role','group');this.seeds.setAttribute('aria-label','播种机种子选择');
-    this.element.append(this.name,this.gear,this.speed,this.hitch,this.work,this.cargo,this.seeds,this.controls);
+    const help=document.createElement('details');help.className='vehicle-control-help';const summary=document.createElement('summary');summary.textContent='操作 / 挂接帮助';help.append(summary,this.hitch,this.controls);
+    this.element.append(this.name,this.gear,this.speed,this.work,this.cargo,this.seeds,help);
   }
   update(controller:VehicleController){
     this.element.hidden=!controller.active;const vehicle=controller.vehicle;if(!vehicle)return;

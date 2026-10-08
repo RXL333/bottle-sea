@@ -30,7 +30,7 @@ export class SettingsPanel {
     const graphics=section('画面与性能');
     select(graphics,'画质档位','影响阴影、天气、植被与粒子。卡顿时可选择 LOW。',a.quality(),{LOW:'LOW · 流畅',MEDIUM:'MEDIUM · 均衡',HIGH:'HIGH · 精致'},v=>a.setQuality(v as Quality));
     range(graphics,'renderScale','渲染精度','相对于画质档位的分辨率，降低可减轻显卡负担。',.5,1.25);
-    check(graphics,'showFps','显示帧率','在画面角落显示当前 FPS。');
+    check(graphics,'showFps','显示帧率','在快捷菜单内查看当前 FPS，保持游玩画面干净。');
     const look=section('步行与钓鱼');
     range(look,'lookSensitivity','第一人称视角灵敏度','同时作用于锁定鼠标和拖动观察。',.25,2);
     check(look,'invertLookY','反转视角纵轴','开启后上下观察方向反转。');

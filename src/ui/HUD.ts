@@ -13,12 +13,19 @@ import type { GameplayServices } from '../gameplay/GameplayFoundation';
 import type { FishingSystem } from '../gameplay/FishingSystem';
 import { WEATHER_LABELS } from '../systems/WeatherState';
 import type { WeatherKind } from '../systems/WeatherState';
+import { hudMode,HudHintLifetime } from './HudPresentation';
+import type { HudContext,HudMode } from './HudPresentation';
+import { panelHeader } from './UIChrome';
 export class HUD {
   readonly element = document.createElement('div');
+  readonly topLeft=document.createElement('div');readonly statusRow=document.createElement('div');readonly notices=document.createElement('div');
+  readonly menu=document.createElement('dialog');
+  onMenuRequest=()=>{};onMenuClose=(transfer:boolean)=>{void transfer;};
+  private hints=new HudHintLifetime();private mode:HudMode='overview';private playMode:HudMode='overview';private immersive=false;
   private noticeTimeout=0;
   private cardTimeout=0;
   constructor(root: HTMLElement) {
-    this.element.className = 'hud';
+    this.element.className = 'hud hud-shell';
     this.element.innerHTML = `
       <header class="identity"><p class="eyebrow">THE MARINER’S KEEPSAKE <span>/</span> No. 01</p><h1>瓶中沧海</h1><p class="tagline">一座孤岛，一段未完的航程。</p></header>
       <button class="settings-trigger" data-action="settings" aria-label="打开游戏设置" title="游戏设置 [O]">⚙ 设置 [O]</button><aside class="weather"><button id="day" class="calendar-link" data-action="calendar" aria-label="打开海岛日历" title="日历 [L]">第 1 年 · 春 8 日</button><time id="clock">17:41</time><div id="forecast">微风 · 平静的海</div><div class="home-stats" hidden></div></aside>
@@ -35,6 +42,33 @@ export class HUD {
       <details class="focus-menu"><summary>⌖ 观察点</summary><nav class="ui-sidebar" aria-label="观察点">${Object.entries(FOCUS_LABELS).map(([id,label])=>`<button data-focus="${id}" aria-pressed="${id==='overview'}">${label}</button>`).join('')}</nav></details>
       <button class="quality" title="切换像素精度" aria-label="切换像素精度">PIXEL / MEDIUM</button>`;
     root.append(this.element);
+    this.notices.className='hud-notices';this.notices.append(this.element.querySelector('#notice')!,this.element.querySelector('.discovery-card')!);this.element.append(this.notices);
+    this.topLeft.className='hud-top-left';this.statusRow.className='hud-status-row';
+    const info=document.createElement('div');info.className='hud-top-right';
+    const weather=this.element.querySelector<HTMLElement>('.weather')!,date=document.createElement('div');date.className='hud-calendar-row';
+    for(const selector of ['#day','#forecast','#clock'])date.append(this.element.querySelector(selector)!);
+    weather.prepend(date);this.statusRow.append(this.element.querySelector('.production-stats')!,this.element.querySelector('.settings-trigger')!);
+    info.append(weather,this.statusRow);this.element.append(this.topLeft,info);
+    const controls=document.createElement('nav');controls.className='hud-controls';controls.setAttribute('aria-label','快捷菜单与显示');
+    const menuButton=document.createElement('button');menuButton.className='hud-menu-trigger';menuButton.textContent='▦ 菜单';menuButton.setAttribute('aria-label','打开快捷菜单');menuButton.innerHTML+=' <kbd>Tab</kbd>';menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-controls','hud-quick-menu');menuButton.addEventListener('click',()=>this.onMenuRequest());
+    const immersiveButton=document.createElement('button');immersiveButton.className='hud-immersive-trigger';immersiveButton.textContent='沉浸 F10';immersiveButton.setAttribute('aria-label','切换沉浸模式');immersiveButton.setAttribute('aria-pressed','false');immersiveButton.addEventListener('click',()=>this.toggleImmersive());controls.append(menuButton,immersiveButton);this.element.append(controls);
+    this.menu.id='hud-quick-menu';this.menu.className='hud-menu ui-panel';this.menu.setAttribute('aria-label','快捷菜单');
+    this.menu.append(panelHeader('航海工具箱','BOTTLE SEA · 功能与操作',()=>this.closeMenu()));
+    const toolbar=this.element.querySelector<HTMLElement>('.toolbar')!;toolbar.setAttribute('aria-label','快捷功能');
+    const extraSettings=document.createElement('button');extraSettings.dataset.action='menu-settings';extraSettings.textContent='⚙ 设置 [O]';toolbar.append(extraSettings);
+    const calendar=document.createElement('button');calendar.dataset.action='menu-calendar';calendar.textContent='▦ 日历 [L]';toolbar.append(calendar);
+    this.menu.append(toolbar,this.element.querySelector('.focus-menu')!,this.element.querySelector('.quality')!);
+    const help=document.createElement('details');help.className='hud-help';help.innerHTML='<summary>操作帮助 · 随时查看</summary><p>步行：WASD 移动 · 鼠标观察 · Space 跳跃 · Shift 加速 · C 下潜</p><p>E 情境交互 · B 背包 · 1～8 选择物品 · Q 使用 · F 食物</p><p>P 成长 · N 航海手记 · J 委托 · L 日历 · O 设置</p><p>驾驶：W/S 前后 · 依设置转向 · Space 刹车 · E 下车 · H 挂接 · J 抬落 · K 换种 · L 作业 · U 卸货；左键拖动观察</p><p>钓鱼：E 提钩 · 左键张力 · R 切换操作 · Esc 收竿</p><p>Tab 菜单 · F10 沉浸显示 · Esc 关闭面板 / 释放鼠标</p>';this.menu.append(help,this.element.querySelector('.edition')!,this.element.querySelector('.voyage')!);
+    this.element.append(this.menu);
+    this.menu.addEventListener('cancel',event=>{event.preventDefault();this.closeMenu();});
+    this.menu.addEventListener('keydown',event=>{
+      const target=event.target as HTMLElement|null;if(event.repeat||target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;
+      if(event.code==='Tab'&&event.target===this.menu){event.preventDefault();event.stopPropagation();this.closeMenu();return;}
+      const actions:Record<string,string>={KeyB:'inventory',KeyP:'progression',KeyN:'collections',KeyJ:'commissions',KeyF:'food',KeyR:'fishing-mode',KeyO:'menu-settings',KeyL:'menu-calendar'};
+      const action=actions[event.code];if(action){event.preventDefault();event.stopPropagation();this.menu.querySelector<HTMLButtonElement>(`[data-action="${action}"]`)!.click();}
+    });
+    // Close before existing action listeners run, restoring their original input context.
+    this.menu.addEventListener('click',event=>{const button=(event.target as HTMLElement).closest<HTMLButtonElement>('button');if(button&&(button.dataset.action||button.dataset.speed||button.dataset.focus||button.classList.contains('quality'))&&!button.disabled)this.closeMenu(['inventory','food','progression','collections','commissions','menu-settings','menu-calendar'].includes(button.dataset.action??''));},true);
     for(const action of ['storm','sound','explore'] as const)this.element.querySelector(`[data-action="${action}"] .icon`)!.innerHTML=icons[action];
     for(const action of ['progression','collections','commissions','inventory','food'] as const){
       const button=this.element.querySelector<HTMLButtonElement>(`[data-action="${action}"]`)!;
@@ -50,11 +84,32 @@ export class HUD {
     const pause=this.element.querySelector<HTMLButtonElement>('[data-action="pause"]')!;pause.textContent=paused?'▷':'Ⅱ';pause.setAttribute('aria-label',paused?'继续时间':'暂停时间');pause.title=paused?'继续时间':'暂停时间';pause.classList.toggle('engaged',paused);
   }
   setActive(action:string,active:boolean){const button=this.element.querySelector(`[data-action="${action}"]`)!;button.classList.toggle('engaged',active);button.setAttribute('aria-pressed',String(active));}
-  setHint(text:string){this.element.querySelector('#hint')!.textContent=text;}
+  setHint(text:string){const hint=this.element.querySelector('#hint')!;if(hint.textContent!==text)hint.textContent=text;}
+  get menuOpen(){return this.menu.open;}
+  showMenu(){if(this.menu.open)return;this.menu.showModal();this.menu.tabIndex=-1;this.menu.focus();this.element.querySelector('.hud-menu-trigger')!.setAttribute('aria-expanded','true');}
+  closeMenu(transfer=false){if(!this.menu.open)return;this.menu.close();this.element.querySelector('.hud-menu-trigger')!.setAttribute('aria-expanded','false');this.onMenuClose(transfer);}
+  toggleImmersive(){this.immersive=!this.immersive;this.element.classList.toggle('hud-immersive',this.immersive);const button=this.element.querySelector('.hud-immersive-trigger')!;button.setAttribute('aria-pressed',String(this.immersive));button.textContent=this.immersive?'恢复 HUD · F10':'沉浸 F10';}
+  updateContext(context:HudContext,world:string,delta:number){
+    const mode=hudMode(context);this.mode=mode;if(this.element.dataset.mode!==mode){
+      this.element.dataset.mode=mode;
+      const prompt=this.element.querySelector('.interaction-prompt')!,vehicle=this.element.querySelector('.vehicle-hud');
+      // Keep the driving action in the same flow as work/cargo, including expanded help on narrow screens.
+      if(mode==='driving'&&vehicle)vehicle.insertBefore(prompt,vehicle.querySelector('.vehicle-control-help'));
+      else this.element.append(prompt);
+    }
+    if(!['panel','dialogue','transition'].includes(mode))this.playMode=mode;
+    this.hints.enter(`${world}/${this.playMode}`);this.element.classList.toggle('hud-hint-visible',this.hints.update(delta)&&!['panel','dialogue','transition','sailing','fishing','driving'].includes(mode));
+    const foot=this.playMode==='explore';
+    for(const action of ['inventory','food','progression','collections','commissions','fishing-mode'] as const){const button=this.element.querySelector<HTMLButtonElement>(`[data-action="${action}"]`)!;const enabled=action==='inventory'||action==='food'?foot:action==='fishing-mode'?foot&&world==='HOME':!['driving','fishing','sailing'].includes(this.playMode);button.disabled=!enabled;button.title=enabled?'':this.playMode==='driving'?'停稳下车后查看':action==='inventory'||action==='food'?'进入探索后使用':'当前操作结束后查看';}
+    this.element.querySelector<HTMLButtonElement>('[data-action="menu-calendar"]')!.disabled=this.playMode==='driving';
+    this.element.querySelector<HTMLButtonElement>('[data-action="settings"]')!.disabled=['fishing','sailing','transition'].includes(mode);
+    this.element.querySelector<HTMLButtonElement>('[data-action="calendar"]')!.disabled=['driving','fishing','sailing','transition'].includes(mode);
+    this.element.querySelector<HTMLButtonElement>('[data-action="explore"]')!.disabled=world!=='HOME'||context.transitioning;
+  }
   setTransition(active:boolean){this.element.classList.toggle('transitioning',active);this.element.querySelector<HTMLButtonElement>('[data-action="explore"]')!.disabled=active;}
   setExplore(active:boolean){
     this.setActive('explore',active);document.body.classList.toggle('exploring',active);
-    this.element.querySelector<HTMLElement>('.explore-panel')!.hidden=!active;
+    this.element.querySelector<HTMLElement>('.explore-panel')!.hidden=true;
     this.element.querySelector<HTMLElement>('#crosshair')!.hidden=!active;
     this.element.querySelector('[data-action="explore"] span:last-child')!.textContent=active?'返回瓶外':'探索模式';
     this.setHint(active?'WASD 移动 · 拖动观察 · E 交互':'ⓘ 点击拖动 · 移动视角 · 探索细节');
@@ -72,7 +127,7 @@ export class HUD {
   closeDiscovery(){const card=this.element.querySelector<HTMLElement>('.discovery-card')!;card.hidden=true;window.clearTimeout(this.cardTimeout);this.cardTimeout=0;}
   setInteractable(active:boolean){this.element.querySelector('#crosshair')!.textContent=active?'◇':'+';this.element.querySelector('#crosshair')!.classList.toggle('ready',active);}
   setInteractionPrompt(prompt?:{text:string;available:boolean}){
-    const card=this.element.querySelector<HTMLElement>('.interaction-prompt')!;card.hidden=!prompt;
+    const card=this.element.querySelector<HTMLElement>('.interaction-prompt')!;card.hidden=!prompt||['panel','dialogue','transition','sailing'].includes(this.mode);
     if(!prompt)return;card.classList.toggle('blocked',!prompt.available);
     const label=prompt.text.replace(/^\[\s*E\s*\]\s*/,''),text=card.querySelector('strong')!,status=card.querySelector('small')!;
     if(text.textContent!==label)text.textContent=label;
@@ -82,16 +137,17 @@ export class HUD {
   updateClock(clock:GameClock,weather:boolean|WeatherKind,date:CalendarDate=calendarAt(clock.simulationTime)) {
     const kind=typeof weather==='boolean'?weather?'STORM':'CLEAR':weather;this.setWeather(kind,date.season);
     this.element.querySelector('#clock')!.textContent=clock.formatted;
-    this.element.querySelector('#day')!.textContent=`${dateLabel(date)} · ${seasonWeatherLabel(kind,date.season)}`;
-    this.element.querySelector('#forecast')!.textContent=date.season==='winter'&&(kind==='RAIN'||kind==='STORM')?(kind==='RAIN'?'轻雪 · 霜色田野':'风雪 · 屋中灯火'):{CLEAR:'微风 · 晴朗的海',OVERCAST:'云聚 · 柔和天光',RAIN:'细雨 · 湿润的田野',STORM:'强风 · 远处雷鸣'}[kind];
+    this.element.querySelector('#day')!.textContent=dateLabel(date);
+    this.element.querySelector('#forecast')!.textContent=`${{CLEAR:'☀',OVERCAST:'☁',RAIN:'☂',STORM:'ϟ'}[kind]} ${seasonWeatherLabel(kind,date.season)}`;
   }
   updateHomeStats(progress:PlayerProgress,inside:boolean){const stats=this.element.querySelector<HTMLElement>('.home-stats')!;stats.hidden=!inside;stats.textContent=`体力 ${Math.round(progress.energy)} / ${progress.maxEnergy}`;}
   updateProductionStats(game:GameplayServices,exploring:boolean){
     const stats=this.element.querySelector<HTMLElement>('.production-stats')!;stats.hidden=!exploring;
-    stats.textContent=`体力 ${Math.round(game.progress.energy)} / ${game.progress.maxEnergy} · 鱼 ${game.items.fish().reduce((n,f)=>n+game.inventory.count(f.id),0)} · 料理 ${game.items.food().reduce((n,f)=>n+game.inventory.count(f.id),0)}`;
+    stats.textContent=`体力 ${Math.round(game.progress.energy)} / ${game.progress.maxEnergy}`;stats.setAttribute('aria-label','当前体力');
   }
   updateFishing(fishing:FishingSystem){
     const card=this.element.querySelector<HTMLElement>('.fishing-status')!,fighting=fishing.state==='FIGHTING';card.hidden=!fishing.active;
+    if(fishing.active&&fishing.state!=='BITE')this.setInteractionPrompt();
     document.body.classList.toggle('fishing-active',fishing.active);
     const mode=this.element.querySelector<HTMLButtonElement>('[data-action="fishing-mode"]')!;mode.textContent=`钓鱼：${fishing.inputMode==='hold'?'长按':'点击'} [R]`;
     if(!fishing.active)return;

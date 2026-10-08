@@ -9,16 +9,39 @@ import { ExploreController } from '../../controls/ExploreController';
 import { obbIntersectsAabb } from '../../world/ship/ShipPath';
 import { TERRAIN_CELLS } from '../../world/island/TerrainData';
 import { separateModelSurfaces } from '../../utils/modelSurfaces';
+import { terrainCellAt } from '../../world/island/TerrainData';
+import { NPCS } from '../../gameplay/npc/NpcRegistry';
+import { HOME_MERCHANT_DECK_TOP } from '../trade/MerchantRoute';
 
 const load=async(url:string)=>{const bytes=await readFile(new URL('../../../public'+url,import.meta.url));const model=(await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'' )).scene;separateModelSurfaces(model);return model;};
-it('keeps pier tops above every touching terrain tile and the fishing approach free of NPCs',async()=>{
+it('keeps the fishing deck above recessed terrain and the approach free of NPCs',async()=>{
   const world=new HomeWorld(load);await world.load();
-  for(const deck of [{minX:-1.96,maxX:-1.24,minZ:1.25,maxZ:2.05,bottom:3.80},{minX:-3.525,maxX:-2.775,minZ:.325,maxZ:.975,bottom:3.55}]){
+  for(const deck of [{minX:-3.525,maxX:-2.775,minZ:.325,maxZ:.975,bottom:3.55}]){
     const cells=TERRAIN_CELLS.filter(c=>c.maxX>deck.minX&&c.minX<deck.maxX&&c.maxZ>deck.minZ&&c.minZ<deck.maxZ);expect(cells.length).toBeGreaterThan(0);
     for(const cell of cells)expect(cell.top).toBeLessThan(deck.bottom);
   }
   for(let x=-2.4;x>=-3.16;x-=.025){const y=world.navigation.groundHeight(x,.65,3.92)+.44;expect(world.navigation.hitsObstacle(x,.65,y)).toBe(false);expect(hitsDynamicObstacle(x,.65,y,world.navigation.dynamicObstacles())).toBe(false);}
   world.interaction.update({x:-3.15,y:4.12,z:.65});expect(world.interaction.nearest?.id).toBe('home_fishing');world.dispose();
+});
+it('hides merchant support tops beneath boards and keeps the grass approach intact',async()=>{
+  const world=new HomeWorld(load);await world.load();
+  try{
+    const mesh=world.root.getObjectByName('MerchantBerth')!.children[0] as InstancedMesh,matrix=new Matrix4();let supports=0,boards=0;
+    for(let i=0;i<mesh.count;i++){
+      mesh.getMatrixAt(i,matrix);const y=matrix.elements[13],height=matrix.elements[5];
+      if(height>.3){supports++;expect(y+height/2).toBeLessThan(HOME_MERCHANT_DECK_TOP-.05);expect(y+height/2).toBeGreaterThan(HOME_MERCHANT_DECK_TOP-.12);}
+      else {boards++;expect(y+height/2).toBeCloseTo(HOME_MERCHANT_DECK_TOP);}
+    }
+    expect(supports).toBe(4);expect(boards).toBe(8);
+    for(let z=1.25;z<=1.66;z+=.035){
+      const grass=terrainCellAt(-1.15,z);expect(grass?.top).toBeGreaterThanOrEqual(3.73);
+      if(z<1.4)expect(grass?.top).toBeCloseTo(3.92);
+      const y=world.navigation.groundHeight(-1.15,z,3.92)+.44;expect(world.navigation.hitsObstacle(-1.15,z,y)).toBe(false);
+    }
+    for(let z=1.3;z<=1.9;z+=.05)expect(world.navigation.groundHeight(-1.6,z,3.92)).toBeCloseTo(HOME_MERCHANT_DECK_TOP);
+    const fisherman=NPCS.get('fisherman')!;expect(terrainCellAt(fisherman.position[0],fisherman.position[2])?.top).toBeCloseTo(fisherman.position[1]);
+    expect(world.navigation.hitsObstacle(fisherman.position[0],fisherman.position[2],fisherman.position[1]+.44)).toBe(false);
+  }finally{world.dispose();}
 });
 it('loads every Home asset once, keeps entry and berth clear, and retains discovery targets',async()=>{
   const loader=vi.fn(load),world=new HomeWorld(loader);await Promise.all([world.load(),world.load()]);
@@ -30,7 +53,7 @@ it('loads every Home asset once, keeps entry and berth clear, and retains discov
   expect(world.navigation.groundHeight(-1.564,0,3.97)).toBeCloseTo(3.97);
   expect(world.navigation.hitsObstacle(-2.18,0,4.44)).toBe(true);
   // Front yard is walkable; the berth must be surrounded by actual water tiles.
-  for(const z of [1.0,1.2,1.35])expect(world.navigation.hitsObstacle(-1.564,z,4.36)).toBe(false);
+  for(const z of [1.0,1.2,1.35])expect(world.navigation.hitsObstacle(-1.564,z,world.navigation.groundHeight(-1.564,z,3.92)+.44)).toBe(false);
   const ocean=world.root.getObjectByName('Ocean')!,tiles=ocean.children.find(o=>o instanceof InstancedMesh) as InstancedMesh;
   const matrix=new Matrix4();let berthWater=false;
   for(let i=0;i<tiles.count;i++){tiles.getMatrixAt(i,matrix);if(Math.abs(matrix.elements[12]-.65)<.2&&matrix.elements[14]>2.6)berthWater=true;}
@@ -74,5 +97,16 @@ it('walks through the former merchant collider beside the cottage with the actua
     const event=new Event('keydown');Object.defineProperties(event,{code:{value:'KeyW'},repeat:{value:false}});events.dispatchEvent(event);
     for(let i=0;i<100;i++)controls.update(1/60,3.3);
     expect(camera.position.z).toBeLessThan(.7);expect(camera.position.x).toBeCloseTo(-.38);
+  }finally{world.dispose();vi.unstubAllGlobals();}
+});
+it('walks from the restored grass onto the merchant berth without falling or hitting its raised edge',async()=>{
+  const events=new EventTarget();vi.stubGlobal('window',events);vi.stubGlobal('HTMLButtonElement',class extends EventTarget{});
+  const world=new HomeWorld(load);await world.load();
+  try{
+    const camera=new PerspectiveCamera(),controls=new ExploreController(camera,new EventTarget() as HTMLElement,undefined,world.navigation);
+    controls.enter(false,{id:'merchant-approach',position:[-1.34,4.36,1.05],lookAt:[-1.34,4.36,2]});
+    const event=new Event('keydown');Object.defineProperties(event,{code:{value:'KeyW'},repeat:{value:false}});events.dispatchEvent(event);
+    for(let i=0;i<27;i++)controls.update(1/60,3.3);
+    expect(camera.position.z).toBeGreaterThan(1.70);expect(camera.position.y).toBeCloseTo(HOME_MERCHANT_DECK_TOP+.44);
   }finally{world.dispose();vi.unstubAllGlobals();}
 });

@@ -78,6 +78,7 @@ import '../styles/trade.css';
 import '../styles/farm-weather.css';
 import '../styles/ui-theme.css';
 import '../styles/ui-screens.css';
+import '../styles/hud-layout.css';
 
 export class Game {
   readonly captureEnabled=trailerEnabled(import.meta.env.DEV,new URLSearchParams(location.search));
@@ -132,7 +133,7 @@ export class Game {
     this.cookingPanel=new CookingPanel(root);
     this.inventoryPanel=new InventoryPanel(root);
     this.settingsPanel=new SettingsPanel(root);
-    this.collectionPanel=new CollectionPanel(root);this.commissionPanel=new CommissionPanel(root);this.dialoguePanel=new DialoguePanel(root);this.calendarPanel=new CalendarPanel(root);this.tradePanel=new TradePanel(root);this.progressionPanel=new ProgressionPanel(root);this.progressionView=new ProgressionView(this.hud.element,()=>this.openProgression());
+    this.collectionPanel=new CollectionPanel(root);this.commissionPanel=new CommissionPanel(root);this.dialoguePanel=new DialoguePanel(root);this.calendarPanel=new CalendarPanel(root);this.tradePanel=new TradePanel(root);this.hud.statusRow.prepend(this.tradePanel.wallet);this.progressionPanel=new ProgressionPanel(root);this.progressionView=new ProgressionView(this.hud.topLeft,()=>this.openProgression());this.hud.notices.prepend(this.progressionView.notice);
     this.cover.className='travel-cover';this.caption.className='travel-caption';this.caption.hidden=true;root.append(this.cover);this.hud.element.append(this.caption);
     // Access to localStorage itself can throw in restricted embeds.
     this.save=new SaveSystem(sessionStorageForTrailer(this.captureEnabled,()=>({getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)})));
@@ -228,7 +229,7 @@ export class Game {
   }
   private resumeExplore(){this.overview.suspend();this.focus.cancel();this.explorer.enter(false,this.spawn);this.camera.far=this.worldManager.currentWorldId==='HOME'?40:150;this.camera.updateProjectionMatrix();this.transition.state='EXPLORE';this.playerFeedback.reset();this.hud.setExplore(true);this.hud.setTransition(false);this.renderer.domElement.focus();}
   private resumeFurnitureExplore(){this.explorer.resumeFromPanel();this.hud.setTransition(false);}
-  private get gameplayPanelOpen(){return this.settingsPanel.open||this.collectionPanel.open||this.commissionPanel.open||this.dialoguePanel.open||this.calendarPanel.open||this.homePanel.open||this.cookingPanel.open||this.inventoryPanel.open||this.tradePanel.open||this.progressionPanel.open;}
+  private get gameplayPanelOpen(){return this.hud.menuOpen||this.settingsPanel.open||this.collectionPanel.open||this.commissionPanel.open||this.dialoguePanel.open||this.calendarPanel.open||this.homePanel.open||this.cookingPanel.open||this.inventoryPanel.open||this.tradePanel.open||this.progressionPanel.open;}
   private openDialogue(npcId:string){
     if(!this.ready||!this.explorer.active||this.vehicleController.active||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen||this.gameplay.fishing.active)return false;
     const definition=this.gameplay.dialogue.registry.get(npcId);if(!definition||this.gameplay.dialogue.registry.npc(npcId)?.worldId!==this.worldManager.currentWorldId)return false;
@@ -380,6 +381,22 @@ export class Game {
     this.settingsPanel.show({state:this.settings,quality:()=>this.renderer.quality,setQuality:quality=>{this.applyQuality(quality);this.persist(true);},fishingMode:()=>this.gameplay.fishing.inputMode,setFishingMode:mode=>{this.gameplay.fishing.setInputMode(mode);this.persist(true);},setSound:enabled=>this.setSound(enabled),reset:()=>{this.settings.reset();this.applyQuality('MEDIUM');this.gameplay.fishing.setInputMode('hold');void this.setSound(false);this.persist(true);}},()=>{this.persist(true);if(driving)this.vehicleController.resumeFromPanel();else if(exploring)this.resumeFurnitureExplore();else{this.overview.enabled=overviewEnabled;this.renderer.domElement.focus();}});
   }
   private bindUI(){
+    this.hud.onMenuRequest=()=>{
+      if(!this.ready||this.captureEnabled||this.worldManager.state!=='READY'||this.travel.active||this.transition.active||this.doorTransition.active||this.sleepTransition.active||this.panel.open||this.gameplayPanelOpen||this.vehicleController.active&&this.vehicleController.phase!=='DRIVING')return;
+      if(this.gameplay.fishing.active){this.hud.notify('收起鱼竿后可打开菜单 · Esc 收竿');return;}
+      const exploring=this.explorer.active,driving=this.vehicleController.active,overviewEnabled=this.overview.enabled;
+      if(driving)this.vehicleController.suspendForPanel();else if(exploring)this.explorer.suspendForPanel();else this.overview.suspend();
+      this.hud.closeDiscovery();this.hud.setInteractionPrompt();
+      this.hud.onMenuClose=transfer=>{if(driving)this.vehicleController.resumeFromPanel(transfer);else if(exploring){this.explorer.resumeFromPanel(transfer);this.hud.setTransition(false);}else{this.overview.enabled=overviewEnabled;this.renderer.domElement.focus();}};
+      this.hud.showMenu();
+    };
+    this.hud.element.querySelector('[data-action="menu-settings"]')!.addEventListener('click',()=>this.openSettings());
+    this.hud.element.querySelector('[data-action="menu-calendar"]')!.addEventListener('click',()=>this.openCalendar());
+    window.addEventListener('keydown',event=>{
+      const target=event.target as HTMLElement|null;if(event.repeat||target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;
+      if(event.code==='F10'&&!this.captureEnabled&&!this.gameplayPanelOpen&&!this.panel.open){event.preventDefault();this.hud.toggleImmersive();}
+      if(event.code==='Tab'&&!this.gameplayPanelOpen&&!this.panel.open&&target===this.renderer.domElement){event.preventDefault();this.hud.onMenuRequest();}
+    });
     if(this.captureEnabled)return;
     this.hud.element.querySelector('[data-action="settings"]')!.addEventListener('click',()=>this.openSettings());
     window.addEventListener('keydown',event=>{const target=event.target as HTMLElement|null;if(event.code!=='KeyO'||event.repeat||target?.isContentEditable||['INPUT','TEXTAREA','SELECT'].includes(target?.tagName??''))return;event.preventDefault();this.openSettings();});
@@ -455,8 +472,9 @@ export class Game {
       else if(document.visibilityState!=='hidden')this.gameplay.fishing.update(delta);
     }
     if(this.cookingPanel.open&&document.visibilityState!=='hidden')this.gameplay.cooking.update(delta);
-    this.progressionView.update(delta,this.gameplay.progression,!this.gameplayPanelOpen&&!this.panel.open&&!this.vehicleController.active,!this.gameplayPanelOpen&&!this.panel.open&&!this.travel.active&&!this.doorTransition.active&&!this.sleepTransition.active);
-    this.tradePanel.update(this.gameplay);this.cookingPanel.update();this.inventoryPanel.update();this.hud.updateFishing(this.gameplay.fishing);this.hotbarView.update();this.hotbarView.element.hidden=!this.explorer.active;this.vehicleHUD.update(this.vehicleController);
+    this.hud.updateContext({exploring:this.explorer.active,driving:this.vehicleController.active,fishing:this.gameplay.fishing.active,sailing:this.travel.active||this.worldManager.currentWorldId==='TRAVEL',transitioning:this.transition.active||this.doorTransition.active||this.sleepTransition.active,panel:this.gameplayPanelOpen||this.panel.open,dialogue:this.dialoguePanel.open},this.worldManager.currentWorldId??'HOME',delta);
+    this.progressionView.update(delta,this.gameplay.progression,!this.gameplayPanelOpen&&!this.panel.open&&!this.vehicleController.active&&!this.gameplay.fishing.active&&!this.travel.active,!this.gameplayPanelOpen&&!this.panel.open&&!this.travel.active&&!this.doorTransition.active&&!this.sleepTransition.active);
+    this.tradePanel.update(this.gameplay);this.cookingPanel.update();this.inventoryPanel.update();this.hud.updateFishing(this.gameplay.fishing);this.hotbarView.update();this.hotbarView.element.hidden=!this.explorer.active||this.gameplayPanelOpen||this.panel.open||this.gameplay.fishing.active;this.vehicleHUD.update(this.vehicleController);
     water=this.worldManager.currentWorld?.navigation?.waterLevel(this.camera.position.x,this.camera.position.z,time,storm)??3.3;
     const underwater=this.explorer.active&&this.explorer.underwater,inside=this.worldManager.currentWorldId==='COTTAGE'||this.worldManager.currentWorld?.sheltered?.(this.camera.position)===true;
     this.weather.shelter(inside);this.scene.fog=underwater?this.underwaterFog:(home&&!this.travel.active)||this.worldManager.currentWorldId==='COTTAGE'?null:this.worldManager.currentWorldId==='FARM'?this.dayNight.farm.fog:this.seaFog;
@@ -472,7 +490,7 @@ export class Game {
     this.sound.update(time,storm,inside?'INDOOR':underwater?'UNDERWATER':this.explorer.active||this.vehicleController.active||this.travel.active?'ISLAND':'OVERVIEW',this.weather.lightning.flash,this.weather.frame);
     const interaction=this.worldManager.currentWorld?.interaction;if(this.explorer.active||this.vehicleController.active)interaction?.update(this.vehicleController.position??this.camera.position);
     this.hudTimer+=delta;if(this.hudTimer>.25){this.hudTimer=0;this.collectionPanel.refresh();this.commissionPanel.refresh();this.hud.updateCollections(this.gameplay.collections);
-      if(this.explorer.active&&!this.gameplayPanelOpen)this.recordVisibleAnimals();this.hud.updateClock(this.clock,this.weather.kind,this.gameplay.calendar.date);this.hud.updateHomeStats(this.gameplay.progress,false);this.hud.updateProductionStats(this.gameplay,this.explorer.active||this.gameplayPanelOpen);this.hud.updateDepth(underwater,water-this.camera.position.y);
+      if(this.explorer.active&&!this.gameplayPanelOpen)this.recordVisibleAnimals();this.hud.updateClock(this.clock,this.weather.kind,this.gameplay.calendar.date);this.hud.updateHomeStats(this.gameplay.progress,false);this.hud.updateProductionStats(this.gameplay,this.explorer.active||this.vehicleController.active||this.gameplayPanelOpen);this.hud.updateDepth(underwater,water-this.camera.position.y);
       if(this.diagnostics){Object.assign(this.renderer.domElement.dataset,{world:this.worldManager.currentWorldId,travel:this.travel.state,door:this.doorTransition.state,sleep:this.sleepTransition.state,energy:String(this.gameplay.progress.energy),cameraMode:this.transition.state,waterEntries:String(this.waterEntry.entries),waterLeaves:String(this.waterEntry.leaves),fov:this.camera.fov.toFixed(2),gameTime:String(this.clock.simulationTime),storm:String(this.weather.storm),quality:this.renderer.quality,discoveries:this.player.discoveries.join(','),completedTrips:String(this.completedTrips),interactionCount:String(this.interactionCount),audio:JSON.stringify(this.sound.diagnostics),vehiclePhase:this.vehicleController.active?this.vehicleController.phase:'ON_FOOT',fleet:JSON.stringify(this.gameplay.vehicles.snapshot()),farmStats:JSON.stringify(this.gameplay.farm.definitions.map(f=>({id:f.id,counts:this.gameplay.farm.getField(f.id)!.stateCounts})))});}
       if(this.diagnostics)this.renderer.domElement.dataset.collections=JSON.stringify({open:this.collectionPanel.open,...this.gameplay.collections.snapshot()});
       if(this.diagnostics)this.renderer.domElement.dataset.commissions=JSON.stringify({open:this.commissionPanel.open,...this.gameplay.commissions.snapshot()});
@@ -484,7 +502,7 @@ export class Game {
       if(this.diagnostics)this.renderer.domElement.dataset.progression=JSON.stringify(this.gameplay.progression.snapshot());
       if(this.diagnostics)this.renderer.domElement.dataset.economy=JSON.stringify(this.gameplay.economy.snapshot());
       if(this.diagnostics)this.renderer.domElement.dataset.weather=JSON.stringify({kind:this.weather.kind,...this.weather.frame,rainVisible:this.weather.rain.visible,precipitation:this.weather.rain.diagnostics,sheltered:inside,atmosphere:this.dayNight.farm.visible?this.dayNight.farm.diagnostics:null,drawCalls:this.renderer.info.render.calls,triangles:this.renderer.info.render.triangles});
-      if(this.explorer.active||this.vehicleController.active){const world=this.worldManager.currentWorld!,prompt=interaction?.getPrompt(this.interactionContext(world),this.interactionActions);this.hud.setInteractable(prompt?.available??false);this.hud.setInteractionPrompt(this.gameplay.fishing.state==='FIGHTING'?undefined:prompt);this.hud.setHint(this.vehicleController.active?'W/S 前进后退 · A/D 转向 · Space 刹车 · 停稳后 E 下车':world.id==='FARM'?(world.livestockFocus?'饲槽 E 补充饲料 / 小麦 / 玉米 · 动物 E 收蛋 / 挤奶 / 剪毛 · B 背包':'E 耕地 / 播种 / 收割 · 靠近车辆 E 上车 · B 拿起种子 · 1～8 换种'):world.id==='COTTAGE'?'WASD 移动 · E 使用家具 / 出屋 · B 背包 · 1～8 快捷栏 · Q 使用':this.gameplay.fishing.active?'E 提钩 · 左键控制张力 · R 切换操作 · Esc 放弃':'WASD 移动 · E 交互 · B 背包 · 1～8 快捷栏 · Q 使用');}
+      if(this.explorer.active||this.vehicleController.active){const world=this.worldManager.currentWorld!,prompt=interaction?.getPrompt(this.interactionContext(world),this.interactionActions);this.hud.setInteractable(prompt?.available??false);this.hud.setInteractionPrompt(this.gameplay.fishing.active&&this.gameplay.fishing.state!=='BITE'?undefined:prompt);this.hud.setHint(this.vehicleController.active?'W/S 前进后退 · A/D 转向 · Space 刹车 · 停稳后 E 下车':world.id==='FARM'?(world.livestockFocus?'饲槽 E 补充饲料 / 小麦 / 玉米 · 动物 E 收蛋 / 挤奶 / 剪毛 · B 背包':'E 耕地 / 播种 / 收割 · 靠近车辆 E 上车 · B 拿起种子 · 1～8 换种'):world.id==='COTTAGE'?'WASD 移动 · E 使用家具 / 出屋 · B 背包 · 1～8 快捷栏 · Q 使用':this.gameplay.fishing.active?'E 提钩 · 左键控制张力 · R 切换操作 · Esc 放弃':'WASD 移动 · E 交互 · B 背包 · 1～8 快捷栏 · Q 使用');}
       else this.hud.setInteractionPrompt();
     }
     this.character.update({delta,time,visible:(this.explorer.active||this.vehicleController.active)&&!this.travel.active&&!this.doorTransition.active&&!this.sleepTransition.active&&!this.gameplayPanelOpen&&!this.panel.open&&!this.transition.active,firstPerson:!this.vehicleController.active,eye:this.camera.position,orientation:this.camera.quaternion,eyeHeight:this.worldManager.currentWorld?.navigation?.eyeHeight,grounded:this.explorer.grounded,sprinting:this.explorer.sprinting,paused:document.visibilityState==='hidden',vehicle:this.vehicleController.phase==='DRIVING'?this.vehicleController.vehicle:undefined});
